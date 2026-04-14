@@ -427,7 +427,15 @@ done
 
 ## 3.5 案例：lovstudio:skill-creator — 用 Skill 创建 Skill
 
-现在来看一个真实的 Skill——`lovstudio:skill-creator`。它的任务是创建新的 Skill，也就是"用 Skill 创建 Skill"。这个 meta 设计本身就是 Skill 系统强大组合能力的证明。
+### 3.5.0 站在巨人的肩膀上
+
+`lovstudio:skill-creator` 并非从零开始——它是 [Anthropic 官方 skill-creator](https://github.com/anthropics/skills/blob/main/skills/skill-creator/SKILL.md) 的二次开发版本。
+
+这引出了 Skill 开发中两个值得铭记的原则：
+
+**原则一：优秀公司的官方实现是最好的教材。** Anthropic 的 skill-creator 只有几十行，但每一行都体现了他们对 SKILL.md 规范的深度理解。当你不知道一个 Skill 应该怎么写时，先去 [anthropics/skills](https://github.com/anthropics/skills) 仓库看官方是怎么做的——它们是 Anthropic 工程师用自己制定的规范写出来的，是最权威的参考实现。`lovstudio:skill-creator` 在官方版本基础上增加了 README 自动生成、仓库级文件更新、发布工作流等功能，但核心的 5 步创建流程和 frontmatter 模板设计，都继承自官方。
+
+**原则二：自举（Bootstrapping）是 AI 时代的标志性特性。** 用 Skill 创建 Skill——这在传统软件开发中相当于用编译器编译自己。但在 AI 时代，自举变得自然而然：你只需要用自然语言说「帮我创建一个将 Markdown 转成 EPUB 的 Skill」，skill-creator 就会走完从需求分析到目录生成到代码填充的全流程。AI 读懂指令、生成代码、调用脚本、创建新的指令文件——**用自然语言生成自然语言驱动的自动化流程**，这在以前是无法想象的。
 
 ### 3.5.1 它解决什么问题
 
@@ -439,7 +447,7 @@ done
 4. 创建 `scripts/` 目录
 5. 更新根目录的 `README.md` 和 `CLAUDE.md` 的 Skills 列表
 
-手动做？第一次可以，第三次就开始出错了——漏了 README、忘了更新列表、frontmatter 格式不对。这正是 Skill 擅长解决的问题：**将重复的、有规范的操作自动化**。
+手动做？第一次可以，第三次就开始出错了——漏了 README、忘了更新列表、frontmatter 格式不对。官方 skill-creator 提供了基础骨架生成，`lovstudio:skill-creator` 在此基础上补全了 monorepo 场景下的自动化需求。
 
 ### 3.5.2 架构拆解
 
