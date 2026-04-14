@@ -151,7 +151,7 @@ Agent Skill 不是凭空出现的。它的演化脉络清晰可循：
 | 平台 | Stars | Skill 生态 | 特色 |
 |------|-------|-----------|------|
 | **[OpenClaw](https://github.com/swarmclawai/swarmclaw)** | 345k | ClawHub 44k+ 社区 Skill | 50+ 渠道连接器；注意 [ClawHavoc 安全事件](https://thenewstack.io/persistent-ai-agents-compared/)（341 恶意 Skill） |
-| **[Hermes Agent](https://github.com/NousResearch/hermes-agent)** | — | 自动创建 + agentskills.io 标准 | 唯一内置学习循环；[GEPA 自进化（ICLR 2026 Oral）](https://github.com/NousResearch/hermes-agent-self-evolution) |
+| **[Hermes Agent](https://github.com/NousResearch/hermes-agent)** | 82k | 自动创建 + agentskills.io 标准 | 唯一内置学习循环；[GEPA 自进化（ICLR 2026 Oral）](https://github.com/NousResearch/hermes-agent-self-evolution) |
 
 ### Background Agent（后台自治 Agent）
 
