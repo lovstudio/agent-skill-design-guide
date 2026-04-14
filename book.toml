@@ -1,7 +1,6 @@
 [book]
 authors = ["手工川"]
 language = "zh"
-multilingual = false
 src = "src"
 title = "Agent Skill 高质量设计指南"
 description = "系统掌握 AI 编程助手 Skill 设计方法论，从架构到发布的完整指南"
