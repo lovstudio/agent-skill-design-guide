@@ -1,5 +1,8 @@
 # 第 4 章：Skill 质量模型 — 如何定义和衡量「高质量」
 
+![质量五维度 — 天平上的五颗宝石](../assets/images/chapters/ch04-quality-model.png)
+
+
 > "Not everything that counts can be counted, and not everything that can be counted counts."
 > — William Bruce Cameron
 

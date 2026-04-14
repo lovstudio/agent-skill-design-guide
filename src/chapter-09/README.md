@@ -1,5 +1,8 @@
 # 第 9 章：MCP 集成 — 连接外部世界
 
+![MCP 集成 — 连接两个世界的牌坊门户](../assets/images/chapters/ch09-mcp-gateway.png)
+
+
 > "Skill 定义了 AI 能做什么；MCP 决定了 AI 能连接什么。两者结合，才是完整的 Agent。"
 
 前几章我们一直在打磨 Skill 的内功 — 精准的 Instruction、流畅的 Workflow、健壮的脚本。但一个 Skill 如果只能操作本地文件系统，就像一台断网的电脑：能力再强也只能自给自足。
@@ -380,7 +383,11 @@ def product_qa(product: str, question: str) -> str:
     """生成产品问答的 Prompt 模板"""
     return (
         f"你是 {product} 的技术支持专家。"
-        f"请根据产品知识库中的信息回答以下问题：\n\n{question}\n\n"
+        f"请根据产品知识库中的信息回答以下问题：
+
+{question}
+
+"
         f"如果知识库中没有相关信息，请明确说明。"
     )
 

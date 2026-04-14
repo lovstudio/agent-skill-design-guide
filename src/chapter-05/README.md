@@ -1,5 +1,8 @@
 # 第 5 章：Instruction 设计的艺术 -- 让 AI 精确理解你的意图
 
+![指令设计的艺术 — 书法笔触化为光之指令](../assets/images/chapters/ch05-instruction-art.png)
+
+
 > "Write code as if the person maintaining it is a violent psychopath who knows where you live."
 > -- 同理，写 Skill 指令时也该假设执行它的 AI 随时可能"创造性地误读"你的意思。
 

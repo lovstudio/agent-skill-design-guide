@@ -1,5 +1,8 @@
 # 第 8 章：Skill 组合模式 — 从单兵到军团
 
+![Skill 组合 — 兵马俑的三种阵型](../assets/images/chapters/ch08-composition.png)
+
+
 > "Unix 哲学的精髓不是写一个什么都能做的程序，而是写很多小程序，让它们协作。"
 > —— Doug McIlroy
 

@@ -1,5 +1,8 @@
 # 第 12 章：Skill 自我进化 — 让 Skill 自己变得更好
 
+![自我进化 — 凤凰涅槃与 DNA 螺旋](../assets/images/chapters/ch12-self-evolution.png)
+
+
 > "The best programs are the ones that write themselves."
 > — 改编自 Donald Knuth
 
@@ -142,7 +145,8 @@ optimized_skill = optimizer.compile(SkillExecutor(), trainset=train_data)
 loss = "用户请求生成 PDF，但中文字符显示为方块。原因是 SKILL.md 中没有指定 CJK 字体回退策略。"
 gradient = LLM("根据以下错误，建议如何修改 SKILL.md：" + loss)
 # gradient = "在 SKILL.md 的字体配置段落加入：当检测到 CJK 字符时，优先使用 Noto Sans CJK..."
-new_skill = LLM("将以下修改建议应用到 SKILL.md：" + gradient + "\n原文：" + old_skill)
+new_skill = LLM("将以下修改建议应用到 SKILL.md：" + gradient + "
+原文：" + old_skill)
 ```
 
 **优点**：反馈直接、修改精准，特别适合修复特定 bug。
@@ -442,7 +446,8 @@ def validate_evolved_skill(skill_md: str) -> dict:
 
     # 检查矛盾指令（简单版：查找 "始终" 和 "不要" 是否作用于同一对象）
     # 生产环境应该用 LLM 做更深层的语义检查
-    lines = skill_md.split("\n")
+    lines = skill_md.split("
+")
     always_do = [l for l in lines if "始终" in l or "always" in l.lower()]
     never_do = [l for l in lines if "不要" in l or "never" in l.lower() or "禁止" in l]
     if always_do and never_do:
@@ -478,7 +483,8 @@ def evolve_skill(skill_path: Path, log_dir: Path, output_dir: Path):
 
     # Step 3: 生成修订
     revision = generate_revision(skill_md, analysis)
-    print(f"\n修订方案：{revision['rationale']}")
+    print(f"
+修订方案：{revision['rationale']}")
     print(f"风险评估：{revision['risk_assessment']}")
 
     # Step 4: 应用修订
@@ -503,12 +509,14 @@ def evolve_skill(skill_path: Path, log_dir: Path, output_dir: Path):
         diff_path = output_dir / f"DIFF_{version_hash}.md"
         diff_content = generate_diff(skill_md, evolved_md)
         diff_path.write_text(diff_content)
-        print(f"\n进化完成，待审批：{output_path}")
+        print(f"
+进化完成，待审批：{output_path}")
         print(f"变更 diff：{diff_path}")
     else:
         # 直接替换
         skill_path.write_text(evolved_md)
-        print(f"\n进化完成，已自动应用")
+        print(f"
+进化完成，已自动应用")
 
 def generate_diff(old: str, new: str) -> str:
     """生成人类可读的 diff 报告"""
@@ -657,7 +665,11 @@ skill_instructions = tg.Variable(
 def simulate_execution(instructions, user_request):
     """模拟 agent 按照指令执行用户请求"""
     response = engine.generate(
-        f"你是一个 AI agent，按照以下指令处理用户请求。\n\n指令：{instructions.value}\n\n用户请求：{user_request}"
+        f"你是一个 AI agent，按照以下指令处理用户请求。
+
+指令：{instructions.value}
+
+用户请求：{user_request}"
     )
     return tg.Variable(value=response, role_description="执行结果")
 
@@ -665,7 +677,9 @@ def simulate_execution(instructions, user_request):
 def compute_loss(result, expected):
     """用 LLM 评估结果与期望的差距"""
     loss = engine.generate(
-        f"对比以下执行结果和期望结果，描述差距和改进方向。\n结果：{result.value}\n期望：{expected}"
+        f"对比以下执行结果和期望结果，描述差距和改进方向。
+结果：{result.value}
+期望：{expected}"
     )
     return tg.Variable(value=loss, role_description="loss/改进方向")
 

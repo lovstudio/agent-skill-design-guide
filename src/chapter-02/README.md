@@ -1,5 +1,8 @@
 # 第 2 章：Skill 架构解剖 — Anthropic 官方规范深度解读
 
+![Skill 架构解剖 — 水晶立方体的三层剖面](../assets/images/chapters/ch02-skill-anatomy.png)
+
+
 > "我写了一个 500 行的 SKILL.md，塞满了各种边界情况的处理指令。结果 Claude 在对话三轮之后就开始'忘'我的规则了。"
 
 这是 Skill 新手最常踩的坑。你以为写得越详细，AI 执行得越好 -- 恰恰相反。Skill 设计的核心矛盾是：**你想教会 AI 的东西是无限的，而上下文窗口（Context Window）是有限的。**

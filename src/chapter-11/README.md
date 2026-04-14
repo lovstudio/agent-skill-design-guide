@@ -1,5 +1,8 @@
 # 第 11 章：Skill 质量工程 — 测试、Lint 与持续优化
 
+![质量工程 — 剑匠检验刀刃的精密仪式](../assets/images/chapters/ch11-quality-engineering.png)
+
+
 > "If it compiles, ship it" 在传统软件里是玩笑话。但在 Agent Skill 领域，太多开发者连 "compiles" 这一步都跳过了 — 因为 SKILL.md 本身不是代码，没有编译器会拒绝它。这正是 Skill 质量工程困难的根源：你在测试一段给 AI 读的指令，而 AI 不会抛出 SyntaxError。
 
 ---
@@ -330,7 +333,9 @@ def test_cjk_font_detection():
     assert detect_cjk_font("Windows") == "SimSun"
 
 def test_markdown_table_parsing():
-    md = "| A | B |\n|---|---|\n| 1 | 2 |"
+    md = "| A | B |
+|---|---|
+| 1 | 2 |"
     rows = parse_table(md)
     assert len(rows) == 1
     assert rows[0] == ["1", "2"]

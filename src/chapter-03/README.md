@@ -1,5 +1,8 @@
 # 第 3 章：开发环境搭建与第一个 Skill
 
+![第一个 Skill — 工匠工作台上萌芽的种子](../assets/images/chapters/ch03-first-skill.png)
+
+
 > **本章目标：** 从零配置 Claude Code Skills 开发环境，理解目录结构规范，亲手创建并运行第一个 Skill，掌握 dev.sh 热链接开发模式。最后，通过 `lovstudio:skill-creator` 案例体验"用 Skill 创建 Skill"的 meta 玩法。
 
 前两章我们理解了 Skill 的本质和架构。现在，打开终端，动手写代码。

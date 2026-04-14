@@ -1,5 +1,8 @@
 # 第 14 章：Skill 生态的未来 — 从个人工具到产业基础设施
 
+![生态未来 — 日出照耀 Skill 之城](../assets/images/chapters/ch14-future-ecosystem.png)
+
+
 > "The best way to predict the future is to invent it." — Alan Kay
 
 当你读到这里，你已经掌握了从零构建一个高质量 Skill 的全部技术栈：SKILL.md 的设计原则、Workflow 编排、脚本开发、质量工程、自我进化、发布分发。你现在是一名合格的 Skill 工程师。

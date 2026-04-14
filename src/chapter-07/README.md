@@ -1,5 +1,8 @@
 # 第 7 章：脚本设计 -- Skill 的「肌肉」
 
+![脚本设计 — 蒸汽朋克自动机锻造代码](../assets/images/chapters/ch07-scripts.png)
+
+
 > "Talk is cheap. Show me the code." -- Linus Torvalds
 
 前六章我们都在讨论 SKILL.md 里的「大脑」-- 如何用自然语言指令让 AI 助手理解意图、执行流程、处理异常。但总有些任务光靠文字描述是搞不定的：生成一份带封面和目录的 PDF、把 40 页 PDF 转成拼接的长图、填充 Word 模板里的表格字段。这些需要**精确的字节级操作**，需要调用第三方库的 API，需要在文件系统上做重活。

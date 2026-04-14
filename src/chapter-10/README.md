@@ -1,5 +1,8 @@
 # 第 10 章：多平台适配 — 一个 Skill 跑遍所有 AI 助手
 
+![多平台适配 — 变色龙在不同编辑器间切换](../assets/images/chapters/ch10-multi-platform.png)
+
+
 > **核心论点**：SKILL.md 不是某个平台的方言，而是一份可移植的 AI 行为合约。只要理解各平台读取指令的方式差异，一份 Skill 就能在 Claude Code、Cursor、Windsurf、Cline、Codex CLI、Gemini CLI 上无缝运行。
 
 ---
@@ -385,7 +388,8 @@ def strip_frontmatter(content: str) -> str:
     if content.startswith('---'):
         end = content.find('---', 3)
         if end != -1:
-            return content[end + 3:].lstrip('\n')
+            return content[end + 3:].lstrip('
+')
     return content
 
 def genericize_tools(content: str) -> str:
@@ -402,9 +406,14 @@ def genericize_tools(content: str) -> str:
 
 def add_activation_guard(content: str, triggers: list[str]) -> str:
     """在文件开头添加条件激活段落"""
-    guard = "## When to Activate\n\n"
-    guard += "Activate this ruleset when the user " + ", ".join(triggers) + ".\n"
-    guard += "Do NOT activate for normal coding, debugging, or file editing tasks.\n\n"
+    guard = "## When to Activate
+
+"
+    guard += "Activate this ruleset when the user " + ", ".join(triggers) + ".
+"
+    guard += "Do NOT activate for normal coding, debugging, or file editing tasks.
+
+"
     return guard + content
 
 def generate(skill_path: str, output_dir: str):

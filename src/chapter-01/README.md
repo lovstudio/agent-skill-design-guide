@@ -1,5 +1,8 @@
 # 第 1 章：从 Prompt 到 Skill — AI 编程助手的能力扩展革命
 
+![从 Prompt 到 Skill — 卷轴展开为数字代码流](../assets/images/chapters/ch01-prompt-to-skill.png)
+
+
 > 本章状态：✅ 完成
 
 ---

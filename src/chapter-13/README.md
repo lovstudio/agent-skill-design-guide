@@ -1,5 +1,8 @@
 # 第 13 章：发布、分发与安全
 
+![发布与安全 — 传统港口的新船下水典礼](../assets/images/chapters/ch13-publish-security.png)
+
+
 > 一个 Skill 写得再好，如果没人能装上，就等于不存在。而如果装上了却被恶意输入劫持，那比不存在更糟。
 
 你已经完成了 Skill 的设计、开发和测试。现在面临三个关键问题：怎么让别人用上？怎么持续更新？怎么确保安全？本章覆盖从 agentskills.io 发布到 GitHub 分发的完整链路，然后深入 Prompt Injection、文件系统权限和敏感信息处理等安全话题。最后，我们用 lovstudio-skills monorepo 和 fill-web-form 作为真实案例，串联所有知识点。
