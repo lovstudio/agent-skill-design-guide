@@ -5,7 +5,7 @@
 </div>
 
 <p style="text-align: center; color: #666; font-size: 1.1em;">
-手工川 著 | 电子工业出版社
+手工川 著
 </p>
 
 ---

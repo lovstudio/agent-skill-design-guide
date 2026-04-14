@@ -1,6 +1,6 @@
 # Agent Skill 高质量设计指南 — 全书大纲
 
-> 作者：手工川 | 出版社：电子工业出版社
+> 作者：手工川 | 出版社：待定
 > 目标读者：入门 → 进阶 → 大师（全阶段覆盖）
 > 全书 14 章 + 3 附录，每章 5000-8000 字，总计约 10-12 万字
 > 实战案例库：[lovstudio-skills](https://github.com/MarkShawn2020/lovstudio-skills)（26 个已发布 Skill）
