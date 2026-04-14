@@ -1,5 +1,9 @@
 # Agent Skill 高质量设计指南
 
+<div style="text-align: center; margin: 2em 0;">
+<img src="assets/images/cover.png" alt="封面 — 金色十二面体" style="max-width: 320px; border-radius: 8px; box-shadow: 0 8px 32px rgba(0,0,0,0.3);" />
+</div>
+
 <p style="text-align: center; color: #666; font-size: 1.1em;">
 手工川 著 | 电子工业出版社
 </p>
