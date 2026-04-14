@@ -57,17 +57,7 @@ Step 3: 验证输出并汇报
 - **Instructions（指令正文）**：告诉 AI「怎么做」「注意什么」
 - **Workflow（工作流）**：告诉 AI「按什么顺序执行」
 
-### Skill 与相近概念的区别
-
-| 概念 | 持久性 | 可复用 | 带工具 | 可组合 | 可进化 | 可分发 |
-|------|--------|--------|--------|--------|--------|--------|
-| **Prompt** | ❌ 单次 | ❌ 复制粘贴 | ❌ 纯文本 | ❌ | ❌ | ❌ |
-| **Prompt Template** | ✅ 可保存 | ✅ 参数化 | ❌ 纯文本 | ❌ | ❌ | ⚠️ 手动 |
-| **Plugin / Extension** | ✅ | ✅ | ✅ 代码级 | ⚠️ 有限 | ❌ | ✅ 商店 |
-| **MCP Tool** | ✅ | ✅ | ✅ API 级 | ✅ 协议标准 | ❌ | ✅ |
-| **Agent Skill** | ✅ | ✅ | ✅ 指令+脚本 | ✅ Skill 间调用 | ✅ 自进化 | ✅ 市场 |
-
-关键差异在于：Skill 是唯一同时具备**组合性**和**进化性**的抽象。因为 SKILL.md 本身就是自然语言，AI 不仅能执行它，还能阅读它、理解它、改进它。这是 Plugin 和 MCP Tool 做不到的。
+Skill 与 Prompt Template、Plugin、MCP Tool 等相近概念有本质区别 —— 核心在于 Skill 是唯一同时具备**组合性**和**进化性**的抽象。因为 SKILL.md 本身就是自然语言，AI 不仅能执行它，还能阅读它、理解它、改进它。详细的概念对比表见[附录 A](../appendix-a.md)。
 
 ### MCP 与 Skill 的协作关系
 
@@ -128,38 +118,52 @@ Agent Skill 不是凭空出现的。它的演化脉络清晰可循：
 
 ## 1.3 Skill 平台全景（2026 年 4 月）
 
-2025 年底 SKILL.md 开放标准发布后，「三大平台」的说法已经过时。截至 2026 年 4 月，Skill 生态是一个 **40+ 平台共存** 的格局，可以分为三个层次：
+2025 年底 SKILL.md 开放标准发布后，Skill 生态从单一平台扩展到 **40+ 平台共存** 的格局。
 
-### 第一梯队：全能 Agent 平台
+参考 [StackOne 的 120+ Agentic AI 工具分层](https://www.stackone.com/blog/ai-agent-tools-landscape-2026/)（Model → Harness → Orchestration 三层架构）和 [DataCamp 的 Agentic IDE 四类分类](https://www.datacamp.com/blog/best-agentic-ide)，我们可以将支持 Skills 的平台按**交互形态**分为四类：
 
-这些平台不仅支持 Skills，还具备完整的 Agent 能力（工具调用、文件操作、终端执行）：
+### CLI Agent（终端原生 Agent）
 
-| 平台 | 定位 | Skill 生态 | 特色 |
+开发者在终端中直接与 Agent 对话，Agent 拥有完整的文件系统、终端、Git 操作能力。2026 年最大的范式转移是 [从 IDE 插件到终端原生 Agent](https://peerpush.net/blog/coding-agents-in-2026)。
+
+| 平台 | 厂商 | Skill 支持 | 特色 |
 |------|------|-----------|------|
-| **Claude Code** | Anthropic 官方 CLI / Desktop / Web / IDE | 官方仓库 87k stars, agentskills.io | Skills 标准制定者；脚本 / references / Skill 间调用全支持 |
-| **Codex CLI** | OpenAI 官方 CLI Agent | 支持 SKILL.md 标准格式 | 48 小时内采纳标准，深度集成 GPT-4.1 |
-| **OpenClaw** | 开源 Agent 框架（345k stars） | ClawHub 44k+ 社区 Skill | 50+ 渠道连接器；但安全问题频发（ClawHavoc 事件） |
-| **Hermes Agent** | Nous Research 自进化 Agent | 自动创建 + 遵循 agentskills.io 标准 | 唯一内置学习循环的 Agent；GEPA 自进化引擎 |
+| **Claude Code** | Anthropic | SKILL.md 标准制定者；87k stars 官方仓库 | 终端 + Desktop + Web + IDE 全形态；脚本 / references / Skill 间调用全支持 |
+| **Codex CLI** | OpenAI | SKILL.md 标准格式（48h 内采纳） | 云端沙箱执行，产出 diff/PR |
+| **Gemini CLI** | Google | SKILL.md 标准格式 | 深度集成 Google 生态 |
+| **Kiro** | AWS | 遵循 Agent Skills 标准 | Spec 驱动开发，强调可复现性 |
+| **Goose, Aider** | 社区 | 通过 `npx skills` 支持 | 轻量级替代方案 |
 
-### 第二梯队：IDE 内置 Agent
+### Agentic IDE（AI 原生编辑器）
 
-嵌入在代码编辑器中，侧重编码场景：
+在编辑器内提供 Agent 模式，兼顾代码编写和 Agent 任务：
 
-| 平台 | 定位 | Skill 机制 |
+| 平台 | 特点 | Skill 机制 |
 |------|------|-----------|
-| **Cursor** | AI-native IDE（VS Code fork） | `.cursor/rules/*.mdc`，Glob 触发，纯指令 |
-| **GitHub Copilot** | VS Code / JetBrains 插件 | VS Code Agent Skills 扩展 |
-| **Gemini CLI** | Google 官方 CLI Agent | 支持 SKILL.md 标准格式 |
-| **Kiro CLI** | AWS 发布的 AI 编码工具 | 遵循 Agent Skills 标准 |
+| **Cursor** | VS Code fork，跨文件推理 | `.cursor/rules/*.mdc`，Glob 触发 |
+| **Windsurf** | Cascade Agent 可视化执行计划 | `.windsurfrules`（2026 年声量下降） |
+| **GitHub Copilot** | VS Code / JetBrains 原生集成 | VS Code Agent Skills 扩展 |
 
-### 第三梯队：垂直 / 新兴平台
+### 自治 Agent 框架（Orchestration 层）
 
-| 平台 | 状态 |
+独立运行的 Agent 框架，不依赖特定 IDE，侧重自主执行和多 Agent 协作：
+
+| 平台 | Stars | Skill 生态 | 特色 |
+|------|-------|-----------|------|
+| **[OpenClaw](https://github.com/swarmclawai/swarmclaw)** | 345k | ClawHub 44k+ 社区 Skill | 50+ 渠道连接器；注意 [ClawHavoc 安全事件](https://thenewstack.io/persistent-ai-agents-compared/)（341 恶意 Skill） |
+| **[Hermes Agent](https://github.com/NousResearch/hermes-agent)** | — | 自动创建 + agentskills.io 标准 | 唯一内置学习循环；[GEPA 自进化（ICLR 2026 Oral）](https://github.com/NousResearch/hermes-agent-self-evolution) |
+
+### Background Agent（后台自治 Agent）
+
+从 Issue Tracker 或调度触发器拾取任务，在沙箱中独立运行，产出 PR：
+
+| 平台 | 特点 |
 |------|------|
-| Windsurf | 2025 年活跃，2026 年声量显著下降 |
-| Cline | VS Code 插件，社区活跃 |
-| Antigravity | Google 发布，2026-01 采纳 Skills 标准 |
-| Goose, Aider, Continue 等 | 均通过 `npx skills` 支持 SKILL.md |
+| Codex (Cloud mode) | OpenAI 云端沙箱，自动产出 PR |
+| GitHub Copilot Workspace | 从 Issue 到 PR 的端到端自动化 |
+| Factory, Devin | 全自治软件工程 Agent |
+
+> **分类说明**：以上四类并非互斥。Claude Code 同时覆盖 CLI + IDE 扩展 + Background（通过 CI/CD hooks）；OpenClaw 既是 Orchestration 框架，也可嵌入 IDE。分类依据的是平台的**主要交互形态**，参考 [DataCamp](https://www.datacamp.com/blog/best-agentic-ide)、[PeerPush](https://peerpush.net/blog/coding-agents-in-2026)、[StackOne](https://www.stackone.com/blog/ai-agent-tools-landscape-2026/) 的行业分析。
 
 ### 统一安装：`npx skills`
 
