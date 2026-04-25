@@ -1,0 +1,746 @@
+<!DOCTYPE HTML>
+<html lang="zh" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>MCP 集成 — 连接外部世界 - Agent Skill 高质量设计指南</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="系统掌握 AI 编程助手 Skill 设计方法论，从架构到发布的完整指南">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../css/general-2459343d.css">
+        <link rel="stylesheet" href="../css/chrome-ae938929.css">
+        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex-fc53036c.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc-b872e53c.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Agent Skill 高质量设计指南</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/MarkShawn2020/agent-skill-design-guide" title="Git repository" aria-label="Git repository">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/MarkShawn2020/agent-skill-design-guide/edit/main/src/chapter-09/README.md" title="Suggest an edit" aria-label="Suggest an edit" rel="edit">
+                            <span class=fa-svg id="git-edit-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M421.7 220.3l-11.3 11.3-22.6 22.6-205 205c-6.6 6.6-14.8 11.5-23.8 14.1L30.8 511c-8.4 2.5-17.5 .2-23.7-6.1S-1.5 489.7 1 481.2L38.7 353.1c2.6-9 7.5-17.2 14.1-23.8l205-205 22.6-22.6 11.3-11.3 33.9 33.9 62.1 62.1 33.9 33.9zM96 353.9l-9.3 9.3c-.9 .9-1.6 2.1-2 3.4l-25.3 86 86-25.3c1.3-.4 2.5-1.1 3.4-2l9.3-9.3H112c-8.8 0-16-7.2-16-16V353.9zM453.3 19.3l39.4 39.4c25 25 25 65.5 0 90.5l-14.5 14.5-22.6 22.6-11.3 11.3-33.9-33.9-62.1-62.1L314.3 67.7l11.3-11.3 22.6-22.6 14.5-14.5c25-25 65.5-25 90.5 0z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="第-9-章mcp-集成--连接外部世界"><a class="header" href="#第-9-章mcp-集成--连接外部世界">第 9 章：MCP 集成 — 连接外部世界</a></h1>
+<p><img src="../assets/images/chapters/ch09-mcp-gateway.png" alt="MCP 集成 — 连接两个世界的牌坊门户"></p>
+<blockquote>
+<p>“Skill 定义了 AI 能做什么；MCP 决定了 AI 能连接什么。两者结合，才是完整的 Agent。”</p>
+</blockquote>
+<p>前几章我们一直在打磨 Skill 的内功 — 精准的 Instruction、流畅的 Workflow、健壮的脚本。但一个 Skill 如果只能操作本地文件系统，就像一台断网的电脑：能力再强也只能自给自足。</p>
+<p>本章的主角是 <strong>MCP（Model Context Protocol）</strong> — 2024 年底由 Anthropic 发布的开放协议，它为 AI 助手提供了一套标准化的方式来连接外部工具、数据源和 API。截至 2026 年初，MCP Registry 已索引超过 20,000 个公开 Server，月均 SDK 下载量突破 9,700 万次，ChatGPT、Claude、Gemini、Copilot、Cursor 等主流 AI 平台均已原生支持。</p>
+<p>如果 Skill 是 Agent 的大脑，MCP 就是它的神经系统。</p>
+<hr>
+<h2 id="91-mcp-快速入门--协议要点"><a class="header" href="#91-mcp-快速入门--协议要点">9.1 MCP 快速入门 — 协议要点</a></h2>
+<h3 id="911-一句话定义"><a class="header" href="#911-一句话定义">9.1.1 一句话定义</a></h3>
+<p>MCP 是一个基于 JSON-RPC 2.0 的 C/S 协议，定义了 AI 应用（Client）与外部能力提供方（Server）之间的标准通信方式。你可以把它理解为 <strong>AI 世界的 USB-C</strong> — 一个接口，连接一切。</p>
+<h3 id="912-核心概念"><a class="header" href="#912-核心概念">9.1.2 核心概念</a></h3>
+<p>MCP 协议围绕三个原语（Primitive）构建：</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>原语</th><th>方向</th><th>用途</th><th>类比</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Tool</strong></td><td>Client → Server</td><td>让 AI 调用外部功能（搜索、查询、写入）</td><td>函数调用</td></tr>
+<tr><td><strong>Resource</strong></td><td>Client → Server</td><td>让 AI 读取外部数据（文档、数据库记录）</td><td>只读 API</td></tr>
+<tr><td><strong>Prompt</strong></td><td>Server → Client</td><td>Server 提供预设的 Prompt 模板</td><td>Skill 的 Instruction</td></tr>
+</tbody>
+</table>
+</div>
+<p>这三个原语覆盖了 AI 与外部世界交互的绝大多数场景。Tool 负责“做事“，Resource 负责“读数据“，Prompt 负责“教 AI 怎么用我“。</p>
+<h3 id="913-传输层"><a class="header" href="#913-传输层">9.1.3 传输层</a></h3>
+<p>MCP 不绑定特定传输协议。当前规范支持三种传输方式：</p>
+<ul>
+<li><strong>Stdio</strong>：通过标准输入/输出通信，适合本地进程。大多数 CLI 集成的 MCP Server 使用此方式。</li>
+<li><strong>Streamable HTTP</strong>：基于 HTTP 的流式传输，2025-11 规范推荐的生产环境方案，替代了早期的 SSE 方案。</li>
+<li><strong>SSE（Server-Sent Events）</strong>：早期方案，仍在广泛使用，但新项目建议使用 Streamable HTTP。</li>
+</ul>
+<h3 id="914-2025-11-规范重大更新"><a class="header" href="#914-2025-11-规范重大更新">9.1.4 2025-11 规范重大更新</a></h3>
+<p>2025 年 11 月 25 日 — MCP 发布一周年之际 — 规范迎来了最大一次更新。核心变化：</p>
+<p><strong>Tasks（异步任务）</strong>：任何请求都可以变成“先调用、后获取“的异步模式。Task 的状态机包括 <code>working</code> → <code>input_required</code> → <code>completed</code> / <code>failed</code> / <code>cancelled</code>。这对需要多步交互的复杂操作至关重要。</p>
+<p><strong>OAuth 2.1 授权框架</strong>：引入标准化的授权流程，支持 Client Credentials（机器对机器）和企业 IdP 策略控制。Client 可以提供一个 URL 指向自身的 JSON 描述文档，Server 据此做权限决策。</p>
+<p><strong>Extensions 机制</strong>：为协议引入了扩展点，允许社区在不修改核心协议的情况下添加新能力。Authorization Extensions 是第一批官方扩展。</p>
+<p><strong>Sampling with Tools</strong>：MCP Server 现在可以在发起 Sampling 请求时附带 Tool 定义，使得 Server 端也能运行 Agent 循环。</p>
+<h3 id="915-治理从-anthropic-到-linux-foundation"><a class="header" href="#915-治理从-anthropic-到-linux-foundation">9.1.5 治理：从 Anthropic 到 Linux Foundation</a></h3>
+<p>2025 年 12 月，Anthropic 将 MCP 捐赠给 Linux Foundation 下新成立的 <strong>Agentic AI Foundation（AAIF）</strong>。AAIF 由 Anthropic、Block、OpenAI 联合创立，Google、Microsoft、AWS、Cloudflare 等参与支持。MCP 与 Block 的 goose、OpenAI 的 AGENTS.md 一起成为 AAIF 的创始项目。</p>
+<p>这意味着 MCP 不再是 Anthropic 的“家规“，而是整个行业的开放标准。对 Skill 开发者来说，这是一个明确的信号：<strong>押注 MCP 是安全的。</strong></p>
+<hr>
+<h2 id="92-skill--mcp架构模式"><a class="header" href="#92-skill--mcp架构模式">9.2 Skill + MCP：架构模式</a></h2>
+<h3 id="921-skill-和-mcp-的关系"><a class="header" href="#921-skill-和-mcp-的关系">9.2.1 Skill 和 MCP 的关系</a></h3>
+<p>先厘清一个常见误解：<strong>Skill 不是 MCP Server，MCP Server 也不是 Skill。</strong> 它们解决不同层次的问题：</p>
+<ul>
+<li><strong>Skill</strong> 是给 AI 助手的操作手册 — 它告诉 AI “你现在要扮演什么角色、执行什么流程、产出什么结果”。</li>
+<li><strong>MCP Server</strong> 是给 AI 助手的工具箱 — 它告诉 AI “你可以调用哪些外部能力”。</li>
+</ul>
+<p>两者的结合才是完整的 Agent 能力栈：</p>
+<pre><code>┌─────────────────────────────────┐
+│         AI 助手 (Client)          │
+│  ┌───────────┐  ┌────────────┐  │
+│  │   Skill   │  │ MCP Client │  │
+│  │ (Workflow) │  │ (连接管理)   │  │
+│  └─────┬─────┘  └──────┬─────┘  │
+│        │               │        │
+│   "做什么"          "用什么做"     │
+└────────┼───────────────┼────────┘
+         │               │
+         ▼               ▼
+   本地脚本/文件     MCP Server(s)
+                   ┌──────────┐
+                   │ 搜索引擎  │
+                   │ 数据库    │
+                   │ Notion   │
+                   │ GitHub   │
+                   │ ...      │
+                   └──────────┘
+</code></pre>
+<h3 id="922-三种集成模式"><a class="header" href="#922-三种集成模式">9.2.2 三种集成模式</a></h3>
+<p><strong>模式一：Skill 编排，MCP 执行</strong></p>
+<p>最常见的模式。Skill 的 Instruction 中引用 MCP Tool，让 AI 在执行 Workflow 时调用外部能力。</p>
+<pre><code class="language-markdown">&lt;!-- SKILL.md 片段 --&gt;
+## Workflow
+
+1. 使用 `web_search` 工具搜索用户提供的主题，获取最新资料
+2. 整理搜索结果，提取关键信息
+3. 根据模板生成报告
+4. 使用 `notion_create_page` 工具将报告写入 Notion 数据库
+</code></pre>
+<p>Skill 只负责编排流程，实际的搜索和写入由 MCP Server 完成。</p>
+<p><strong>模式二：MCP 提供上下文，Skill 消费</strong></p>
+<p>Skill 执行前需要最新的外部信息（如某个库的最新 API 文档），通过 MCP Resource 获取。</p>
+<pre><code class="language-markdown">&lt;!-- SKILL.md 片段 --&gt;
+## 前置步骤
+
+在生成代码之前，使用 context7 MCP 拉取目标库的最新文档：
+1. 调用 `resolve-library-id` 确认库的 Context7 ID
+2. 调用 `query-docs` 获取相关 API 文档
+3. 基于获取的文档（而非训练数据）生成代码
+</code></pre>
+<p><strong>模式三：Skill 产出数据，MCP 分发</strong></p>
+<p>Skill 生成内容后，通过多个 MCP Server 分发到不同平台。</p>
+<pre><code class="language-markdown">&lt;!-- SKILL.md 片段 --&gt;
+## 分发步骤
+
+内容生成完成后，按用户选择的渠道分发：
+- [ ] Notion：调用 `notion_create_page` 写入知识库
+- [ ] GitHub：调用 `create_issue` 创建 Issue
+- [ ] Slack：调用 `send_message` 发送通知
+</code></pre>
+<h3 id="923-在-skillmd-中引用-mcp-tool-的最佳实践"><a class="header" href="#923-在-skillmd-中引用-mcp-tool-的最佳实践">9.2.3 在 SKILL.md 中引用 MCP Tool 的最佳实践</a></h3>
+<pre><code class="language-markdown">&lt;!-- 好的写法：声明依赖 + 降级策略 --&gt;
+## Dependencies
+
+- MCP Server: `context7` (文档查询)
+- MCP Server: `notion` (可选，用于输出到 Notion)
+
+## Workflow
+
+1. 如果 `context7` MCP 可用，使用 `query-docs` 获取最新文档
+2. 如果不可用，使用训练数据中的知识（并提醒用户可能不是最新）
+</code></pre>
+<p>关键原则：<strong>永远提供降级路径。</strong> 不是所有用户都配置了你需要的 MCP Server。一个好的 Skill 在有 MCP 时更强，在没有 MCP 时仍然能用。</p>
+<hr>
+<h2 id="93-实战用-context7-mcp-拉取最新文档写入-skill"><a class="header" href="#93-实战用-context7-mcp-拉取最新文档写入-skill">9.3 实战：用 context7 MCP 拉取最新文档写入 Skill</a></h2>
+<h3 id="931-场景"><a class="header" href="#931-场景">9.3.1 场景</a></h3>
+<p>你正在开发一个代码生成 Skill，需要确保生成的代码使用的是目标库的最新 API，而不是 AI 训练数据中可能过时的版本。</p>
+<h3 id="932-配置-context7-mcp"><a class="header" href="#932-配置-context7-mcp">9.3.2 配置 context7 MCP</a></h3>
+<p>在 Claude Code 的 MCP 配置中添加 context7：</p>
+<pre><code class="language-json">{
+  "mcpServers": {
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp"]
+    }
+  }
+}
+</code></pre>
+<p>配置完成后，AI 助手在会话中就可以使用两个 Tool：</p>
+<ul>
+<li><code>resolve-library-id</code>：搜索库名，返回 Context7 兼容的 Library ID</li>
+<li><code>query-docs</code>：用 Library ID 查询特定主题的文档和代码示例</li>
+</ul>
+<h3 id="933-在-skill-中使用"><a class="header" href="#933-在-skill-中使用">9.3.3 在 Skill 中使用</a></h3>
+<p>假设我们有一个 <code>codegen</code> Skill，需要为用户生成 Next.js 代码：</p>
+<pre><code class="language-markdown">---
+name: codegen
+description: 生成使用最新 API 的代码片段
+---
+
+# codegen Skill
+
+## Workflow
+
+### Step 1: 确认目标库
+
+向用户确认要使用的库和版本。
+
+### Step 2: 拉取最新文档
+
+使用 context7 MCP 获取最新文档：
+
+1. 调用 `resolve-library-id`，传入库名（如 "next.js"）
+2. 从返回结果中选择匹配的 Library ID（如 `/vercel/next.js`）
+3. 调用 `query-docs`，传入 Library ID 和用户的具体问题
+4. 将返回的文档片段作为上下文注入后续代码生成
+
+### Step 3: 生成代码
+
+基于 Step 2 获取的文档，而非训练数据，生成代码。
+在代码注释中标注文档来源和版本。
+
+### 降级策略
+
+如果 context7 MCP 不可用：
+- 告知用户将基于训练数据生成代码
+- 建议用户自行验证 API 是否为最新版本
+</code></pre>
+<h3 id="934-效果对比"><a class="header" href="#934-效果对比">9.3.4 效果对比</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th></th><th>无 MCP</th><th>有 context7 MCP</th></tr>
+</thead>
+<tbody>
+<tr><td>API 时效性</td><td>取决于训练数据截止日期</td><td>实时获取最新文档</td></tr>
+<tr><td>版本准确性</td><td>可能混淆不同版本的 API</td><td>精确到指定版本</td></tr>
+<tr><td>代码可用性</td><td>可能需要用户手动修复</td><td>大幅降低 API 变更导致的错误</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="94-实战用-notion-mcp-将-skill-输出写入-notion-数据库"><a class="header" href="#94-实战用-notion-mcp-将-skill-输出写入-notion-数据库">9.4 实战：用 Notion MCP 将 Skill 输出写入 Notion 数据库</a></h2>
+<h3 id="941-场景"><a class="header" href="#941-场景">9.4.1 场景</a></h3>
+<p>你有一个 <code>research</code> Skill，它会搜索、整理资料并生成研究报告。你希望报告自动写入 Notion 数据库，方便团队协作和归档。</p>
+<h3 id="942-配置-notion-mcp"><a class="header" href="#942-配置-notion-mcp">9.4.2 配置 Notion MCP</a></h3>
+<p>Notion 官方提供了 MCP Server。配置方式：</p>
+<pre><code class="language-json">{
+  "mcpServers": {
+    "notion": {
+      "command": "npx",
+      "args": ["-y", "@notionhq/notion-mcp-server"],
+      "env": {
+        "OPENAPI_MCP_HEADERS": "{\"Authorization\": \"Bearer ntn_xxxx\", \"Notion-Version\": \"2022-06-28\"}"
+      }
+    }
+  }
+}
+</code></pre>
+<p>其中 <code>ntn_xxxx</code> 是你的 Notion Internal Integration Token，需要在 Notion 开发者后台创建。</p>
+<h3 id="943-skill-中的-notion-输出步骤"><a class="header" href="#943-skill-中的-notion-输出步骤">9.4.3 Skill 中的 Notion 输出步骤</a></h3>
+<pre><code class="language-markdown">## 输出到 Notion（可选）
+
+如果用户要求将结果保存到 Notion：
+
+1. 使用 `notion-search` 工具搜索目标数据库
+2. 确认数据库 ID 和字段结构
+3. 使用 `notion-create-page` 工具创建新页面：
+   - Title：研究报告标题
+   - Tags：从内容中提取的关键词
+   - Status：Draft
+   - Content：完整的研究报告（Markdown 格式）
+4. 返回 Notion 页面链接给用户
+</code></pre>
+<h3 id="944-完整流程图"><a class="header" href="#944-完整流程图">9.4.4 完整流程图</a></h3>
+<pre><code>用户输入研究主题
+       │
+       ▼
+┌──────────────┐     context7 MCP
+│  Skill 编排   │────────────────→ 拉取相关文档
+│  (research)  │
+│              │     web_search MCP
+│              │────────────────→ 搜索最新资料
+│              │
+│  整理 &amp; 生成  │
+│  研究报告     │
+│              │     Notion MCP
+│              │────────────────→ 写入 Notion 数据库
+└──────────────┘
+       │
+       ▼
+  返回 Notion 链接
+</code></pre>
+<p>这个例子展示了一个 Skill 如何同时编排多个 MCP Server — context7 提供文档上下文，Web Search 提供最新信息，Notion 负责输出存储。<strong>Skill 是指挥官，MCP Server 是各兵种。</strong></p>
+<hr>
+<h2 id="95-mcp-server-开发入门为你的-skill-生态构建专属-mcp"><a class="header" href="#95-mcp-server-开发入门为你的-skill-生态构建专属-mcp">9.5 MCP Server 开发入门：为你的 Skill 生态构建专属 MCP</a></h2>
+<h3 id="951-什么时候需要自建-mcp-server"><a class="header" href="#951-什么时候需要自建-mcp-server">9.5.1 什么时候需要自建 MCP Server</a></h3>
+<p>公开 Registry 中已有 20,000+ Server，覆盖了大多数常见场景。但以下情况你需要自建：</p>
+<ul>
+<li>连接内部系统（ERP、CRM、自建数据库）</li>
+<li>封装复杂的业务逻辑（审批流程、数据转换管线）</li>
+<li>提供团队专属的领域知识（产品文档、设计规范）</li>
+<li>需要精细的权限控制和审计日志</li>
+</ul>
+<h3 id="952-用-python-sdk-构建-mcp-server"><a class="header" href="#952-用-python-sdk-构建-mcp-server">9.5.2 用 Python SDK 构建 MCP Server</a></h3>
+<p>MCP 官方提供了 TypeScript 和 Python 两套 SDK。以 Python SDK 为例，构建一个为团队提供产品知识查询的 MCP Server：</p>
+<pre><code class="language-python">"""
+product-kb MCP Server — 团队产品知识库查询服务
+
+安装依赖：pip install mcp
+运行：python product_kb_server.py
+"""
+
+from mcp.server.fastmcp import FastMCP
+
+mcp = FastMCP(
+    name="product-kb",
+    description="团队产品知识库 MCP Server",
+)
+
+
+# ---- Tool: 搜索产品文档 ----
+
+@mcp.tool()
+def search_docs(query: str, product: str = "all") -&gt; list[dict]:
+    """搜索产品知识库文档。
+
+    Args:
+        query: 搜索关键词
+        product: 产品名称过滤，默认搜索全部产品
+    """
+    # 实际实现中连接内部搜索引擎或数据库
+    results = internal_search(query, product)
+    return [
+        {"title": r.title, "content": r.snippet, "url": r.url}
+        for r in results
+    ]
+
+
+# ---- Tool: 获取产品变更日志 ----
+
+@mcp.tool()
+def get_changelog(product: str, since: str = "7d") -&gt; list[dict]:
+    """获取产品最近的变更日志。
+
+    Args:
+        product: 产品名称
+        since: 时间范围，如 "7d"、"30d"、"2025-01-01"
+    """
+    entries = fetch_changelog(product, since)
+    return [
+        {"date": e.date, "version": e.version, "changes": e.summary}
+        for e in entries
+    ]
+
+
+# ---- Resource: 产品配置（只读） ----
+
+@mcp.resource("product://{product_name}/config")
+def get_product_config(product_name: str) -&gt; str:
+    """获取指定产品的当前配置信息"""
+    config = load_product_config(product_name)
+    return config.to_json()
+
+
+# ---- Prompt: 产品问答模板 ----
+
+@mcp.prompt()
+def product_qa(product: str, question: str) -&gt; str:
+    """生成产品问答的 Prompt 模板"""
+    return (
+        f"你是 {product} 的技术支持专家。"
+        f"请根据产品知识库中的信息回答以下问题：
+
+{question}
+
+"
+        f"如果知识库中没有相关信息，请明确说明。"
+    )
+
+
+if __name__ == "__main__":
+    mcp.run(transport="streamable-http", host="127.0.0.1", port=8000)
+</code></pre>
+<h3 id="953-代码解析"><a class="header" href="#953-代码解析">9.5.3 代码解析</a></h3>
+<p>这段代码展示了 MCP Server 的四个关键组成部分：</p>
+<ol>
+<li>
+<p><strong><code>FastMCP</code> 实例</strong>：Server 的入口。<code>name</code> 和 <code>description</code> 会出现在 Client 的 Server 列表中，帮助 AI 理解这个 Server 能做什么。</p>
+</li>
+<li>
+<p><strong><code>@mcp.tool()</code> 装饰器</strong>：注册一个 Tool。Python 的类型注解和 docstring 会被自动转换为 JSON Schema，Client 据此展示参数说明和做输入校验。<strong>好的 docstring 直接决定 AI 能否正确调用你的 Tool。</strong></p>
+</li>
+<li>
+<p><strong><code>@mcp.resource()</code> 装饰器</strong>：注册一个只读 Resource。URI 模板中的 <code>{product_name}</code> 是动态参数。Resource 适合暴露配置、状态等不需要副作用的数据。</p>
+</li>
+<li>
+<p><strong><code>@mcp.prompt()</code> 装饰器</strong>：注册一个 Prompt 模板。这是一个经常被忽视的原语 — 它让 Server 可以向 Client 提供“推荐的使用方式“。</p>
+</li>
+</ol>
+<h3 id="954-typescript-sdk-对照"><a class="header" href="#954-typescript-sdk-对照">9.5.4 TypeScript SDK 对照</a></h3>
+<p>如果你更熟悉 TypeScript，MCP 官方 TypeScript SDK 提供了几乎一致的开发体验：</p>
+<pre><code class="language-typescript">import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { z } from "zod";
+
+const server = new McpServer({
+  name: "product-kb",
+  version: "0.1.0",
+});
+
+server.tool(
+  "search_docs",
+  "搜索产品知识库文档",
+  { query: z.string(), product: z.string().default("all") },
+  async ({ query, product }) =&gt; {
+    const results = await internalSearch(query, product);
+    return {
+      content: [{ type: "text", text: JSON.stringify(results) }],
+    };
+  }
+);
+</code></pre>
+<h3 id="955-部署方式"><a class="header" href="#955-部署方式">9.5.5 部署方式</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>方式</th><th>适用场景</th><th>传输协议</th></tr>
+</thead>
+<tbody>
+<tr><td>本地进程</td><td>个人开发、测试</td><td>Stdio</td></tr>
+<tr><td>Docker 容器</td><td>团队内部</td><td>Streamable HTTP</td></tr>
+<tr><td>云函数（Cloudflare Workers / Vercel）</td><td>公开服务</td><td>Streamable HTTP</td></tr>
+<tr><td>npm/pip 包</td><td>社区分发</td><td>Stdio（用户本地运行）</td></tr>
+</tbody>
+</table>
+</div>
+<p>对于团队内部使用的 MCP Server，Docker + Streamable HTTP 是最实用的方案。对于要分发给社区的 Server，打包成 npm/pip 包让用户通过 <code>npx</code> 或 <code>uvx</code> 本地运行是主流做法。</p>
+<hr>
+<h2 id="96-安全考量mcp-权限模型与数据隔离"><a class="header" href="#96-安全考量mcp-权限模型与数据隔离">9.6 安全考量：MCP 权限模型与数据隔离</a></h2>
+<p>MCP 连接了 AI 与外部世界，安全性不是“最好有“而是“必须有“。2025-11 规范在安全方面做了大幅强化。</p>
+<h3 id="961-oauth-21-授权框架"><a class="header" href="#961-oauth-21-授权框架">9.6.1 OAuth 2.1 授权框架</a></h3>
+<p>2025-11 规范引入了完整的 OAuth 2.1 授权框架，这是 MCP 走向生产环境的关键一步。</p>
+<p><strong>Server 端授权发现</strong>：MCP Server 通过 <code>/.well-known/oauth-authorization-server</code> 端点暴露授权服务器的元数据。Client 据此知道该去哪里获取访问令牌。</p>
+<p><strong>Client 注册</strong>：Client 可以提供一个 URL 指向自身的 JSON 描述文档（<code>client_uri</code>），Server 据此判断 Client 的身份和权限。这解决了 “谁在调用我” 的信任问题。</p>
+<p><strong>两种授权模式</strong>：</p>
+<pre><code>Authorization Code Flow（人机交互）：
+用户 → Client → Authorization Server → 授权码 → Access Token
+
+Client Credentials Flow（机器对机器）：
+Client → Authorization Server → Access Token（无用户参与）
+</code></pre>
+<p><strong>企业 IdP 集成</strong>：通过 Authorization Extension，企业可以强制所有 MCP Client 通过企业的 Identity Provider（如 Okta、Azure AD）进行认证。这让 IT 部门可以用统一的策略管控 AI 助手访问哪些外部服务。</p>
+<h3 id="962-skill-开发者的安全清单"><a class="header" href="#962-skill-开发者的安全清单">9.6.2 Skill 开发者的安全清单</a></h3>
+<p>开发涉及 MCP 的 Skill 时，以下安全实践是底线：</p>
+<p><strong>1. 最小权限原则</strong></p>
+<pre><code class="language-markdown">&lt;!-- 好的做法：Skill 明确声明需要的权限范围 --&gt;
+## MCP 依赖
+
+- `notion` MCP：仅需要 `read_content` 和 `insert_content` 权限
+  - 不需要 `delete` 权限
+  - 不需要访问 workspace 级别的设置
+</code></pre>
+<p><strong>2. 敏感数据不经过 AI</strong></p>
+<pre><code class="language-markdown">&lt;!-- Workflow 中的安全指引 --&gt;
+## 安全要求
+
+- 数据库连接凭据通过 MCP Server 的环境变量管理，不在对话中传递
+- 查询结果中的个人信息（邮箱、手机号）必须脱敏后再返回
+- 不要将 API Key 写入 Skill 的任何输出文件
+</code></pre>
+<p><strong>3. 操作确认机制</strong></p>
+<pre><code class="language-markdown">## 写入操作
+
+在执行以下操作前，必须向用户确认：
+- 向 Notion 创建页面
+- 向 GitHub 创建 Issue / PR
+- 向 Slack 发送消息
+- 任何涉及删除或修改的操作
+
+格式："即将向 [目标] 执行 [操作]，内容摘要如下：... 确认执行？"
+</code></pre>
+<p><strong>4. 降级与熔断</strong></p>
+<pre><code class="language-markdown">## 异常处理
+
+- MCP Server 调用超时（&gt; 30s）：告知用户并建议稍后重试
+- MCP Server 返回错误：展示错误信息，不要静默吞掉
+- 多次失败：建议用户检查 MCP Server 配置和网络连接
+</code></pre>
+<h3 id="963-mcp-server-开发者的安全清单"><a class="header" href="#963-mcp-server-开发者的安全清单">9.6.3 MCP Server 开发者的安全清单</a></h3>
+<p>如果你在自建 MCP Server，还需要注意：</p>
+<p><strong>输入校验</strong>：永远不要信任 Client 传入的参数。即使 JSON Schema 会在 Client 端做校验，Server 端必须再验一次。</p>
+<p><strong>速率限制</strong>：AI 助手可能在短时间内发起大量调用。为你的 MCP Server 设置合理的速率限制。</p>
+<p><strong>审计日志</strong>：记录每次 Tool 调用的时间、参数和结果。在出问题时，日志是唯一的真相来源。</p>
+<p><strong>数据隔离</strong>：多租户场景下，确保不同用户的数据互不可见。Token 中的 <code>sub</code>（subject）字段是隔离的依据。</p>
+<pre><code class="language-python">@mcp.tool()
+def search_docs(query: str, ctx: Context) -&gt; list[dict]:
+    """搜索文档，结果按当前用户权限过滤"""
+    user_id = ctx.request_context.get("user_id")
+    if not user_id:
+        raise ValueError("未获取到用户身份，拒绝查询")
+
+    # 只返回该用户有权限访问的文档
+    return search_with_acl(query, user_id)
+</code></pre>
+<h3 id="964-安全反模式"><a class="header" href="#964-安全反模式">9.6.4 安全反模式</a></h3>
+<p>以下做法在 MCP 集成中极其危险，必须避免：</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>反模式</th><th>风险</th><th>正确做法</th></tr>
+</thead>
+<tbody>
+<tr><td>在 SKILL.md 中硬编码 API Key</td><td>Key 泄露到版本控制和日志</td><td>使用 MCP Server 的 <code>env</code> 配置</td></tr>
+<tr><td>让 AI 自由拼接 SQL 查询</td><td>SQL 注入</td><td>Server 端使用参数化查询</td></tr>
+<tr><td>MCP Server 返回全量数据由 AI 过滤</td><td>数据泄露、Token 浪费</td><td>Server 端做权限过滤和分页</td></tr>
+<tr><td>不校验 Client 身份就执行写入操作</td><td>未授权访问</td><td>启用 OAuth 2.1 授权</td></tr>
+<tr><td>将 MCP Server 暴露在公网且无认证</td><td>被恶意调用</td><td>加认证 + 限制来源 IP / 域名</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="97-mcp-集成的未来展望"><a class="header" href="#97-mcp-集成的未来展望">9.7 MCP 集成的未来展望</a></h2>
+<h3 id="971-从配置驱动到发现驱动"><a class="header" href="#971-从配置驱动到发现驱动">9.7.1 从“配置驱动“到“发现驱动“</a></h3>
+<p>当前的 MCP 集成需要用户手动配置每个 Server。随着 MCP Registry 的成熟和 AAIF 的标准化推进，未来的体验可能是：</p>
+<pre><code>用户：帮我查一下 Jira 里的 Sprint 进度
+
+AI 助手：检测到你需要 Jira 集成。在 MCP Registry 中找到了
+      官方 Jira MCP Server（认证：Atlassian 官方，评分：4.8/5）。
+      需要我帮你安装并授权吗？
+</code></pre>
+<p>Skill 开发者可以在 <code>SKILL.md</code> 中声明“推荐的 MCP Server“，AI 助手自动从 Registry 拉取和配置。</p>
+<h3 id="972-mcp--tasks--长时间运行的-skill"><a class="header" href="#972-mcp--tasks--长时间运行的-skill">9.7.2 MCP + Tasks = 长时间运行的 Skill</a></h3>
+<p>Tasks 原语的引入让 Skill 可以编排需要几分钟甚至几小时的工作流。例如一个 CI/CD 部署 Skill：</p>
+<ol>
+<li>触发部署（Task 状态：<code>working</code>）</li>
+<li>等待构建完成（轮询 Task 状态）</li>
+<li>构建失败时请求用户决策（Task 状态：<code>input_required</code>）</li>
+<li>部署完成后通知用户（Task 状态：<code>completed</code>）</li>
+</ol>
+<p>这在之前是不可能的 — 同步的 Tool 调用无法处理这种时间跨度。</p>
+<h3 id="973-skill-作为-mcp-server"><a class="header" href="#973-skill-作为-mcp-server">9.7.3 Skill 作为 MCP Server</a></h3>
+<p>一个有趣的趋势是：<strong>Skill 本身也可以被封装为 MCP Server。</strong> 你写了一个高质量的“代码审查 Skill“，为什么不把它作为 MCP Tool 暴露给其他 AI 助手？</p>
+<p>这创造了一个递归的能力网络 — AI 助手通过 MCP 调用另一个 AI 助手的 Skill，形成 Agent 之间的协作。这正是 AAIF 愿景中 “Agentic AI” 的含义。</p>
+<hr>
+<h2 id="本章小结"><a class="header" href="#本章小结">本章小结</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>要点</th><th>说明</th></tr>
+</thead>
+<tbody>
+<tr><td>MCP 是什么</td><td>AI 助手连接外部工具和数据的标准协议（JSON-RPC 2.0）</td></tr>
+<tr><td>三大原语</td><td>Tool（执行操作）、Resource（读取数据）、Prompt（使用模板）</td></tr>
+<tr><td>Skill + MCP</td><td>Skill 负责编排流程，MCP 负责连接外部能力</td></tr>
+<tr><td>自建 MCP Server</td><td>Python/TypeScript SDK，装饰器模式定义 Tool/Resource/Prompt</td></tr>
+<tr><td>安全底线</td><td>OAuth 2.1 授权、最小权限、输入校验、操作确认、审计日志</td></tr>
+<tr><td>降级策略</td><td>Skill 必须在 MCP 不可用时仍能工作</td></tr>
+</tbody>
+</table>
+</div>
+<p><strong>核心原则：Skill 定义意图，MCP 提供能力。好的 Skill 在有 MCP 时如虎添翼，在没有 MCP 时仍能独立作战。</strong></p>
+<p>下一章，我们将探讨 Skill 如何跨平台适配 — 同一个 Skill 如何在 Claude Code、Cursor、Copilot 等不同 AI 助手中都能工作。</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../chapter-08/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../chapter-10/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../chapter-08/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../chapter-10/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../mark-09e88c2c.min.js"></script>
+        <script src="../searcher-c2a407aa.js"></script>
+
+        <script src="../clipboard-1626706a.min.js"></script>
+        <script src="../highlight-abc7f01d.js"></script>
+        <script src="../book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

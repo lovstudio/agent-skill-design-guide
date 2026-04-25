@@ -1,0 +1,701 @@
+<!DOCTYPE HTML>
+<html lang="zh" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>开发环境搭建与第一个 Skill - Agent Skill 高质量设计指南</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="系统掌握 AI 编程助手 Skill 设计方法论，从架构到发布的完整指南">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../css/general-2459343d.css">
+        <link rel="stylesheet" href="../css/chrome-ae938929.css">
+        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex-fc53036c.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc-b872e53c.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Agent Skill 高质量设计指南</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/MarkShawn2020/agent-skill-design-guide" title="Git repository" aria-label="Git repository">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/MarkShawn2020/agent-skill-design-guide/edit/main/src/chapter-03/README.md" title="Suggest an edit" aria-label="Suggest an edit" rel="edit">
+                            <span class=fa-svg id="git-edit-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M421.7 220.3l-11.3 11.3-22.6 22.6-205 205c-6.6 6.6-14.8 11.5-23.8 14.1L30.8 511c-8.4 2.5-17.5 .2-23.7-6.1S-1.5 489.7 1 481.2L38.7 353.1c2.6-9 7.5-17.2 14.1-23.8l205-205 22.6-22.6 11.3-11.3 33.9 33.9 62.1 62.1 33.9 33.9zM96 353.9l-9.3 9.3c-.9 .9-1.6 2.1-2 3.4l-25.3 86 86-25.3c1.3-.4 2.5-1.1 3.4-2l9.3-9.3H112c-8.8 0-16-7.2-16-16V353.9zM453.3 19.3l39.4 39.4c25 25 25 65.5 0 90.5l-14.5 14.5-22.6 22.6-11.3 11.3-33.9-33.9-62.1-62.1L314.3 67.7l11.3-11.3 22.6-22.6 14.5-14.5c25-25 65.5-25 90.5 0z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="第-3-章开发环境搭建与第一个-skill"><a class="header" href="#第-3-章开发环境搭建与第一个-skill">第 3 章：开发环境搭建与第一个 Skill</a></h1>
+<p><img src="../assets/images/chapters/ch03-first-skill.png" alt="第一个 Skill — 工匠工作台上萌芽的种子"></p>
+<blockquote>
+<p><strong>本章目标：</strong> 从零配置 Claude Code Skills 开发环境，理解目录结构规范，亲手创建并运行第一个 Skill，掌握 dev.sh 热链接开发模式。最后，通过 <code>lovstudio:skill-creator</code> 案例体验“用 Skill 创建 Skill“的 meta 玩法。</p>
+</blockquote>
+<p>前两章我们理解了 Skill 的本质和架构。现在，打开终端，动手写代码。</p>
+<hr>
+<h2 id="31-claude-code-skills-开发环境配置"><a class="header" href="#31-claude-code-skills-开发环境配置">3.1 Claude Code Skills 开发环境配置</a></h2>
+<h3 id="311-前置条件"><a class="header" href="#311-前置条件">3.1.1 前置条件</a></h3>
+<p>开发 Skill 需要以下工具：</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>工具</th><th>最低版本</th><th>用途</th></tr>
+</thead>
+<tbody>
+<tr><td>Claude Code CLI</td><td>最新</td><td>运行和加载 Skill</td></tr>
+<tr><td>Python</td><td>3.8+</td><td>编写脚本 Skill</td></tr>
+<tr><td>Node.js</td><td>18+</td><td>部分 Skill 依赖</td></tr>
+<tr><td>Git</td><td>任意</td><td>版本管理</td></tr>
+</tbody>
+</table>
+</div>
+<p>确认 Claude Code 已安装并可用：</p>
+<pre><code class="language-bash">claude --version
+</code></pre>
+<p>如果还没安装，参考官方文档：</p>
+<pre><code class="language-bash">npm install -g @anthropic-ai/claude-code
+</code></pre>
+<h3 id="312-skill-存储位置"><a class="header" href="#312-skill-存储位置">3.1.2 Skill 存储位置</a></h3>
+<p>Claude Code 从 <code>~/.claude/skills/</code> 目录加载 Skill。每个子目录就是一个 Skill，目录中必须包含 <code>SKILL.md</code> 文件：</p>
+<pre><code>~/.claude/skills/
+├── my-first-skill/
+│   └── SKILL.md
+├── lovstudio-any2pdf/
+│   ├── SKILL.md
+│   ├── scripts/
+│   └── references/
+└── lovstudio-fill-form/
+    ├── SKILL.md
+    └── scripts/
+</code></pre>
+<p>Claude Code 启动新会话时，会扫描这个目录，将所有 <code>SKILL.md</code> 注册为可用 Skill。用户的指令匹配到 Skill 的 <code>description</code> 中的触发词时，Claude 会自动调用对应 Skill。</p>
+<p><strong>关键认知：</strong> Skill 的加载是会话级别的——修改了 <code>SKILL.md</code>，需要开启新的 Claude Code 会话才能生效。这一点对后面的开发流程有直接影响。</p>
+<h3 id="313-创建-skill-仓库"><a class="header" href="#313-创建-skill-仓库">3.1.3 创建 Skill 仓库</a></h3>
+<p>实际项目中，你不会直接在 <code>~/.claude/skills/</code> 里开发。正确做法是创建独立的 Git 仓库，通过符号链接连接到 Skills 目录：</p>
+<pre><code class="language-bash">mkdir -p ~/projects/my-skills
+cd ~/projects/my-skills
+git init
+mkdir skills
+</code></pre>
+<p>这样做的好处：</p>
+<ul>
+<li>版本管理：所有改动有 Git 历史</li>
+<li>多 Skill 管理：一个仓库管理多个 Skill</li>
+<li>协作发布：推送到 GitHub 后，其他人可以安装</li>
+</ul>
+<hr>
+<h2 id="32-skill-目录结构规范与命名约定"><a class="header" href="#32-skill-目录结构规范与命名约定">3.2 Skill 目录结构规范与命名约定</a></h2>
+<h3 id="321-最小结构"><a class="header" href="#321-最小结构">3.2.1 最小结构</a></h3>
+<p>一个 Skill 最少只需要一个文件：</p>
+<pre><code>my-skill/
+└── SKILL.md
+</code></pre>
+<p><code>SKILL.md</code> 既是 Skill 的定义文件（frontmatter 声明元数据），也是 Claude 的操作手册（正文部分的 workflow 指令）。这是 Skill 系统最优雅的设计——<strong>一个文件，两个角色</strong>。</p>
+<h3 id="322-完整结构"><a class="header" href="#322-完整结构">3.2.2 完整结构</a></h3>
+<p>当 Skill 需要执行确定性操作（如文件格式转换、数据处理）时，需要脚本支持：</p>
+<pre><code>lovstudio-&lt;name&gt;/
+├── SKILL.md          # 必须：Skill 定义 + AI 指令
+├── README.md         # 推荐：人类可读的文档（发布到 GitHub 时必须）
+├── scripts/          # 可选：Python/Shell 脚本
+│   └── main.py
+├── references/       # 可选：领域知识文档
+│   └── style-guide.md
+├── assets/           # 可选：模板、字体等资源
+└── examples/         # 可选：示例文件
+</code></pre>
+<p><strong>每个目录的职责明确：</strong></p>
+<ul>
+<li><strong><code>scripts/</code></strong> — 确定性操作，每次调用都会被 Claude 执行的代码</li>
+<li><strong><code>references/</code></strong> — 领域知识，Claude 在决策时按需读取</li>
+<li><strong><code>assets/</code></strong> — 静态资源，脚本运行时使用的模板和文件</li>
+<li><strong><code>examples/</code></strong> — 输入/输出示例，帮助 Claude 理解预期结果</li>
+</ul>
+<h3 id="323-命名约定"><a class="header" href="#323-命名约定">3.2.3 命名约定</a></h3>
+<p>如果你在开发个人或团队的 Skill 系列，建议采用统一前缀：</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>元素</th><th>约定</th><th>示例</th></tr>
+</thead>
+<tbody>
+<tr><td>Skill 名称</td><td><code>&lt;prefix&gt;:&lt;name&gt;</code></td><td><code>lovstudio:any2pdf</code></td></tr>
+<tr><td>目录名</td><td><code>&lt;prefix&gt;-&lt;name&gt;</code></td><td><code>lovstudio-any2pdf</code></td></tr>
+<tr><td>脚本名</td><td>小写 + 下划线</td><td><code>md2pdf.py</code>、<code>fill_form.py</code></td></tr>
+<tr><td>仓库结构</td><td>统一放在 <code>skills/</code> 下</td><td><code>skills/lovstudio-any2pdf/</code></td></tr>
+</tbody>
+</table>
+</div>
+<p>前缀起到命名空间的作用，避免不同作者的 Skill 名称冲突。就像 npm 的 <code>@scope/package</code>，简单有效。</p>
+<hr>
+<h2 id="33-从零创建第一个-skillhello-world-完整流程"><a class="header" href="#33-从零创建第一个-skillhello-world-完整流程">3.3 从零创建第一个 Skill：hello-world 完整流程</a></h2>
+<p>让我们抛开框架，手工创建一个最简单的 Skill，理解每一步的含义。</p>
+<h3 id="331-step-1创建目录和-skillmd"><a class="header" href="#331-step-1创建目录和-skillmd">3.3.1 Step 1：创建目录和 SKILL.md</a></h3>
+<pre><code class="language-bash">mkdir -p ~/projects/my-skills/skills/hello-world
+</code></pre>
+<p>创建 <code>skills/hello-world/SKILL.md</code>：</p>
+<pre><code class="language-markdown">---
+name: hello-world
+description: &gt;
+  A simple greeting skill for learning purposes.
+  Trigger when the user says "hello", "greet me", or "say hi".
+license: MIT
+metadata:
+  author: your-name
+  version: "1.0.0"
+  tags: hello greeting demo
+---
+
+# hello-world
+
+A minimal skill that demonstrates the basic structure.
+
+## Workflow
+
+### Step 1: Greet the user
+
+When triggered, respond with a personalized greeting that includes:
+- The current date and time
+- A random fun fact about programming
+
+### Step 2: Ask for follow-up
+
+Use `AskUserQuestion` to ask:
+"Want to hear another fun fact? (yes/no)"
+
+If yes, share another fact. If no, end the conversation.
+</code></pre>
+<p>这就是一个完整的 Skill。我们来解剖它。</p>
+<h3 id="332-skillmd-的两个部分"><a class="header" href="#332-skillmd-的两个部分">3.3.2 SKILL.md 的两个部分</a></h3>
+<p><strong>Part 1 — Frontmatter（YAML 头部）</strong></p>
+<pre><code class="language-yaml">---
+name: hello-world
+description: &gt;
+  A simple greeting skill for learning purposes.
+  Trigger when the user says "hello", "greet me", or "say hi".
+license: MIT
+metadata:
+  author: your-name
+  version: "1.0.0"
+  tags: hello greeting demo
+---
+</code></pre>
+<p>Frontmatter 是 Skill 的“身份证“。Claude Code 通过它来：</p>
+<ol>
+<li><strong>识别 Skill</strong>（<code>name</code>）</li>
+<li><strong>判断何时触发</strong>（<code>description</code> 中的关键词）</li>
+<li><strong>显示元信息</strong>（<code>version</code>、<code>author</code>、<code>tags</code>）</li>
+</ol>
+<p><code>description</code> 字段至关重要——它不仅是给人看的说明，更是 Claude 判断“要不要调用这个 Skill“的依据。写得太模糊，Claude 不知道什么时候该调用；写得太窄，又会漏掉本该触发的场景。这是第 5 章会深入讨论的主题。</p>
+<p><strong>Part 2 — 正文（Markdown 指令）</strong></p>
+<p>Frontmatter 下方的 Markdown 内容是 Claude 的操作手册。Claude 读到这些指令后，会按照 Workflow 中描述的步骤执行。这部分的写作质量直接决定了 Skill 的行为质量。</p>
+<h3 id="333-step-2安装到-claude-code"><a class="header" href="#333-step-2安装到-claude-code">3.3.3 Step 2：安装到 Claude Code</a></h3>
+<p>将 Skill 链接到 Claude Code 的 Skills 目录：</p>
+<pre><code class="language-bash">ln -s ~/projects/my-skills/skills/hello-world ~/.claude/skills/hello-world
+</code></pre>
+<p>验证链接是否正确：</p>
+<pre><code class="language-bash">ls -la ~/.claude/skills/hello-world
+# 应该看到指向源目录的符号链接
+</code></pre>
+<h3 id="334-step-3测试"><a class="header" href="#334-step-3测试">3.3.4 Step 3：测试</a></h3>
+<p>启动新的 Claude Code 会话：</p>
+<pre><code class="language-bash">claude
+</code></pre>
+<p>然后输入：</p>
+<pre><code>hello
+</code></pre>
+<p>如果一切配置正确，Claude 会按照 SKILL.md 中的 Workflow 执行：先给出带有日期和趣味事实的问候，然后用 <code>AskUserQuestion</code> 询问是否继续。</p>
+<p><strong>常见问题排查：</strong></p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>现象</th><th>原因</th><th>解决</th></tr>
+</thead>
+<tbody>
+<tr><td>Skill 没被触发</td><td><code>description</code> 中没有匹配用户输入的关键词</td><td>在 description 中添加更多触发词</td></tr>
+<tr><td>找不到 Skill</td><td>符号链接指向错误路径</td><td><code>ls -la</code> 检查链接目标</td></tr>
+<tr><td>修改后没生效</td><td>当前会话已加载旧版本</td><td>开启新的 Claude Code 会话</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="335-step-4添加脚本能力"><a class="header" href="#335-step-4添加脚本能力">3.3.5 Step 4：添加脚本能力</a></h3>
+<p>纯指令型 Skill 的能力有限。当你需要执行确定性操作时（格式转换、文件处理、API 调用），需要添加脚本。</p>
+<p>给 hello-world 加一个 Python 脚本：</p>
+<pre><code class="language-bash">mkdir -p ~/projects/my-skills/skills/hello-world/scripts
+</code></pre>
+<p>创建 <code>scripts/greet.py</code>：</p>
+<pre><code class="language-python">#!/usr/bin/env python3
+"""Generate a greeting with a random programming fun fact."""
+
+import argparse
+import random
+from datetime import datetime
+
+FACTS = [
+    "The first computer bug was an actual bug — a moth found in Harvard's Mark II in 1947.",
+    "Python is named after Monty Python, not the snake.",
+    "The first programmer was Ada Lovelace, who wrote algorithms for Babbage's Analytical Engine in 1843.",
+    "Git was created by Linus Torvalds in just 2 weeks.",
+    "The term 'refactoring' was popularized by Martin Fowler's 1999 book.",
+]
+
+def main():
+    ap = argparse.ArgumentParser(description="Generate a greeting")
+    ap.add_argument("--name", default="World", help="Name to greet")
+    args = ap.parse_args()
+
+    now = datetime.now().strftime("%Y-%m-%d %H:%M")
+    fact = random.choice(FACTS)
+
+    print(f"Hello, {args.name}!")
+    print(f"Current time: {now}")
+    print(f"Fun fact: {fact}")
+
+if __name__ == "__main__":
+    main()
+</code></pre>
+<p>然后更新 <code>SKILL.md</code> 的 Workflow 部分，让 Claude 调用这个脚本：</p>
+<pre><code class="language-markdown">## Workflow
+
+### Step 1: Get the user's name
+
+Use `AskUserQuestion` to ask: "What's your name?"
+
+### Step 2: Run the greeting script
+
+```bash
+python ~/.claude/skills/hello-world/scripts/greet.py --name "&lt;user's name&gt;"
+</code></pre>
+<h3 id="step-3-display-the-result"><a class="header" href="#step-3-display-the-result">Step 3: Display the result</a></h3>
+<p>Show the script output to the user, then ask if they want another greeting.</p>
+<pre><code>
+注意脚本路径使用了 `~/.claude/skills/` 的绝对路径——因为 Claude Code 执行命令时的工作目录是用户的项目目录，不是 Skill 目录。这是新手常踩的坑。
+
+**脚本设计原则：**
+
+- 单文件、无依赖（或最少依赖），用 `argparse` 处理参数
+- 通过 stdout 输出结果，通过 stderr 输出错误
+- 退出码 0 表示成功，非 0 表示失败
+- 不要依赖特定工作目录，所有路径用参数传入
+
+---
+
+## 3.4 dev.sh 热链接开发模式详解
+
+手动 `ln -s` 管理一个 Skill 还行，管理十几个就要疯了。lovstudio-skills 仓库设计了一个 `dev.sh` 脚本来解决这个问题。
+
+### 3.4.1 dev.sh 做了什么
+
+```bash
+bash dev.sh
+</code></pre>
+<p>这条命令做了三件事：</p>
+<ol>
+<li>扫描 <code>skills/</code> 目录下所有包含 <code>SKILL.md</code> 的 <code>lovstudio-*</code> 目录</li>
+<li>将每个 Skill 目录符号链接到 <code>~/.claude/skills/</code></li>
+<li>进入等待状态，<code>Ctrl+C</code> 退出时自动恢复原状</li>
+</ol>
+<p>也可以只链接单个 Skill：</p>
+<pre><code class="language-bash">bash dev.sh lovstudio-any2pdf
+</code></pre>
+<h3 id="342-源码解读"><a class="header" href="#342-源码解读">3.4.2 源码解读</a></h3>
+<p><code>dev.sh</code> 只有 55 行，但设计精巧。来看核心逻辑：</p>
+<p><strong>链接函数：</strong></p>
+<pre><code class="language-bash">link_skill() {
+  local dir="$1"
+  local name="$(basename "$dir")"
+  local target="$SKILLS_DIR/$name"
+
+  # 如果目标已存在且不是符号链接，先备份
+  if [ -d "$target" ] &amp;&amp; [ ! -L "$target" ]; then
+    mv "$target" "$target.bak"
+  fi
+  rm -f "$target"
+  ln -s "$dir" "$target"
+  LINKED+=("$name")
+  echo "  ✓ $name → $dir"
+}
+</code></pre>
+<p>关键细节：如果 <code>~/.claude/skills/</code> 中已经有同名的正式安装目录（不是符号链接），会先备份为 <code>.bak</code>，不会直接覆盖。这样开发完退出后，原来安装的版本会自动恢复。</p>
+<p><strong>清理函数：</strong></p>
+<pre><code class="language-bash">cleanup() {
+  for name in "${LINKED[@]}"; do
+    local target="$SKILLS_DIR/$name"
+    rm -f "$target"
+    if [ -d "$target.bak" ]; then
+      mv "$target.bak" "$target"
+      echo "  Restored $name from backup."
+    else
+      echo "  Removed $name symlink."
+    fi
+  done
+  echo "Dev mode OFF."
+}
+trap cleanup INT TERM
+</code></pre>
+<p><code>trap</code> 捕获 <code>Ctrl+C</code>（INT 信号）和 TERM 信号，确保退出时自动清理。这是 Unix 哲学的体现——工具用完不留垃圾。</p>
+<h3 id="343-开发工作流"><a class="header" href="#343-开发工作流">3.4.3 开发工作流</a></h3>
+<p>有了 <code>dev.sh</code>，日常开发流程变成：</p>
+<pre><code>终端 A                          终端 B
+──────────                      ──────────
+$ bash dev.sh                   $ claude
+Dev mode ON:                    &gt; /lovstudio:any2pdf
+  ✓ lovstudio-any2pdf → ...     （Claude 加载 SKILL.md 并执行）
+  ✓ lovstudio-fill-form → ...
+                                （发现问题，修改 SKILL.md）
+Edit source freely.
+                                &gt; /clear  （或开新会话）
+                                &gt; /lovstudio:any2pdf
+                                （验证修改生效）
+
+Ctrl+C
+Dev mode OFF.
+</code></pre>
+<p>核心循环是：<strong>改源码 → 开新会话 → 测试 → 改源码</strong>。由于 Skill 加载是会话级的，每次改完都需要新会话。但因为是符号链接，不需要重新拷贝文件——源码改了，新会话立即读到最新版。</p>
+<h3 id="344-为你的项目写-devsh"><a class="header" href="#344-为你的项目写-devsh">3.4.4 为你的项目写 dev.sh</a></h3>
+<p><code>dev.sh</code> 的模式可以直接复用。如果你的 Skill 目录前缀不是 <code>lovstudio-</code>，只需改一行：</p>
+<pre><code class="language-bash"># 原来
+for d in "$SOURCE_ROOT"/skills/lovstudio-*/; do
+
+# 改成你的前缀
+for d in "$SOURCE_ROOT"/skills/myteam-*/; do
+</code></pre>
+<p>或者更通用的版本——扫描所有包含 <code>SKILL.md</code> 的目录：</p>
+<pre><code class="language-bash">for d in "$SOURCE_ROOT"/skills/*/; do
+  [ -f "$d/SKILL.md" ] &amp;&amp; link_skill "$d"
+done
+</code></pre>
+<hr>
+<h2 id="35-案例lovstudioskill-creator--用-skill-创建-skill"><a class="header" href="#35-案例lovstudioskill-creator--用-skill-创建-skill">3.5 案例：lovstudio:skill-creator — 用 Skill 创建 Skill</a></h2>
+<h3 id="350-站在巨人的肩膀上"><a class="header" href="#350-站在巨人的肩膀上">3.5.0 站在巨人的肩膀上</a></h3>
+<p><code>lovstudio:skill-creator</code> 并非从零开始——它是 <a href="https://github.com/anthropics/skills/blob/main/skills/skill-creator/SKILL.md">Anthropic 官方 skill-creator</a> 的二次开发版本。</p>
+<p>这引出了 Skill 开发中两个值得铭记的原则：</p>
+<p><strong>原则一：优秀公司的官方实现是最好的教材。</strong> Anthropic 的 skill-creator 只有几十行，但每一行都体现了他们对 SKILL.md 规范的深度理解。当你不知道一个 Skill 应该怎么写时，先去 <a href="https://github.com/anthropics/skills">anthropics/skills</a> 仓库看官方是怎么做的——它们是 Anthropic 工程师用自己制定的规范写出来的，是最权威的参考实现。<code>lovstudio:skill-creator</code> 在官方版本基础上增加了 README 自动生成、仓库级文件更新、发布工作流等功能，但核心的 5 步创建流程和 frontmatter 模板设计，都继承自官方。</p>
+<p><strong>原则二：自举（Bootstrapping）是 AI 时代的标志性特性。</strong> 用 Skill 创建 Skill——这在传统软件开发中相当于用编译器编译自己。但在 AI 时代，自举变得自然而然：你只需要用自然语言说「帮我创建一个将 Markdown 转成 EPUB 的 Skill」，skill-creator 就会走完从需求分析到目录生成到代码填充的全流程。AI 读懂指令、生成代码、调用脚本、创建新的指令文件——<strong>用自然语言生成自然语言驱动的自动化流程</strong>，这在以前是无法想象的。</p>
+<h3 id="351-它解决什么问题"><a class="header" href="#351-它解决什么问题">3.5.1 它解决什么问题</a></h3>
+<p>每次创建新 Skill 时，你需要：</p>
+<ol>
+<li>创建目录 <code>skills/lovstudio-&lt;name&gt;/</code></li>
+<li>创建 <code>SKILL.md</code> 并填入 frontmatter 模板</li>
+<li>创建 <code>README.md</code> 用于 GitHub 展示</li>
+<li>创建 <code>scripts/</code> 目录</li>
+<li>更新根目录的 <code>README.md</code> 和 <code>CLAUDE.md</code> 的 Skills 列表</li>
+</ol>
+<p>手动做？第一次可以，第三次就开始出错了——漏了 README、忘了更新列表、frontmatter 格式不对。官方 skill-creator 提供了基础骨架生成，<code>lovstudio:skill-creator</code> 在此基础上补全了 monorepo 场景下的自动化需求。</p>
+<h3 id="352-架构拆解"><a class="header" href="#352-架构拆解">3.5.2 架构拆解</a></h3>
+<p><code>skill-creator</code> 的文件结构：</p>
+<pre><code>skills/lovstudio-skill-creator/
+├── SKILL.md                    # AI 指令：5 步创建流程
+└── scripts/
+    └── init_skill.py           # Python 脚本：生成目录和模板文件
+</code></pre>
+<p>它是一个“指令 + 脚本“混合型 Skill。SKILL.md 定义了完整的创建流程（5 步），其中 Step 3 调用 <code>init_skill.py</code> 生成初始文件结构。</p>
+<h3 id="353-init_skillpy-的设计"><a class="header" href="#353-init_skillpy-的设计">3.5.3 init_skill.py 的设计</a></h3>
+<p>这个脚本做的事情很简单——接收一个名称参数，生成标准目录结构：</p>
+<pre><code class="language-python">def main():
+    ap = argparse.ArgumentParser(description="Initialize a new lovstudio skill")
+    ap.add_argument("name", help="Skill name (without lovstudio- prefix)")
+    ap.add_argument("--path", default="", help="Custom base path")
+    args = ap.parse_args()
+
+    name = args.name.removeprefix("lovstudio-").removeprefix("lovstudio:")
+    # ... 定位仓库根目录 ...
+
+    skill_dir = base / f"lovstudio-{name}"
+    skill_dir.mkdir(parents=True)
+    (skill_dir / "scripts").mkdir()
+    (skill_dir / "SKILL.md").write_text(SKILL_MD.format(name=name))
+    (skill_dir / "README.md").write_text(README_MD.format(name=name))
+</code></pre>
+<p>脚本内嵌了 <code>SKILL.md</code> 和 <code>README.md</code> 的模板字符串，用 <code>{name}</code> 占位符填充。运行效果：</p>
+<pre><code class="language-bash">$ python init_skill.py fill-form
+
+Created skill at /Users/you/projects/lovstudio-skills/skills/lovstudio-fill-form/
+  SKILL.md    — edit frontmatter description + workflow
+  README.md   — edit for GitHub readers
+  scripts/    — add Python CLI scripts
+
+Next steps:
+  1. Implement scripts in scripts/
+  2. Fill in TODO placeholders in SKILL.md and README.md
+  3. Update root README.md and CLAUDE.md skills tables
+  4. Test: bash dev.sh lovstudio-fill-form
+</code></pre>
+<p>生成的 <code>SKILL.md</code> 模板包含了所有必需的 frontmatter 字段和 Workflow 骨架，TODO 占位符明确标出需要填写的位置。</p>
+<h3 id="354-skillmd-中的创建流程"><a class="header" href="#354-skillmd-中的创建流程">3.5.4 SKILL.md 中的创建流程</a></h3>
+<p><code>skill-creator</code> 的 SKILL.md 定义了 5 步工作流：</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>步骤</th><th>动作</th><th>执行者</th></tr>
+</thead>
+<tbody>
+<tr><td>Step 1</td><td>理解 Skill 需求——问用户要做什么</td><td>Claude（对话）</td></tr>
+<tr><td>Step 2</td><td>规划内容——哪些是脚本、哪些是参考文档</td><td>Claude（分析）</td></tr>
+<tr><td>Step 3</td><td>运行 <code>init_skill.py</code> 生成骨架</td><td>脚本（确定性）</td></tr>
+<tr><td>Step 4</td><td>填充 SKILL.md 和脚本实现</td><td>Claude（生成代码）</td></tr>
+<tr><td>Step 5</td><td>更新仓库级文件（README、CLAUDE.md）</td><td>Claude（编辑）</td></tr>
+</tbody>
+</table>
+</div>
+<p>这个流程体现了 Skill 设计的核心思想：<strong>Claude 负责理解需求和生成内容，脚本负责执行确定性操作</strong>。Step 1-2 是 Claude 的强项（理解、规划），Step 3 用脚本保证结构一致性，Step 4-5 又回到 Claude 的领域（代码生成、文件编辑）。</p>
+<h3 id="355-值得学习的设计决策"><a class="header" href="#355-值得学习的设计决策">3.5.5 值得学习的设计决策</a></h3>
+<p><strong>1. 名称归一化</strong></p>
+<pre><code class="language-python">name = args.name.removeprefix("lovstudio-").removeprefix("lovstudio:")
+</code></pre>
+<p>无论用户传入 <code>fill-form</code>、<code>lovstudio-fill-form</code> 还是 <code>lovstudio:fill-form</code>，都能正确处理。防御性编程，减少用户犯错的可能。</p>
+<p><strong>2. 智能定位仓库根目录</strong></p>
+<pre><code class="language-python">known = Path.home() / "projects" / "lovstudio-skills"
+if (known / "skills").is_dir():
+    base = known / "skills"
+else:
+    # 从 cwd 向上搜索
+    for parent in [cwd] + list(cwd.parents):
+        if (parent / "skills").is_dir() and (parent / "dev.sh").exists():
+            repo_root = parent
+            break
+</code></pre>
+<p>先检查已知路径，再从当前目录向上搜索。这种“先快后全“的策略在 CLI 工具中很常见。</p>
+<p><strong>3. 模板内嵌而非外部文件</strong></p>
+<p>模板字符串直接写在 Python 文件中，而不是放在单独的模板文件里。对于不到 100 行的模板，这是正确的选择——减少文件依赖，单文件即可运行。</p>
+<p><strong>4. 防重复创建</strong></p>
+<pre><code class="language-python">if skill_dir.exists():
+    print(f"ERROR: {skill_dir} already exists", file=sys.stderr)
+    sys.exit(1)
+</code></pre>
+<p>如果目录已存在，直接报错退出，不会覆盖已有内容。简单粗暴，但安全。</p>
+<h3 id="356-实际使用体验"><a class="header" href="#356-实际使用体验">3.5.6 实际使用体验</a></h3>
+<p>在 Claude Code 中输入：</p>
+<pre><code>帮我创建一个新 skill，用来将 Markdown 转成 EPUB
+</code></pre>
+<p>Claude 会识别到 <code>skill-creator</code> 的触发词（“创建skill”、“new skill”），然后启动 5 步流程：</p>
+<ol>
+<li>问你几个问题：输入输出是什么？需要什么依赖？</li>
+<li>分析后规划文件结构</li>
+<li>运行 <code>init_skill.py md2epub</code> 生成骨架</li>
+<li>根据你的回答填充 SKILL.md 和实现脚本</li>
+<li>自动更新 README.md 和 CLAUDE.md</li>
+</ol>
+<p>整个过程 2-3 分钟，你得到一个结构完整、文档齐全、可以直接 <code>dev.sh</code> 测试的新 Skill。</p>
+<hr>
+<h2 id="本章小结"><a class="header" href="#本章小结">本章小结</a></h2>
+<p>本章完成了从“理论理解“到“动手实践“的跨越：</p>
+<ol>
+<li><strong>环境配置</strong> — <code>~/.claude/skills/</code> 是 Skill 的安装目录，开发时用符号链接连接源码</li>
+<li><strong>目录结构</strong> — 最小只需 <code>SKILL.md</code>，完整结构包含 scripts、references、assets</li>
+<li><strong>hello-world</strong> — 从空目录到可运行的 Skill，理解了 frontmatter 和 workflow 的分工</li>
+<li><strong>dev.sh</strong> — 55 行的热链接脚本，解决了多 Skill 开发的日常痛点</li>
+<li><strong>skill-creator</strong> — 一个真实的 meta Skill，展示了“指令 + 脚本“的协作模式</li>
+</ol>
+<p>现在你已经能创建和测试 Skill 了。但“能跑“和“好用“之间还有巨大的差距。下一章，我们将建立 Skill 质量模型——定义什么是“高质量“，以及如何系统性地衡量和提升它。</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../chapter-02/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../chapter-04/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../chapter-02/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../chapter-04/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../mark-09e88c2c.min.js"></script>
+        <script src="../searcher-c2a407aa.js"></script>
+
+        <script src="../clipboard-1626706a.min.js"></script>
+        <script src="../highlight-abc7f01d.js"></script>
+        <script src="../book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

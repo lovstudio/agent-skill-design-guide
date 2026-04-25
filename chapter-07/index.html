@@ -1,0 +1,908 @@
+<!DOCTYPE HTML>
+<html lang="zh" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>脚本设计 — Skill 的「肌肉」 - Agent Skill 高质量设计指南</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="系统掌握 AI 编程助手 Skill 设计方法论，从架构到发布的完整指南">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../css/general-2459343d.css">
+        <link rel="stylesheet" href="../css/chrome-ae938929.css">
+        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex-fc53036c.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc-b872e53c.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Agent Skill 高质量设计指南</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/MarkShawn2020/agent-skill-design-guide" title="Git repository" aria-label="Git repository">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/MarkShawn2020/agent-skill-design-guide/edit/main/src/chapter-07/README.md" title="Suggest an edit" aria-label="Suggest an edit" rel="edit">
+                            <span class=fa-svg id="git-edit-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M421.7 220.3l-11.3 11.3-22.6 22.6-205 205c-6.6 6.6-14.8 11.5-23.8 14.1L30.8 511c-8.4 2.5-17.5 .2-23.7-6.1S-1.5 489.7 1 481.2L38.7 353.1c2.6-9 7.5-17.2 14.1-23.8l205-205 22.6-22.6 11.3-11.3 33.9 33.9 62.1 62.1 33.9 33.9zM96 353.9l-9.3 9.3c-.9 .9-1.6 2.1-2 3.4l-25.3 86 86-25.3c1.3-.4 2.5-1.1 3.4-2l9.3-9.3H112c-8.8 0-16-7.2-16-16V353.9zM453.3 19.3l39.4 39.4c25 25 25 65.5 0 90.5l-14.5 14.5-22.6 22.6-11.3 11.3-33.9-33.9-62.1-62.1L314.3 67.7l11.3-11.3 22.6-22.6 14.5-14.5c25-25 65.5-25 90.5 0z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="第-7-章脚本设计--skill-的肌肉"><a class="header" href="#第-7-章脚本设计--skill-的肌肉">第 7 章：脚本设计 – Skill 的「肌肉」</a></h1>
+<p><img src="../assets/images/chapters/ch07-scripts.png" alt="脚本设计 — 蒸汽朋克自动机锻造代码"></p>
+<blockquote>
+<p>“Talk is cheap. Show me the code.” – Linus Torvalds</p>
+</blockquote>
+<p>前六章我们都在讨论 SKILL.md 里的「大脑」– 如何用自然语言指令让 AI 助手理解意图、执行流程、处理异常。但总有些任务光靠文字描述是搞不定的：生成一份带封面和目录的 PDF、把 40 页 PDF 转成拼接的长图、填充 Word 模板里的表格字段。这些需要<strong>精确的字节级操作</strong>，需要调用第三方库的 API，需要在文件系统上做重活。</p>
+<p>这就是脚本的用武之地。脚本是 Skill 的「肌肉」– SKILL.md 发号施令，脚本干苦力活。</p>
+<p>本章讨论何时需要脚本、如何设计脚本、以及三种主流脚本语言（Python / Shell / Node.js）在 Skill 场景下的最佳实践。所有案例均来自生产环境中经过大量迭代的真实 Skill。</p>
+<hr>
+<h2 id="71-何时需要脚本何时纯指令足够"><a class="header" href="#71-何时需要脚本何时纯指令足够">7.1 何时需要脚本、何时纯指令足够</a></h2>
+<p>这是第一个要回答的问题。并非每个 Skill 都需要脚本。以我们仓库中的 Skill 为例：</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Skill</th><th>有脚本?</th><th>原因</th></tr>
+</thead>
+<tbody>
+<tr><td><code>auto-context</code></td><td>无</td><td>纯 prompt 技巧，AI 自身能力足够</td></tr>
+<tr><td><code>thesis-polish</code></td><td>无</td><td>文本润色，AI 原生能力</td></tr>
+<tr><td><code>visual-clone</code></td><td>无</td><td>分析截图提取设计 DNA，AI 视觉能力</td></tr>
+<tr><td><code>any2pdf</code></td><td>有 (Python)</td><td>生成带排版的 PDF，需要 reportlab</td></tr>
+<tr><td><code>pdf2png</code></td><td>有 (Shell+Python)</td><td>调用 macOS CoreGraphics 渲染 PDF</td></tr>
+<tr><td><code>fill-form</code></td><td>有 (Python)</td><td>操作 .docx XML 结构</td></tr>
+</tbody>
+</table>
+</div>
+<p><strong>判断准则</strong>：问自己三个问题。</p>
+<p><strong>1. AI 能不能直接做？</strong> 如果任务是「改写这段文字」「分析这张图的配色」「检查代码风格」，AI 本身就能做，不需要脚本。SKILL.md 里给好 prompt 就够了。</p>
+<p><strong>2. 输出是不是二进制/结构化文件？</strong> 生成 PDF、PPTX、DOCX、PNG – 这些格式有严格的二进制结构，AI 不能直接「写出」一个合法的 PDF 文件。必须用脚本调用专门的库。</p>
+<p><strong>3. 需不需要精确的数值控制？</strong> 页面边距 25mm、字号 10.5pt、行距 17pt、水印倾斜 35 度 – 这种精度要求超出了自然语言指令的能力范围。脚本用 argparse 暴露参数，SKILL.md 负责决定传什么值。</p>
+<p>如果三个问题的答案是「不能 / 是 / 需要」，那就需要脚本。否则，保持纯指令，别增加复杂度。</p>
+<blockquote>
+<p><strong>实战经验</strong>：我们仓库中 17 个 Skill 里有 8 个是纯指令的。不要低估 AI 的原生能力 – <code>thesis-polish</code> 只靠 SKILL.md 里的 prompt 就能做到学术论文级别的中英文润色，加脚本反而画蛇添足。</p>
+</blockquote>
+<hr>
+<h2 id="72-脚本设计原则"><a class="header" href="#72-脚本设计原则">7.2 脚本设计原则</a></h2>
+<p>当你决定需要脚本时，遵循以下原则。</p>
+<h3 id="原则一单文件-cli"><a class="header" href="#原则一单文件-cli">原则一：单文件 CLI</a></h3>
+<p>每个脚本是一个<strong>独立的、可以直接运行的 CLI 工具</strong>。不要搞 Python package，不要搞 <code>setup.py</code>，不要搞 <code>__init__.py</code>。一个 <code>.py</code> 文件，放在 <code>scripts/</code> 目录下，<code>python scripts/xxx.py --input foo --output bar</code> 就能跑。</p>
+<p>原因很简单：AI 助手执行脚本的方式是 <code>Bash("python /path/to/script.py --args")</code>。它不会帮你 <code>pip install -e .</code>，不会帮你激活 virtualenv，不会帮你配置 <code>PYTHONPATH</code>。单文件 CLI 是零配置的。</p>
+<pre><code>skills/lovstudio-any2pdf/
+  SKILL.md
+  scripts/
+    md2pdf.py          # 1451 行，一个文件搞定所有事
+</code></pre>
+<p>是的，1451 行放在一个文件里。这在传统软件工程里是 code smell，但在 Skill 脚本的场景下是正确选择。原因：</p>
+<ul>
+<li><strong>部署零摩擦</strong>：复制一个文件就能用</li>
+<li><strong>依赖透明</strong>：文件头的 import 区就是完整的依赖清单</li>
+<li><strong>AI 友好</strong>：AI 助手可以一次性读取整个脚本理解全貌</li>
+</ul>
+<h3 id="原则二argparse-是标准接口"><a class="header" href="#原则二argparse-是标准接口">原则二：argparse 是标准接口</a></h3>
+<p>SKILL.md 和脚本之间的接口就是命令行参数。使用 <code>argparse</code> 定义清晰的 CLI 接口：</p>
+<pre><code class="language-python">def main():
+    parser = argparse.ArgumentParser(
+        description="md2pdf -- Markdown to Professional PDF"
+    )
+    parser.add_argument("--input", "-i", required=True,
+                        help="Input markdown file")
+    parser.add_argument("--output", "-o", default="output.pdf",
+                        help="Output PDF path")
+    parser.add_argument("--title", default="",
+                        help="Cover page title")
+    parser.add_argument("--theme", default="warm-academic",
+                        help="Theme name")
+    parser.add_argument("--cover", default=True,
+                        type=lambda x: x.lower() != 'false',
+                        help="Generate cover page")
+    parser.add_argument("--toc", default=True,
+                        type=lambda x: x.lower() != 'false',
+                        help="Generate TOC")
+    parser.add_argument("--watermark", default="",
+                        help="Watermark text (empty = none)")
+    parser.add_argument("--page-size", default="A4",
+                        choices=["A4", "Letter"],
+                        help="Page size")
+    args = parser.parse_args()
+</code></pre>
+<p>几个要点：</p>
+<p><strong>必填参数用 <code>required=True</code></strong>，可选参数给合理的默认值。AI 助手只需要传用户明确指定的参数，其余走默认值。</p>
+<p><strong>布尔参数用 <code>lambda</code> 解析字符串</strong>。<code>argparse</code> 的 <code>type=bool</code> 行为反直觉（<code>bool("false")</code> 是 <code>True</code>），用 <code>lambda x: x.lower() != 'false'</code> 才是正确姿势。</p>
+<p><strong>用 <code>choices</code> 约束枚举值</strong>。<code>--page-size</code> 只接受 <code>A4</code> 和 <code>Letter</code>，传错了 argparse 直接报错，不用你在代码里校验。</p>
+<h3 id="原则三最小依赖"><a class="header" href="#原则三最小依赖">原则三：最小依赖</a></h3>
+<p>Skill 脚本的依赖应该尽可能少。理想情况是只有一个核心依赖：</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>任务</th><th>核心依赖</th><th>安装命令</th></tr>
+</thead>
+<tbody>
+<tr><td>Markdown -&gt; PDF</td><td>reportlab</td><td><code>pip install reportlab</code></td></tr>
+<tr><td>操作 Word 文档</td><td>python-docx</td><td><code>pip install python-docx</code></td></tr>
+<tr><td>PDF 转图片 (macOS)</td><td>pyobjc-framework-Quartz</td><td><code>pip install pyobjc-framework-Quartz</code></td></tr>
+</tbody>
+</table>
+</div>
+<p>不要引入 framework。不要用 Flask 来跑一个本地服务器。不要用 pandas 来解析一个 CSV。<code>import csv</code> 是标准库，够用了。</p>
+<p>在 SKILL.md 的 frontmatter 里声明依赖，在脚本文件头的 docstring 里也写明安装命令：</p>
+<pre><code class="language-python">#!/usr/bin/env python3
+"""
+md2pdf -- Convert Markdown to professionally typeset PDF.
+
+Dependencies:
+  pip install reportlab --break-system-packages
+"""
+</code></pre>
+<p><code>--break-system-packages</code> 这个 flag 是 2023 年之后 Python（PEP 668）的现实。在 macOS / Linux 上直接 <code>pip install</code> 会被系统拒绝。要么用这个 flag，要么用 <code>pipx</code>，要么用 <code>uv</code>。作为 Skill 作者，在文档里直接给出能跑的命令，别让用户自己去摸索。</p>
+<h3 id="原则四脚本头部声明一切"><a class="header" href="#原则四脚本头部声明一切">原则四：脚本头部声明一切</a></h3>
+<p>一个好的脚本头部应该像是一份完整的说明书：</p>
+<pre><code class="language-python">#!/usr/bin/env python3
+"""
+md2pdf -- Convert Markdown to professionally typeset PDF.
+
+Features:
+  - CJK/Latin mixed text with automatic font switching
+  - Fenced code blocks with preserved indentation
+  - Markdown tables with smart proportional column widths
+  - Cover page, clickable TOC, PDF bookmarks, page numbers
+  - Configurable color themes
+  - Watermark support
+
+Usage:
+  python md2pdf.py --input report.md --output report.pdf \
+    --title "My Report"
+
+Dependencies:
+  pip install reportlab --break-system-packages
+"""
+
+import re, os, sys, json, argparse
+from datetime import date
+from reportlab.lib.pagesizes import A4, LETTER
+from reportlab.lib.units import mm
+# ... 所有 import 集中在这里
+</code></pre>
+<p>AI 助手读到这个头部就知道：这个脚本做什么、怎么用、需要什么依赖。不需要翻到第 1400 行去看 argparse 的定义。</p>
+<hr>
+<h2 id="73-python-脚本最佳实践"><a class="header" href="#73-python-脚本最佳实践">7.3 Python 脚本最佳实践</a></h2>
+<p>Python 是 Skill 脚本的首选语言，原因是：AI 助手对 Python 最熟悉、Python 的库生态最丰富、跨平台兼容性最好。以下是从实战中总结的最佳实践。</p>
+<h3 id="731-cjklatin-混排"><a class="header" href="#731-cjklatin-混排">7.3.1 CJK/Latin 混排</a></h3>
+<p>如果你的 Skill 要处理中文（或日文、韩文），CJK 混排是绕不过去的坑。核心问题是：中文字符和英文字符需要使用不同的字体。英文用 Arial/Palatino，中文用宋体/黑体，而且两者经常混在一起出现。</p>
+<p><code>lovstudio:any2pdf</code> 的解决方案是字符级的字体切换：</p>
+<pre><code class="language-python"># CJK Unicode ranges for font switching
+_CJK_RANGES = [
+    (0x4E00, 0x9FFF),    # CJK Unified Ideographs
+    (0x3400, 0x4DBF),    # CJK Extension A
+    (0xF900, 0xFAFF),    # CJK Compatibility Ideographs
+    (0x3000, 0x303F),    # CJK Symbols and Punctuation
+    (0xFF00, 0xFFEF),    # Fullwidth Forms
+    # ... 更多 range
+]
+
+def _is_cjk(ch):
+    cp = ord(ch)
+    return any(lo &lt;= cp &lt;= hi for lo, hi in _CJK_RANGES)
+</code></pre>
+<p>然后在渲染文本时，逐字符扫描，把连续的 CJK 字符和 Latin 字符分段，每段用对应字体渲染：</p>
+<pre><code class="language-python">def _font_wrap(text):
+    """Wrap CJK runs in &lt;font name='CJK'&gt; tags for reportlab Paragraph."""
+    out, buf, in_cjk = [], [], False
+    for ch in text:
+        c = _is_cjk(ch)
+        if c != in_cjk and buf:
+            seg = ''.join(buf)
+            out.append(
+                f"&lt;font name='CJK'&gt;{seg}&lt;/font&gt;" if in_cjk else seg
+            )
+            buf = []
+        buf.append(ch)
+        in_cjk = c
+    if buf:
+        seg = ''.join(buf)
+        out.append(
+            f"&lt;font name='CJK'&gt;{seg}&lt;/font&gt;" if in_cjk else seg
+        )
+    return ''.join(out)
+</code></pre>
+<p>这个函数的输入是普通文本，输出是带 <code>&lt;font&gt;</code> 标签的 reportlab 标记文本。reportlab 的 <code>Paragraph</code> 组件能理解这些标签，自动切换字体。</p>
+<p>对于 canvas 级别的绘制（封面标题、页眉页脚），不能用 <code>Paragraph</code>，需要手动切换字体：</p>
+<pre><code class="language-python">def _draw_mixed(c, x, y, text, size, anchor="left", max_w=0):
+    """Draw mixed CJK/Latin text on canvas with font switching."""
+    segs, buf, in_cjk = [], [], False
+    for ch in text:
+        cj = _is_cjk(ch)
+        if cj != in_cjk and buf:
+            segs.append(("CJK" if in_cjk else "Sans", ''.join(buf)))
+            buf = []
+        buf.append(ch)
+        in_cjk = cj
+    if buf:
+        segs.append(("CJK" if in_cjk else "Sans", ''.join(buf)))
+
+    total_w = sum(c.stringWidth(t, f, size) for f, t in segs)
+    if anchor == "right":   x -= total_w
+    elif anchor == "center": x -= total_w / 2
+
+    for font, txt in segs:
+        c.setFont(font, size)
+        c.drawString(x, y, txt)
+        x += c.stringWidth(txt, font, size)
+</code></pre>
+<blockquote>
+<p><strong>教训</strong>：我们最初尝试用单一的 Unicode 字体（Arial Unicode MS）来解决 CJK 混排，结果英文字体很丑。后来改为双字体切换方案，英文用专业的衬线/无衬线字体，CJK 用宋体，效果好了一个量级。这 100 多行代码是整个 Skill 里最值得投入的部分。</p>
+</blockquote>
+<h3 id="732-跨平台字体发现"><a class="header" href="#732-跨平台字体发现">7.3.2 跨平台字体发现</a></h3>
+<p>CJK 混排的下一个问题是：字体文件在哪？macOS、Linux、Windows 的字体路径完全不同。</p>
+<p><code>any2pdf</code> 的方案是<strong>候选列表 + 首匹配</strong>：</p>
+<pre><code class="language-python">_FONT_CANDIDATES = {
+    "Sans": [
+        # macOS
+        "/System/Library/Fonts/Supplemental/Arial.ttf",
+        # Windows
+        "C:/Windows/Fonts/arial.ttf",
+        # Linux Debian
+        "/usr/share/fonts/truetype/crosextra/Carlito-Regular.ttf",
+        # Linux Noto
+        "/usr/share/fonts/truetype/noto/NotoSans-Regular.ttf",
+        # Linux Fedora
+        "/usr/share/fonts/noto/NotoSans-Regular.ttf",
+    ],
+    "CJK": [
+        # macOS Songti SC
+        ("/System/Library/Fonts/Supplemental/Songti.ttc", 0),
+        # Windows SimSun
+        "C:/Windows/Fonts/simsun.ttc",
+        # Windows MSYH
+        "C:/Windows/Fonts/msyh.ttc",
+        # Linux Noto CJK
+        "/usr/share/fonts/opentype/noto/NotoSerifCJK-Regular.ttc",
+        # ...
+    ],
+    # ... Serif, Mono, Bold variants
+}
+
+def _find_font(candidates):
+    """Return first existing path from candidates list."""
+    for c in candidates:
+        path = c[0] if isinstance(c, tuple) else c
+        if os.path.exists(path):
+            return c
+    return None
+</code></pre>
+<p>每种字体角色（Sans、Serif、Mono、CJK）定义一组候选路径，按优先级排列。<code>_find_font</code> 遍历候选列表，返回第一个存在的文件。</p>
+<p>注意 <code>.ttc</code>（TrueType Collection）文件需要指定 subfontIndex：<code>("/System/Library/Fonts/Palatino.ttc", 0)</code> 表示取 Palatino.ttc 里的第一个子字体。</p>
+<p>注册字体时统一处理两种格式：</p>
+<pre><code class="language-python">def register_fonts():
+    missing = []
+    for name, candidates in _FONT_CANDIDATES.items():
+        spec = _find_font(candidates)
+        if spec is None:
+            missing.append(name)
+            continue
+        if isinstance(spec, tuple):
+            pdfmetrics.registerFont(
+                TTFont(name, spec[0], subfontIndex=spec[1])
+            )
+        else:
+            pdfmetrics.registerFont(TTFont(name, spec))
+
+    if missing:
+        print(f"Warning: Missing fonts: {', '.join(missing)}",
+              file=sys.stderr)
+</code></pre>
+<p>缺失字体不是致命错误 – 打印 warning 继续运行，用户可能只处理英文文档。但要在 warning 里给出修复命令：</p>
+<pre><code class="language-python">if _PLAT == "Linux":
+    print("  Fix: sudo apt install fonts-noto fonts-noto-cjk",
+          file=sys.stderr)
+</code></pre>
+<h3 id="733-主题系统"><a class="header" href="#733-主题系统">7.3.3 主题系统</a></h3>
+<p>一个好的文档转换 Skill 应该支持多种视觉风格。<code>any2pdf</code> 用一个 Python dict 定义 14 种主题，每个主题包含颜色和排版参数：</p>
+<pre><code class="language-python">THEMES = {
+    "warm-academic": {
+        "canvas": "#F9F9F7",       # 页面背景
+        "canvas_sec": "#F0EEE6",   # 次级背景（代码块等）
+        "ink": "#181818",          # 正文颜色
+        "ink_faded": "#87867F",    # 次级文字
+        "accent": "#CC785C",       # 强调色
+        "accent_light": "#D99A82", # 浅强调色
+        "border": "#E8E6DC",       # 边框色
+        "watermark_rgba": (0.82, 0.80, 0.76, 0.12),
+        "layout": {
+            "body_font": "Serif",
+            "body_size": 10.5,
+            "body_leading": 17,
+            "heading_align": "center",
+            "heading_decoration": "rules",
+            "header_style": "full",
+            "code_style": "bg",
+            "cover_style": "centered",
+            "page_decoration": "top-bar",
+        }
+    },
+    "nord-frost": {
+        "canvas": "#ECEFF4",
+        "ink": "#2E3440",
+        "accent": "#5E81AC",
+        # ...
+        "layout": {
+            "body_font": "Sans",        # 无衬线
+            "heading_align": "left",     # 左对齐标题
+            "heading_decoration": "underline",
+            "cover_style": "left-aligned",
+            "page_decoration": "left-stripe",
+        }
+    },
+    "tufte": {
+        # ...
+        "layout": {
+            "margins": (30, 55, 25, 25),  # Tufte 风格：超宽右边距
+            "body_font": "Serif",
+            "body_size": 11,
+            "heading_decoration": "none",
+            "header_style": "none",
+            "cover_style": "minimal",
+            "page_decoration": "side-rule",
+        }
+    },
+    # ... 共 14 个主题
+}
+</code></pre>
+<p>设计要点：</p>
+<p><strong>1. 颜色和排版分离</strong>。<code>canvas</code>/<code>ink</code>/<code>accent</code> 是颜色，<code>layout</code> 是排版参数。同一种排版风格可以搭配不同的颜色方案。</p>
+<p><strong>2. layout 使用默认值合并</strong>。不是每个主题都要写全所有 layout 参数。定义一个 <code>_DEFAULT_LAYOUT</code>，然后主题只覆盖需要修改的值：</p>
+<pre><code class="language-python">_DEFAULT_LAYOUT = {
+    "margins": (25, 22, 28, 25),
+    "body_font": "Serif",
+    "body_size": 10.5,
+    "body_leading": 17,
+    "h1_size": 26,
+    "h2_size": 18,
+    "h3_size": 12,
+    "heading_align": "center",
+    "heading_decoration": "rules",
+    "header_style": "full",
+    "code_style": "bg",
+    "cover_style": "centered",
+    "page_decoration": "none",
+}
+</code></pre>
+<p><strong>3. 支持自定义主题文件</strong>。用 <code>--theme-file custom.json</code> 可以加载用户自定义的主题 JSON。这样用户不需要修改脚本源码。</p>
+<p><strong>4. 主题名是 CLI 参数</strong>。<code>--theme warm-academic</code> 直接传字符串，SKILL.md 里根据用户的偏好或文档类型选择合适的主题。</p>
+<h3 id="734-文件-io-模式"><a class="header" href="#734-文件-io-模式">7.3.4 文件 I/O 模式</a></h3>
+<p>Skill 脚本的 I/O 模式很固定：</p>
+<pre><code>读取输入文件 -&gt; 处理 -&gt; 写入输出文件
+</code></pre>
+<p>遵循以下约定：</p>
+<pre><code class="language-python"># 1. 输入输出都用参数指定
+parser.add_argument("--input", "-i", required=True)
+parser.add_argument("--output", "-o", default="output.pdf")
+
+# 2. 读取文件时指定编码
+with open(args.input, encoding='utf-8') as f:
+    md_text = f.read()
+
+# 3. 完成后打印输出信息
+size = os.path.getsize(output_path)
+print(f"Done! {output_path} ({size/1024/1024:.1f} MB)")
+</code></pre>
+<p>最后的 <code>print</code> 很重要 – AI 助手需要知道脚本执行成功了，输出文件在哪。如果没有这行输出，AI 不知道操作是否成功。</p>
+<h3 id="735-错误处理策略"><a class="header" href="#735-错误处理策略">7.3.5 错误处理策略</a></h3>
+<p>Skill 脚本的错误处理哲学是<strong>快速失败，清晰报错</strong>：</p>
+<pre><code class="language-python"># 检查输入文件存在
+if not os.path.exists(args.input):
+    print(f"Error: input file not found: {args.input}",
+          file=sys.stderr)
+    sys.exit(1)
+
+# 检查依赖
+try:
+    from reportlab.lib.pagesizes import A4
+except ImportError:
+    print("Error: reportlab not installed. "
+          "Run: pip install reportlab --break-system-packages",
+          file=sys.stderr)
+    sys.exit(1)
+</code></pre>
+<p>不要 <code>try/except</code> 整个 <code>main()</code>。让不可恢复的错误直接崩溃并打印 traceback – AI 助手能读懂 Python traceback 并做出诊断。吞掉异常反而让 AI 迷失方向。</p>
+<hr>
+<h2 id="74-shell-脚本最佳实践"><a class="header" href="#74-shell-脚本最佳实践">7.4 Shell 脚本最佳实践</a></h2>
+<p>有些场景下 Shell 脚本比 Python 更合适：调用系统命令、管道式处理、或者需要直接使用系统级 API。<code>lovstudio:pdf2png</code> 就是一个好案例。</p>
+<h3 id="741-案例分析pdf2pngsh"><a class="header" href="#741-案例分析pdf2pngsh">7.4.1 案例分析：pdf2png.sh</a></h3>
+<p>这个脚本做一件事：把 PDF 的每一页渲染成图片，然后垂直拼接成一张长 PNG。</p>
+<pre><code class="language-bash">#!/bin/bash
+# Convert PDF to vertically concatenated PNG
+# (using macOS native CoreGraphics)
+# Usage: pdf2png.sh file1.pdf [file2.pdf ...]
+
+for f in "$@"; do
+  [[ "$f" == *.pdf ]] || continue
+  output="${f%.pdf}.png"
+  /usr/bin/python3 - "$f" "$output" &lt;&lt;'PYEOF'
+import sys
+from Quartz import (
+    CGPDFDocumentCreateWithURL,
+    CGPDFDocumentGetNumberOfPages,
+    CGPDFDocumentGetPage,
+    CGPDFPageGetBoxRect, kCGPDFMediaBox,
+    CGColorSpaceCreateDeviceRGB,
+    CGBitmapContextCreate,
+    kCGImageAlphaPremultipliedLast,
+    CGContextDrawPDFPage,
+    CGContextScaleCTM,
+    CGBitmapContextCreateImage,
+    CGContextDrawImage, CGRectMake
+)
+from CoreFoundation import (
+    CFURLCreateWithFileSystemPath, kCFURLPOSIXPathStyle
+)
+from AppKit import NSBitmapImageRep, NSPNGFileType
+
+url = CFURLCreateWithFileSystemPath(
+    None, sys.argv[1], kCFURLPOSIXPathStyle, False
+)
+doc = CGPDFDocumentCreateWithURL(url)
+n = CGPDFDocumentGetNumberOfPages(doc)
+scale = 2.0  # 2x for Retina quality
+
+# Render each page
+images, total_h, max_w = [], 0, 0
+for i in range(1, n + 1):
+    page = CGPDFDocumentGetPage(doc, i)
+    r = CGPDFPageGetBoxRect(page, kCGPDFMediaBox)
+    w, h = int(r.size.width * scale), int(r.size.height * scale)
+    cs = CGColorSpaceCreateDeviceRGB()
+    ctx = CGBitmapContextCreate(
+        None, w, h, 8, 4 * w, cs,
+        kCGImageAlphaPremultipliedLast
+    )
+    CGContextScaleCTM(ctx, scale, scale)
+    CGContextDrawPDFPage(ctx, page)
+    images.append((CGBitmapContextCreateImage(ctx), w, h))
+    total_h += h
+    max_w = max(max_w, w)
+
+# Stitch vertically
+cs = CGColorSpaceCreateDeviceRGB()
+ctx = CGBitmapContextCreate(
+    None, max_w, total_h, 8, 4 * max_w, cs,
+    kCGImageAlphaPremultipliedLast
+)
+y = total_h
+for img, w, h in images:
+    y -= h
+    CGContextDrawImage(ctx, CGRectMake(0, y, w, h), img)
+
+rep = NSBitmapImageRep.alloc().initWithCGImage_(
+    CGBitmapContextCreateImage(ctx)
+)
+data = rep.representationUsingType_properties_(NSPNGFileType, None)
+data.writeToFile_atomically_(sys.argv[2], True)
+PYEOF
+  echo "Created: $output"
+done
+</code></pre>
+<p>这个脚本有几个值得学习的设计决策。</p>
+<h3 id="742-heredoc-嵌入-python"><a class="header" href="#742-heredoc-嵌入-python">7.4.2 Heredoc 嵌入 Python</a></h3>
+<p>Shell 脚本的正文是一个 bash <code>for</code> 循环，但核心逻辑用 Python heredoc 嵌入。为什么？</p>
+<ul>
+<li><strong>Shell 擅长</strong>：遍历命令行参数（<code>"$@"</code>）、文件名处理（<code>${f%.pdf}.png</code>）、输出反馈（<code>echo</code>）</li>
+<li><strong>Python 擅长</strong>：调用 CoreGraphics API、位图操作、复杂的坐标计算</li>
+</ul>
+<p>用 heredoc（<code>&lt;&lt;'PYEOF'</code>）嵌入 Python 代码，单引号阻止 Shell 变量展开，<code>sys.argv</code> 接收参数。这是一种在单文件里融合两种语言优势的实用技巧。</p>
+<h3 id="743-使用系统-python"><a class="header" href="#743-使用系统-python">7.4.3 使用系统 Python</a></h3>
+<p>注意脚本用的是 <code>/usr/bin/python3</code> 而不是 <code>python3</code>。这是有意为之 – macOS 的系统 Python 自带 <code>pyobjc</code> 绑定（Quartz、CoreFoundation、AppKit），不需要额外安装。如果用 Homebrew 的 Python，这些绑定不存在，反而需要 <code>pip install pyobjc-framework-Quartz</code>。</p>
+<p>教训：<strong>了解你的运行环境</strong>。macOS 上系统 Python 有独特的优势；Linux 上 <code>/usr/bin/python3</code> 可能缺少很多包。脚本要根据目标平台选择正确的 Python。</p>
+<h3 id="744-shell-脚本的防御性编程"><a class="header" href="#744-shell-脚本的防御性编程">7.4.4 Shell 脚本的防御性编程</a></h3>
+<p>生产级 Shell 脚本应该加上以下防护：</p>
+<pre><code class="language-bash">#!/bin/bash
+set -euo pipefail  # 严格模式
+
+# 依赖检测
+command -v python3 &gt;/dev/null 2&gt;&amp;1 || {
+    echo "Error: python3 not found" &gt;&amp;2; exit 1;
+}
+
+# 参数校验
+if [[ $# -eq 0 ]]; then
+    echo "Usage: pdf2png.sh file1.pdf [file2.pdf ...]" &gt;&amp;2
+    exit 1
+fi
+
+# 文件存在性检查
+for f in "$@"; do
+    [[ -f "$f" ]] || {
+        echo "Warning: $f not found, skipping" &gt;&amp;2; continue;
+    }
+    [[ "$f" == *.pdf ]] || continue
+    # ... 处理
+done
+</code></pre>
+<p><code>set -euo pipefail</code> 三件套：<code>-e</code> 任何命令失败立即退出；<code>-u</code> 使用未定义变量报错；<code>-o pipefail</code> 管道中任何一步失败都报错。这避免了 Shell 脚本「静默失败」的经典陷阱。</p>
+<h3 id="745-何时选-shell-vs-python"><a class="header" href="#745-何时选-shell-vs-python">7.4.5 何时选 Shell vs Python</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>场景</th><th>选 Shell</th><th>选 Python</th></tr>
+</thead>
+<tbody>
+<tr><td>调用系统命令管道</td><td><code>ffmpeg | sox | lame</code></td><td>-</td></tr>
+<tr><td>批量文件处理</td><td><code>for f in *.pdf</code></td><td>-</td></tr>
+<tr><td>复杂数据结构</td><td>-</td><td>dict, list, class</td></tr>
+<tr><td>二进制文件操作</td><td>-</td><td>struct, bytes</td></tr>
+<tr><td>需要跨平台</td><td>-</td><td><code>platform.system()</code></td></tr>
+<tr><td>10 行以内</td><td>Shell</td><td>-</td></tr>
+<tr><td>100 行以上</td><td>-</td><td>Python</td></tr>
+</tbody>
+</table>
+</div>
+<p>经验法则：<strong>如果你在 Shell 脚本里写超过 3 个 <code>if</code> 语句，换 Python</strong>。</p>
+<hr>
+<h2 id="75-nodejs-脚本前端相关-skill-的选择"><a class="header" href="#75-nodejs-脚本前端相关-skill-的选择">7.5 Node.js 脚本：前端相关 Skill 的选择</a></h2>
+<p>有些 Skill 涉及前端技术栈：生成 PPTX、操作 SVG、渲染 HTML。这时 Node.js 可能是更好的选择。</p>
+<p><code>lovstudio:any2deck</code> 就用了 Node.js 来生成 PowerPoint：</p>
+<pre><code class="language-javascript">// 使用 pptxgenjs 库
+const pptxgen = require("pptxgenjs");
+
+// 每张幻灯片对应 markdown 的一个 ## 标题
+sections.forEach(section =&gt; {
+    const slide = pres.addSlide();
+    slide.addText(section.title, {
+        x: 0.5, y: 0.3, w: 9, h: 1,
+        fontSize: 28, bold: true,
+        color: theme.accent
+    });
+    // ...
+});
+
+pres.writeFile({ fileName: outputPath });
+</code></pre>
+<p>Node.js 的优势场景：</p>
+<ol>
+<li><strong>PPTX 生成</strong>：<code>pptxgenjs</code> 是目前最成熟的幻灯片生成库，没有同等水平的 Python 替代品（<code>python-pptx</code> 功能弱很多）</li>
+<li><strong>PDF 操作</strong>：<code>pdf-lib</code> 可以合并、拆分、加水印，且是纯 JavaScript，无系统依赖</li>
+<li><strong>SVG 处理</strong>：Node 生态的 SVG 工具比 Python 丰富</li>
+<li><strong>与前端复用</strong>：如果 Skill 涉及生成 HTML 预览，Node 是天然选择</li>
+</ol>
+<p>但 Node.js 的劣势也很明显：</p>
+<ul>
+<li><strong><code>node_modules</code> 地狱</strong>：Python 的 <code>pip install reportlab</code> 装一个包就完事，Node 的 <code>npm install pptxgenjs</code> 会拖入一棵依赖树</li>
+<li><strong>AI 助手熟悉度</strong>：大多数 AI 助手对 Python 的理解比 Node 更深</li>
+<li><strong>启动速度</strong>：对于简单任务，<code>python script.py</code> 比 <code>node script.js</code> 快（不需要解析 <code>node_modules</code>）</li>
+</ul>
+<p><strong>实用建议</strong>：除非目标库只有 Node 版本（如 <code>pptxgenjs</code>），否则首选 Python。如果必须用 Node，把 <code>package.json</code> 和脚本放在同一个 <code>scripts/</code> 目录下，让 AI 助手能 <code>cd scripts &amp;&amp; npm install &amp;&amp; node generate.js</code> 一条龙。</p>
+<hr>
+<h2 id="76-案例对比reportlab-方案-vs-pandoc-方案"><a class="header" href="#76-案例对比reportlab-方案-vs-pandoc-方案">7.6 案例对比：reportlab 方案 vs pandoc 方案</a></h2>
+<p>同一个需求 – Markdown 转 PDF – 我们有两种实现。这个对比能帮助你理解「自己造轮子」和「调用成熟工具」的取舍。</p>
+<h3 id="方案-alovstudioany2pdfreportlabpython-原生渲染"><a class="header" href="#方案-alovstudioany2pdfreportlabpython-原生渲染">方案 A：lovstudio:any2pdf（reportlab，Python 原生渲染）</a></h3>
+<p><strong>架构</strong>：Python 脚本直接使用 reportlab 库，在代码里逐元素构建 PDF 页面。</p>
+<pre><code>Markdown -&gt; 自研 parser -&gt; reportlab Flowables -&gt; PDF
+</code></pre>
+<p><strong>优势</strong>：</p>
+<ul>
+<li>像素级控制：封面、页眉、水印、主题颜色、字体大小，全部可编程</li>
+<li>CJK 混排：自己实现字符级字体切换，完美控制</li>
+<li>零外部工具：只需要 <code>pip install reportlab</code>，不需要 LaTeX 发行版</li>
+<li>单文件部署：1451 行 Python，复制即用</li>
+<li>14 种主题：每种主题不只是换颜色，而是整套排版风格</li>
+</ul>
+<p><strong>劣势</strong>：</p>
+<ul>
+<li>开发成本高：1451 行代码是大量迭代的结果</li>
+<li>Markdown 解析不完整：自研 parser 只支持常用语法，复杂嵌套可能有 bug</li>
+<li>表格排版受限：reportlab 的表格自动布局不如 LaTeX 智能</li>
+</ul>
+<p><strong>代码量</strong>：~1450 行 Python</p>
+<h3 id="方案-blovstudiomd2pdfpandoc--xelatex"><a class="header" href="#方案-blovstudiomd2pdfpandoc--xelatex">方案 B：lovstudio:md2pdf（pandoc + XeLaTeX）</a></h3>
+<p><strong>架构</strong>：用 pandoc 做 Markdown -&gt; LaTeX 转换，用 XeLaTeX 做 LaTeX -&gt; PDF 渲染。</p>
+<pre><code>Markdown -&gt; pandoc -&gt; LaTeX -&gt; XeLaTeX -&gt; PDF
+</code></pre>
+<p><strong>优势</strong>：</p>
+<ul>
+<li>排版质量：LaTeX 的排版算法是学术出版的黄金标准</li>
+<li>表格处理：LaTeX 的表格自动分页、列宽计算远超 reportlab</li>
+<li>Markdown 兼容性：pandoc 支持几乎所有 Markdown 扩展语法</li>
+<li>代码量少：Shell 脚本包装 pandoc 命令，核心逻辑很短</li>
+</ul>
+<p><strong>劣势</strong>：</p>
+<ul>
+<li>重依赖：需要 pandoc + BasicTeX/TeX Live，安装包几百 MB</li>
+<li>环境配置复杂：<code>tlmgr install</code> 各种 LaTeX 包，CJK 字体配置容易出错</li>
+<li>可控性差：想自定义封面样式？写 LaTeX 模板，学习曲线陡峭</li>
+<li>平台差异：macOS 用 BasicTeX，Linux 用 TeX Live，行为不完全一致</li>
+</ul>
+<p><strong>代码量</strong>：~80 行 Shell + LaTeX 模板</p>
+<h3 id="如何选择"><a class="header" href="#如何选择">如何选择</a></h3>
+<pre><code>你需要精确的像素级视觉控制?
+  ├─ 是 -&gt; reportlab 方案 (any2pdf)
+  └─ 否
+      你需要学术级排版质量?
+        ├─ 是 -&gt; pandoc + LaTeX 方案 (md2pdf)
+        └─ 否
+            你的用户环境能装 LaTeX?
+              ├─ 是 -&gt; pandoc 方案 (更省力)
+              └─ 否 -&gt; reportlab 方案 (依赖更轻)
+</code></pre>
+<p>实际上我们在生产环境中两个都保留了。<code>any2pdf</code> 是默认方案（依赖轻、可控性强），<code>md2pdf</code> 作为 fallback（表格处理更好）。SKILL.md 里根据文档内容选择：有复杂表格就用 pandoc，需要品牌化封面就用 reportlab。</p>
+<blockquote>
+<p><strong>核心洞察</strong>：Skill 脚本不需要做到完美，需要做到<strong>在特定场景下足够好</strong>。<code>any2pdf</code> 的表格排版不如 LaTeX，但它的封面和主题系统远超 pandoc 方案。两个方案互补，比一个「什么都做」的方案更实用。</p>
+</blockquote>
+<hr>
+<h2 id="77-脚本与-skillmd-的协作模式"><a class="header" href="#77-脚本与-skillmd-的协作模式">7.7 脚本与 SKILL.md 的协作模式</a></h2>
+<p>脚本写好了，怎么和 SKILL.md 配合？</p>
+<h3 id="模式一skillmd-组装命令行"><a class="header" href="#模式一skillmd-组装命令行">模式一：SKILL.md 组装命令行</a></h3>
+<p>最常见的模式。SKILL.md 告诉 AI 助手根据用户需求组装 CLI 命令：</p>
+<pre><code class="language-markdown">## 执行步骤
+
+1. 根据用户需求确定参数
+2. 运行命令：
+   ```bash
+   python {{SKILL_DIR}}/scripts/md2pdf.py \
+     --input &lt;用户的文件&gt; \
+     --output &lt;输出路径&gt; \
+     --title "&lt;文档标题&gt;" \
+     --theme &lt;选定主题&gt; \
+     --watermark "&lt;水印文字&gt;"
+</code></pre>
+<ol start="3">
+<li>检查输出，向用户报告</li>
+</ol>
+<pre><code>
+AI 助手的角色是「翻译官」-- 把用户的自然语言需求翻译成精确的命令行参数。
+
+### 模式二：SKILL.md 做决策，脚本做执行
+
+更复杂的模式。SKILL.md 包含决策逻辑（选主题、选方案、处理异常），脚本只负责执行：
+
+```markdown
+## 主题选择逻辑
+
+- 学术论文 / 技术报告 -&gt; `warm-academic` 或 `classic-thesis`
+- 商务 PPT 配套 PDF -&gt; `github-light` 或 `nord-frost`
+- 中文党政公文 -&gt; `chinese-red`
+- 极简风格 -&gt; `tufte`
+- 用户指定 -&gt; 直接使用
+
+## 方案选择
+
+- 文档包含超过 3 个复杂表格 -&gt; 使用 pandoc 方案
+- 需要品牌化封面 -&gt; 使用 reportlab 方案
+- 默认 -&gt; reportlab 方案
+</code></pre>
+<p>这种分工让 SKILL.md 和脚本各做自己擅长的事：SKILL.md 做模糊的、需要理解上下文的决策；脚本做精确的、确定性的执行。</p>
+<h3 id="模式三多脚本编排"><a class="header" href="#模式三多脚本编排">模式三：多脚本编排</a></h3>
+<p>一个 Skill 调用多个脚本，形成 pipeline：</p>
+<pre><code>1. 分析输入 (Python)
+2. 生成图片 (image-gen Skill)
+3. 组装幻灯片 (Node.js pptxgenjs)
+4. 导出 PDF (pdf-lib)
+</code></pre>
+<p><code>lovstudio:any2deck</code> 就是这种模式。SKILL.md 是总指挥，按步骤调用不同的工具。每个工具的输出是下一个工具的输入。</p>
+<hr>
+<h2 id="78-本章小结"><a class="header" href="#78-本章小结">7.8 本章小结</a></h2>
+<p>脚本是 Skill 的「肌肉」，但不是每个 Skill 都需要肌肉。判断准则简单明了：AI 做不了的事才需要脚本。</p>
+<p>设计脚本时，记住四个原则：</p>
+<ol>
+<li><strong>单文件 CLI</strong>：一个 <code>.py</code> / <code>.sh</code> / <code>.js</code> 文件搞定，不搞 package</li>
+<li><strong>argparse 接口</strong>：命令行参数是 SKILL.md 和脚本的唯一合约</li>
+<li><strong>最小依赖</strong>：一个核心库解决核心问题，其余用标准库</li>
+<li><strong>头部声明一切</strong>：功能、用法、依赖，读前 20 行就够</li>
+</ol>
+<p>语言选择：</p>
+<ul>
+<li><strong>Python</strong>：默认选择，适合大多数场景</li>
+<li><strong>Shell</strong>：系统命令调用、10 行以内的胶水代码</li>
+<li><strong>Node.js</strong>：前端相关库只有 JS 版本时的选择</li>
+</ul>
+<p>方案选择的本质不是「哪个更好」，而是「在你的场景下哪个足够好」。<code>reportlab</code> 给你像素级控制但开发成本高，<code>pandoc</code> 给你学术级排版但依赖重。两者互补优于二选一。</p>
+<p>下一章我们讨论 Skill 的测试与发布 – 写好的脚本如何验证、如何交付给用户。</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../chapter-06/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../chapter-08/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../chapter-06/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../chapter-08/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../mark-09e88c2c.min.js"></script>
+        <script src="../searcher-c2a407aa.js"></script>
+
+        <script src="../clipboard-1626706a.min.js"></script>
+        <script src="../highlight-abc7f01d.js"></script>
+        <script src="../book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

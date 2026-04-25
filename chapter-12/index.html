@@ -1,0 +1,990 @@
+<!DOCTYPE HTML>
+<html lang="zh" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Skill 自我进化 — 让 Skill 自己变得更好 - Agent Skill 高质量设计指南</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="系统掌握 AI 编程助手 Skill 设计方法论，从架构到发布的完整指南">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../css/general-2459343d.css">
+        <link rel="stylesheet" href="../css/chrome-ae938929.css">
+        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex-fc53036c.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc-b872e53c.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Agent Skill 高质量设计指南</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/MarkShawn2020/agent-skill-design-guide" title="Git repository" aria-label="Git repository">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/MarkShawn2020/agent-skill-design-guide/edit/main/src/chapter-12/README.md" title="Suggest an edit" aria-label="Suggest an edit" rel="edit">
+                            <span class=fa-svg id="git-edit-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M421.7 220.3l-11.3 11.3-22.6 22.6-205 205c-6.6 6.6-14.8 11.5-23.8 14.1L30.8 511c-8.4 2.5-17.5 .2-23.7-6.1S-1.5 489.7 1 481.2L38.7 353.1c2.6-9 7.5-17.2 14.1-23.8l205-205 22.6-22.6 11.3-11.3 33.9 33.9 62.1 62.1 33.9 33.9zM96 353.9l-9.3 9.3c-.9 .9-1.6 2.1-2 3.4l-25.3 86 86-25.3c1.3-.4 2.5-1.1 3.4-2l9.3-9.3H112c-8.8 0-16-7.2-16-16V353.9zM453.3 19.3l39.4 39.4c25 25 25 65.5 0 90.5l-14.5 14.5-22.6 22.6-11.3 11.3-33.9-33.9-62.1-62.1L314.3 67.7l11.3-11.3 22.6-22.6 14.5-14.5c25-25 65.5-25 90.5 0z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="第-12-章skill-自我进化--让-skill-自己变得更好"><a class="header" href="#第-12-章skill-自我进化--让-skill-自己变得更好">第 12 章：Skill 自我进化 — 让 Skill 自己变得更好</a></h1>
+<p><img src="../assets/images/chapters/ch12-self-evolution.png" alt="自我进化 — 凤凰涅槃与 DNA 螺旋"></p>
+<blockquote>
+<p>“The best programs are the ones that write themselves.”
+— 改编自 Donald Knuth</p>
+</blockquote>
+<p>你写了一个 Skill，它工作得不错。用户反馈说某些 edge case 处理不好，你打开 SKILL.md，调整几行 instruction，测试，发布。下个月又来了新的问题，再改。这个循环你已经重复了几十次。</p>
+<p>问题来了：<strong>你能不能让 Skill 自己完成这个循环？</strong></p>
+<p>这不是科幻。2025 年以来，从 Google DeepMind 的 OPRO 到 DSPy 的 MIPRO，从 PromptBreeder 到 TextGrad，一系列研究证明了一件事 —— LLM 不仅能执行指令，还能<strong>优化指令本身</strong>。将这些技术应用到 Skill 领域，就是本章要讲的：<strong>Skill 自我进化</strong>。</p>
+<hr>
+<h2 id="121-为什么需要自我进化"><a class="header" href="#121-为什么需要自我进化">12.1 为什么需要自我进化</a></h2>
+<h3 id="人工迭代的三个瓶颈"><a class="header" href="#人工迭代的三个瓶颈">人工迭代的三个瓶颈</a></h3>
+<ol>
+<li><strong>反馈延迟</strong>：用户遇到问题 → 提 issue → 作者排查 → 修改发布，链路太长。一个 edge case 可能要几天才能修复。</li>
+<li><strong>认知盲区</strong>：Skill 作者不可能预见所有使用场景。你为 Python 项目设计的 skill，用户拿去处理 Rust monorepo，指令就不够用了。</li>
+<li><strong>规模瓶颈</strong>：一个人维护 5 个 Skill 没问题，维护 50 个就力不从心。每个 Skill 都有自己的 failure mode，人工逐一调优不现实。</li>
+</ol>
+<h3 id="自动化进化的核心思路"><a class="header" href="#自动化进化的核心思路">自动化进化的核心思路</a></h3>
+<p>把 Skill 的 SKILL.md 视为一段“可优化的程序“。它的输入是用户请求，输出是 agent 行为，评价标准是执行成功率和用户满意度。既然有输入、输出、评价函数，就能跑优化循环：</p>
+<pre><code>while not good_enough:
+    执行 Skill → 收集反馈 → 分析失败原因 → 生成改进方案 → 验证 → 更新 SKILL.md
+</code></pre>
+<p>这和传统软件工程的 CI/CD 管线如出一辙，只不过被优化的对象从代码变成了自然语言指令。</p>
+<hr>
+<h2 id="122-进化方法论谱系"><a class="header" href="#122-进化方法论谱系">12.2 进化方法论谱系</a></h2>
+<p>2023-2026 年间，prompt 优化领域涌现了一系列方法。下面按时间线梳理，帮你建立完整的知识地图。</p>
+<h3 id="1221-opro--llm-as-optimizer"><a class="header" href="#1221-opro--llm-as-optimizer">12.2.1 OPRO — LLM-as-Optimizer</a></h3>
+<p><strong>论文</strong>：<em>Large Language Models as Optimizers</em>（Google DeepMind, 2023）</p>
+<p>核心思路极其简洁：把优化问题本身描述成一段 prompt，让 LLM 生成候选解，用 scoring function 评分，把结果反馈给 LLM 生成更好的解。</p>
+<p>应用到 Skill 场景：</p>
+<pre><code>meta-prompt = """
+以下是一个 SKILL.md 的历史版本和对应的成功率：
+v1 (成功率 72%)：...
+v2 (成功率 78%)：...
+v3 (成功率 75%)：...
+
+请生成一个成功率更高的新版本。
+"""
+</code></pre>
+<p><strong>优点</strong>：实现简单，只需要一个 LLM 和一个评分函数。
+<strong>局限</strong>：搜索效率低，容易在局部最优打转。没有结构化的变异策略。</p>
+<h3 id="1222-evoprompt--进化算法驱动"><a class="header" href="#1222-evoprompt--进化算法驱动">12.2.2 EvoPrompt — 进化算法驱动</a></h3>
+<p><strong>论文</strong>：<em>Connecting Large Language Models with Evolutionary Algorithms</em>（2024）</p>
+<p>把进化算法（GA/DE）的思路搬过来：维护一个 prompt 种群，用交叉（crossover）和变异（mutation）生成后代，用 fitness function 选择存活者。</p>
+<pre><code>种群 = [skill_v1, skill_v2, ..., skill_n]
+for generation in range(max_gen):
+    parents = tournament_select(种群)
+    offspring = crossover(parents[0], parents[1])  # LLM 融合两个版本
+    mutant = mutate(offspring)                      # LLM 随机修改一个段落
+    score = evaluate(mutant)
+    种群 = survive(种群 + [mutant], topk)
+</code></pre>
+<p><strong>优点</strong>：比 OPRO 更系统，种群多样性防止早熟收敛。
+<strong>局限</strong>：需要大量评估（每代 N 个候选 x M 个测试用例），token 消耗高。</p>
+<h3 id="1223-promptbreeder--自引用进化"><a class="header" href="#1223-promptbreeder--自引用进化">12.2.3 PromptBreeder — 自引用进化</a></h3>
+<p><strong>论文</strong>：<em>PromptBreeder: Self-Referential Self-Improvement</em>（Google DeepMind, 2024）</p>
+<p>最有趣的一个。不仅进化 prompt 本身，还进化“用来进化 prompt 的 meta-prompt“。两层进化嵌套：</p>
+<ul>
+<li><strong>Task Prompt</strong>：执行任务的指令（对应 SKILL.md）</li>
+<li><strong>Mutation Prompt</strong>：描述如何修改 Task Prompt 的指令</li>
+</ul>
+<p>每一代，Mutation Prompt 指导 Task Prompt 变异；同时 Mutation Prompt 自身也在进化。这就像“进化的进化“—— 不仅改良基因，还改良育种策略。</p>
+<p><strong>优点</strong>：理论上能跳出固定变异策略的限制。
+<strong>局限</strong>：实现复杂，调试困难，收敛不稳定。</p>
+<h3 id="1224-dspy-mipro--编程化优化"><a class="header" href="#1224-dspy-mipro--编程化优化">12.2.4 DSPy MIPRO — 编程化优化</a></h3>
+<p><strong>框架</strong>：DSPy（Stanford NLP, 2024-2025）</p>
+<p>DSPy 的革命性在于把 prompt engineering 变成了编程问题。你不写 prompt，你写程序：定义 Signature（输入输出规范）、Module（处理步骤）、Metric（评价函数），然后让 optimizer 自动搜索最优 prompt。</p>
+<p>MIPRO（Multi-prompt Instruction PRoposal Optimizer）是其中最强的 optimizer：</p>
+<ol>
+<li>用 LLM 从训练数据中提取 instructions</li>
+<li>用 Bayesian 搜索选择最优组合</li>
+<li>自动挑选 few-shot 示例</li>
+</ol>
+<pre><code class="language-python">import dspy
+
+class SkillExecutor(dspy.Module):
+    def __init__(self):
+        self.plan = dspy.ChainOfThought("user_request -&gt; execution_plan")
+        self.execute = dspy.ChainOfThought("execution_plan -&gt; result")
+
+    def forward(self, user_request):
+        plan = self.plan(user_request=user_request)
+        return self.execute(execution_plan=plan.execution_plan)
+
+# 定义 metric
+def skill_metric(example, pred, trace=None):
+    return int(pred.result == example.expected_result)
+
+# 自动优化
+optimizer = dspy.MIPROv2(metric=skill_metric, num_threads=4)
+optimized_skill = optimizer.compile(SkillExecutor(), trainset=train_data)
+</code></pre>
+<p><strong>优点</strong>：工程化程度最高，可复现，可组合。
+<strong>局限</strong>：需要标注数据（trainset），对纯指令型 Skill 适配成本较高。</p>
+<h3 id="1225-textgrad--文本反向传播"><a class="header" href="#1225-textgrad--文本反向传播">12.2.5 TextGrad — 文本反向传播</a></h3>
+<p><strong>论文</strong>：<em>TextGrad: Automatic “Differentiation” via Text</em>（Stanford, 2024）</p>
+<p>把深度学习的反向传播思路移植到文本域：</p>
+<ul>
+<li><strong>前向传播</strong>：执行 Skill，产生结果</li>
+<li><strong>Loss 计算</strong>：评估结果与期望的差距（用自然语言描述）</li>
+<li><strong>反向传播</strong>：LLM 根据 loss 描述，生成“梯度“（自然语言形式的改进建议）</li>
+<li><strong>参数更新</strong>：用梯度修改 SKILL.md</li>
+</ul>
+<pre><code>loss = "用户请求生成 PDF，但中文字符显示为方块。原因是 SKILL.md 中没有指定 CJK 字体回退策略。"
+gradient = LLM("根据以下错误，建议如何修改 SKILL.md：" + loss)
+# gradient = "在 SKILL.md 的字体配置段落加入：当检测到 CJK 字符时，优先使用 Noto Sans CJK..."
+new_skill = LLM("将以下修改建议应用到 SKILL.md：" + gradient + "
+原文：" + old_skill)
+</code></pre>
+<p><strong>优点</strong>：反馈直接、修改精准，特别适合修复特定 bug。
+<strong>局限</strong>：每次只能沿一个“梯度方向“优化，全局搜索能力弱。</p>
+<h3 id="方法对比"><a class="header" href="#方法对比">方法对比</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>方法</th><th>核心思想</th><th>搜索策略</th><th>Token 成本</th><th>适合场景</th><th>工程复杂度</th></tr>
+</thead>
+<tbody>
+<tr><td>OPRO</td><td>LLM 直接生成更优版本</td><td>历史引导</td><td>低</td><td>快速原型</td><td>低</td></tr>
+<tr><td>EvoPrompt</td><td>进化算法 + LLM</td><td>种群进化</td><td>高</td><td>大规模搜索</td><td>中</td></tr>
+<tr><td>PromptBreeder</td><td>自引用双层进化</td><td>元进化</td><td>很高</td><td>研究探索</td><td>高</td></tr>
+<tr><td>DSPy MIPRO</td><td>编程化 + Bayesian</td><td>贝叶斯优化</td><td>中</td><td>有标注数据时</td><td>中</td></tr>
+<tr><td>TextGrad</td><td>文本反向传播</td><td>梯度下降</td><td>低</td><td>修复特定问题</td><td>低</td></tr>
+<tr><td>Experience-Based</td><td>日志驱动修订</td><td>人工/LLM 混合</td><td>很低</td><td>日常维护</td><td>很低</td></tr>
+</tbody>
+</table>
+</div>
+<blockquote>
+<p><strong>实践建议</strong>：对于大多数 Skill 开发者，从 Experience-Based（方案 A）开始。当你有了足够的测试数据后，再考虑 DSPy MIPRO（方案 B）。TextGrad（方案 C）适合定点修复。PromptBreeder 目前更适合研究场景。</p>
+</blockquote>
+<hr>
+<h2 id="123-开源进化引擎实战"><a class="header" href="#123-开源进化引擎实战">12.3 开源进化引擎实战</a></h2>
+<p>理论之后，来看真正能跑起来的开源项目。以下四个引擎代表了 2025-2026 年 Skill 进化的工程前沿。</p>
+<h3 id="1231-evomap-evolver--skill-基因级遗传"><a class="header" href="#1231-evomap-evolver--skill-基因级遗传">12.3.1 EvoMap Evolver — Skill 基因级遗传</a></h3>
+<p><strong>GitHub</strong>: <code>EvoMap/evolver</code></p>
+<p>EvoMap 提出了 GEP（Gene Expression Programming）协议，把 Skill 拆解为“基因片段“：</p>
+<ul>
+<li><strong>Instruction Gene</strong>：核心指令段落</li>
+<li><strong>Constraint Gene</strong>：约束条件（不要做什么）</li>
+<li><strong>Example Gene</strong>：Few-shot 示例</li>
+<li><strong>Tool Gene</strong>：工具调用模式</li>
+</ul>
+<p>每个基因可以独立进化、跨 Skill 继承。比如你的 <code>any2pdf</code> 有一个优秀的“CJK 字体处理“基因，可以直接移植到 <code>any2docx</code>，而不需要从头调优。</p>
+<p><strong>核心流程</strong>：</p>
+<pre><code>1. 解析 SKILL.md → 基因组（Gene Pool）
+2. 对每个基因独立评估 fitness
+3. 跨 Skill 基因交换（Gene Transfer）
+4. 组装新基因组 → 生成新 SKILL.md
+5. 集成测试 → 择优保留
+</code></pre>
+<p><strong>适用场景</strong>：管理大量相关 Skill 的团队。基因复用能显著降低全局调优成本。</p>
+<h3 id="1232-hermes-agent-self-evolution"><a class="header" href="#1232-hermes-agent-self-evolution">12.3.2 Hermes Agent Self-Evolution</a></h3>
+<p><strong>GitHub</strong>: <code>NousResearch/hermes-agent-self-evolution</code>
+<strong>论文</strong>: ICLR 2026 Oral</p>
+<p>NousResearch 的这个项目把 DSPy 和进化算法结合，提出了 GEPA（Guided Evolution with Performance Anchoring）引擎：</p>
+<ol>
+<li><strong>Performance Anchoring</strong>：为每个 Skill 版本建立性能基线（anchor），任何变异必须超过 anchor 才能存活</li>
+<li><strong>Guided Mutation</strong>：不是随机变异，而是用 LLM 分析失败案例后定向变异</li>
+<li><strong>Self-Play</strong>：让进化后的 Skill 互相测试，发现对方的弱点</li>
+</ol>
+<p>关键创新在于<strong>稳定性</strong>。传统进化方法容易出现“进化退化“—— 新版本在某些 case 上更好，但在老 case 上更差。Performance Anchoring 通过维护一个回归测试集，确保进化只前进不后退。</p>
+<p><strong>实测数据</strong>（论文报告）：</p>
+<ul>
+<li>在 SWE-bench 上，经过 5 轮自进化的 coding agent，解决率从 38% 提升到 52%</li>
+<li>平均每轮进化只需 ~200 次 LLM 调用</li>
+</ul>
+<h3 id="1233-evoskill--从失败中学习"><a class="header" href="#1233-evoskill--从失败中学习">12.3.3 EvoSkill — 从失败中学习</a></h3>
+<p><strong>GitHub</strong>: <code>sentient-agi/EvoSkill</code></p>
+<p>EvoSkill 的哲学很实用：<strong>失败是最好的老师</strong>。它不是优化现有 Skill，而是从 agent 的失败轨迹中自动合成新的 Skill。</p>
+<p>工作流程：</p>
+<pre><code>1. 收集 agent 执行日志（成功 + 失败）
+2. 聚类失败模式（用 embedding 做相似性分组）
+3. 对每个失败簇，用 LLM 分析根因
+4. 合成新 Skill（或 Skill 片段）来解决该类失败
+5. 验证新 Skill 确实能覆盖该失败模式
+6. 注册到 Skill Library，供 agent 在后续任务中调用
+</code></pre>
+<p><strong>杀手特性</strong>：它产生的不是“更好的指令“，而是<strong>全新的能力模块</strong>。比如 agent 在处理 YAML 配置时反复失败，EvoSkill 会自动合成一个 <code>yaml-validator</code> Skill，包含 schema 校验、常见错误修复等逻辑。</p>
+<p><strong>适用场景</strong>：需要持续扩展 agent 能力边界的场景。特别适合搭配 Skill marketplace 使用。</p>
+<h3 id="1234-openspace--跨行业-skill-进化"><a class="header" href="#1234-openspace--跨行业-skill-进化">12.3.4 OpenSpace — 跨行业 Skill 进化</a></h3>
+<p><strong>GitHub</strong>: <code>HKUDS/OpenSpace</code></p>
+<p>OpenSpace 关注的是<strong>跨领域迁移</strong>。它的核心假设是：不同行业的 Skill 之间存在可迁移的通用模式。</p>
+<p>核心机制：</p>
+<ul>
+<li><strong>Space Mapping</strong>：将所有 Skill 映射到一个语义空间，相似 Skill 距离近</li>
+<li><strong>Cross-Pollination</strong>：从高性能行业（如 DevOps）的 Skill 中提取成功模式，迁移到低性能行业（如 Legal）</li>
+<li><strong>Domain Adaptation</strong>：迁移后做领域适配微调</li>
+</ul>
+<p><strong>论文报告的 4.2x 效能提升</strong>来自一个实验：把 DevOps 领域的“故障排查“Skill 模式迁移到医疗领域的“诊断推理“Skill，后者的准确率从 34% 跳到 71%。模式的本质是相同的 —— 收集症状、排除假设、定位根因 —— 只是领域术语不同。</p>
+<h3 id="引擎对比"><a class="header" href="#引擎对比">引擎对比</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>引擎</th><th>核心机制</th><th>输入</th><th>输出</th><th>最佳场景</th></tr>
+</thead>
+<tbody>
+<tr><td>EvoMap Evolver</td><td>基因分解 + 跨 Skill 继承</td><td>多个 SKILL.md</td><td>优化后的 SKILL.md</td><td>管理 Skill 家族</td></tr>
+<tr><td>Hermes Self-Evolution</td><td>GEPA + Performance Anchoring</td><td>SKILL.md + 测试集</td><td>稳定进化的版本</td><td>需要保证不退化</td></tr>
+<tr><td>EvoSkill</td><td>失败轨迹 → 新 Skill 合成</td><td>Agent 执行日志</td><td>全新的 Skill</td><td>扩展能力边界</td></tr>
+<tr><td>OpenSpace</td><td>跨行业语义迁移</td><td>多行业 Skill 库</td><td>迁移适配后的 Skill</td><td>跨领域复用</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="124-实战构建-skill-进化管线"><a class="header" href="#124-实战构建-skill-进化管线">12.4 实战：构建 Skill 进化管线</a></h2>
+<p>理论和工具都有了，现在来构建你自己的进化管线。给出三个方案，从简单到复杂。</p>
+<h3 id="方案-aexperience-based-进化最实用"><a class="header" href="#方案-aexperience-based-进化最实用">方案 A：Experience-Based 进化（最实用）</a></h3>
+<p>这是最务实的方案，不需要任何额外框架，只需要 LLM API 和基本的脚本能力。核心思想：<strong>收集执行日志 → 分析失败 → LLM 生成修订建议 → Lint 验证 → 人工审批</strong>。</p>
+<h4 id="架构"><a class="header" href="#架构">架构</a></h4>
+<pre><code>┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐
+│  Agent   │───▸│  日志    │───▸│  分析    │───▸│  修订    │───▸│  验证    │
+│  执行    │    │  收集    │    │  引擎    │    │  生成    │    │  &amp; 发布  │
+└──────────┘    └──────────┘    └──────────┘    └──────────┘    └──────────┘
+     │                                                              │
+     └──────────────────── 更新后的 SKILL.md ◂──────────────────────┘
+</code></pre>
+<h4 id="完整伪代码"><a class="header" href="#完整伪代码">完整伪代码</a></h4>
+<pre><code class="language-python">"""
+Experience-Based Skill Evolution Pipeline
+输入：SKILL.md 路径 + 执行日志目录
+输出：改进后的 SKILL.md（写入 _evolved/ 目录待审批）
+"""
+import json
+import hashlib
+from pathlib import Path
+from datetime import datetime
+
+# ── 配置 ──────────────────────────────────────────────
+EVOLUTION_CONFIG = {
+    "min_logs_for_evolution": 20,        # 至少 20 条日志才触发进化
+    "failure_threshold": 0.15,           # 失败率超过 15% 才值得优化
+    "max_instructions_per_round": 3,     # 每轮最多修改 3 条指令
+    "require_human_approval": True,      # 是否需要人工审批
+}
+
+# ── Step 1: 日志收集 ────────────────────────────────────
+def collect_logs(log_dir: Path) -&gt; list[dict]:
+    """
+    收集 agent 执行日志。每条日志包含：
+    - user_request: 用户原始请求
+    - skill_version: 使用的 SKILL.md 版本 hash
+    - steps: agent 执行的步骤列表
+    - outcome: "success" | "failure" | "partial"
+    - error_message: 失败时的错误信息（可选）
+    - user_feedback: 用户反馈（可选）
+    - duration_seconds: 执行耗时
+    """
+    logs = []
+    for f in sorted(log_dir.glob("*.jsonl")):
+        for line in f.read_text().splitlines():
+            if line.strip():
+                logs.append(json.loads(line))
+    return logs
+
+# ── Step 2: 失败分析 ────────────────────────────────────
+def analyze_failures(logs: list[dict]) -&gt; dict:
+    """
+    统计失败模式，返回结构化分析报告。
+    """
+    total = len(logs)
+    failures = [l for l in logs if l["outcome"] != "success"]
+    failure_rate = len(failures) / total if total &gt; 0 else 0
+
+    if failure_rate &lt; EVOLUTION_CONFIG["failure_threshold"]:
+        return {"should_evolve": False, "reason": "failure rate below threshold"}
+
+    # 按错误类型聚类
+    error_clusters = {}
+    for f in failures:
+        key = f.get("error_message", "unknown")[:100]  # 取前 100 字符做粗分组
+        if key not in error_clusters:
+            error_clusters[key] = []
+        error_clusters[key].append(f)
+
+    # 按频率排序，取 top 5
+    sorted_clusters = sorted(error_clusters.items(), key=lambda x: -len(x[1]))[:5]
+
+    return {
+        "should_evolve": True,
+        "total_logs": total,
+        "failure_rate": failure_rate,
+        "top_failure_patterns": [
+            {
+                "pattern": pattern,
+                "count": len(examples),
+                "sample_requests": [e["user_request"] for e in examples[:3]],
+            }
+            for pattern, examples in sorted_clusters
+        ],
+    }
+
+# ── Step 3: LLM 修订生成 ───────────────────────────────
+def generate_revision(skill_md: str, analysis: dict) -&gt; dict:
+    """
+    调用 LLM，根据失败分析生成 SKILL.md 修订建议。
+    返回：{ "changes": [...], "rationale": str, "risk_assessment": str }
+    """
+    prompt = f"""你是一位 Skill 优化专家。以下是一个 SKILL.md 的当前版本和执行失败分析报告。
+
+## 当前 SKILL.md
+</code></pre>
+<p>{skill_md}</p>
+<pre><code>
+## 失败分析报告
+{json.dumps(analysis, ensure_ascii=False, indent=2)}
+
+## 任务
+1. 分析每个失败模式的根因
+2. 提出具体的 SKILL.md 修改建议（最多 {EVOLUTION_CONFIG['max_instructions_per_round']} 条）
+3. 对每条修改评估风险（是否可能影响现有成功 case）
+
+以 JSON 格式输出：
+{{
+  "changes": [
+    {{
+      "section": "要修改的段落标识",
+      "old_text": "原文（用于定位）",
+      "new_text": "修改后的文本",
+      "addresses_pattern": "解决哪个失败模式",
+      "confidence": 0.0-1.0
+    }}
+  ],
+  "rationale": "整体修改思路",
+  "risk_assessment": "可能的副作用"
+}}"""
+
+    response = call_llm(prompt)  # 你的 LLM API 调用
+    return json.loads(response)
+
+# ── Step 4: 应用修订 ────────────────────────────────────
+def apply_revision(skill_md: str, revision: dict) -&gt; str:
+    """
+    将修订建议应用到 SKILL.md，生成新版本。
+    只应用 confidence &gt;= 0.7 的修改。
+    """
+    new_md = skill_md
+    applied = []
+
+    for change in revision["changes"]:
+        if change["confidence"] &lt; 0.7:
+            continue
+        if change["old_text"] in new_md:
+            new_md = new_md.replace(change["old_text"], change["new_text"], 1)
+            applied.append(change["section"])
+
+    # 更新版本号（如果 frontmatter 中有的话）
+    # 在 SKILL.md 末尾追加进化记录
+    evolution_log = f"""
+&lt;!-- Evolution Record
+date: {datetime.now().isoformat()}
+trigger: failure_rate={revision.get('failure_rate', 'N/A')}
+changes_applied: {applied}
+rationale: {revision['rationale']}
+--&gt;"""
+    new_md += evolution_log
+
+    return new_md
+
+# ── Step 5: Lint 验证 ───────────────────────────────────
+def validate_evolved_skill(skill_md: str) -&gt; dict:
+    """
+    对进化后的 SKILL.md 做基本校验：
+    - frontmatter 格式正确
+    - 必需字段存在（name, description, instructions）
+    - 指令不超过 token 上限
+    - 没有引入矛盾指令（简单的语义检查）
+    """
+    errors = []
+    warnings = []
+
+    # 检查 frontmatter
+    if not skill_md.startswith("---"):
+        errors.append("Missing frontmatter")
+
+    # 检查 token 数（粗略估计）
+    token_estimate = len(skill_md) // 4
+    if token_estimate &gt; 8000:
+        warnings.append(f"SKILL.md 约 {token_estimate} tokens，可能超出 context 预算")
+
+    # 检查矛盾指令（简单版：查找 "始终" 和 "不要" 是否作用于同一对象）
+    # 生产环境应该用 LLM 做更深层的语义检查
+    lines = skill_md.split("
+")
+    always_do = [l for l in lines if "始终" in l or "always" in l.lower()]
+    never_do = [l for l in lines if "不要" in l or "never" in l.lower() or "禁止" in l]
+    if always_do and never_do:
+        warnings.append("存在 always/never 指令，请人工确认无矛盾")
+
+    return {"valid": len(errors) == 0, "errors": errors, "warnings": warnings}
+
+# ── 主流程 ──────────────────────────────────────────────
+def evolve_skill(skill_path: Path, log_dir: Path, output_dir: Path):
+    """
+    Skill 进化主流程。
+    """
+    # 读取当前 SKILL.md
+    skill_md = skill_path.read_text()
+    version_hash = hashlib.sha256(skill_md.encode()).hexdigest()[:8]
+
+    # Step 1: 收集日志
+    logs = collect_logs(log_dir)
+    if len(logs) &lt; EVOLUTION_CONFIG["min_logs_for_evolution"]:
+        print(f"日志不足（{len(logs)}/{EVOLUTION_CONFIG['min_logs_for_evolution']}），跳过进化")
+        return
+
+    # Step 2: 分析失败
+    analysis = analyze_failures(logs)
+    if not analysis["should_evolve"]:
+        print(f"失败率未达阈值：{analysis.get('reason')}")
+        return
+
+    print(f"检测到 {analysis['failure_rate']:.1%} 失败率，启动进化...")
+    print(f"Top 失败模式：")
+    for p in analysis["top_failure_patterns"]:
+        print(f"  [{p['count']}次] {p['pattern'][:80]}")
+
+    # Step 3: 生成修订
+    revision = generate_revision(skill_md, analysis)
+    print(f"
+修订方案：{revision['rationale']}")
+    print(f"风险评估：{revision['risk_assessment']}")
+
+    # Step 4: 应用修订
+    evolved_md = apply_revision(skill_md, revision)
+
+    # Step 5: 验证
+    validation = validate_evolved_skill(evolved_md)
+    if not validation["valid"]:
+        print(f"验证失败：{validation['errors']}")
+        return
+
+    if validation["warnings"]:
+        print(f"警告：{validation['warnings']}")
+
+    # 写入待审批目录
+    output_dir.mkdir(parents=True, exist_ok=True)
+    output_path = output_dir / f"SKILL_evolved_{version_hash}.md"
+    output_path.write_text(evolved_md)
+
+    if EVOLUTION_CONFIG["require_human_approval"]:
+        # 生成 diff 供人工审阅
+        diff_path = output_dir / f"DIFF_{version_hash}.md"
+        diff_content = generate_diff(skill_md, evolved_md)
+        diff_path.write_text(diff_content)
+        print(f"
+进化完成，待审批：{output_path}")
+        print(f"变更 diff：{diff_path}")
+    else:
+        # 直接替换
+        skill_path.write_text(evolved_md)
+        print(f"
+进化完成，已自动应用")
+
+def generate_diff(old: str, new: str) -&gt; str:
+    """生成人类可读的 diff 报告"""
+    import difflib
+    diff = difflib.unified_diff(
+        old.splitlines(keepends=True),
+        new.splitlines(keepends=True),
+        fromfile="SKILL.md (before)",
+        tofile="SKILL.md (after)",
+    )
+    return "".join(diff)
+</code></pre>
+<h4 id="日志格式规范"><a class="header" href="#日志格式规范">日志格式规范</a></h4>
+<p>要让进化管线工作，首先需要标准化的执行日志。建议在你的 agent 框架中输出如下格式的 JSONL：</p>
+<pre><code class="language-json">{
+  "timestamp": "2026-04-14T10:30:00Z",
+  "skill_name": "lovstudio:any2pdf",
+  "skill_version": "a3f2b1c8",
+  "user_request": "把这篇论文转成 PDF，要用 nord-frost 主题",
+  "steps": [
+    {"action": "read_file", "target": "paper.md", "status": "ok"},
+    {"action": "run_script", "target": "md2pdf.py", "args": "--theme nord-frost", "status": "error", "error": "Font not found: FiraCode"}
+  ],
+  "outcome": "failure",
+  "error_message": "Font not found: FiraCode",
+  "duration_seconds": 12.3
+}
+</code></pre>
+<h4 id="触发策略"><a class="header" href="#触发策略">触发策略</a></h4>
+<p>不要每次失败就跑进化。推荐的触发策略：</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>触发方式</th><th>条件</th><th>适用场景</th></tr>
+</thead>
+<tbody>
+<tr><td>定时批量</td><td>每周一，若累积日志 &gt;= 20 条</td><td>稳定运行的 Skill</td></tr>
+<tr><td>阈值触发</td><td>近 50 次执行失败率 &gt; 15%</td><td>需要快速响应的场景</td></tr>
+<tr><td>手动触发</td><td>开发者主动运行</td><td>开发调试阶段</td></tr>
+<tr><td>CI/CD 集成</td><td>PR 合并后自动评估</td><td>成熟的 Skill 仓库</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="方案-bdspy-mipro-进化"><a class="header" href="#方案-bdspy-mipro-进化">方案 B：DSPy MIPRO 进化</a></h3>
+<p>当你有标注数据（输入-期望输出对）时，DSPy 能发挥更大威力。</p>
+<h4 id="准备工作"><a class="header" href="#准备工作">准备工作</a></h4>
+<pre><code class="language-bash">pip install dspy-ai
+</code></pre>
+<h4 id="核心实现"><a class="header" href="#核心实现">核心实现</a></h4>
+<pre><code class="language-python">import dspy
+
+# 1. 连接 LLM
+lm = dspy.LM("anthropic/claude-sonnet-4-20250514")
+dspy.configure(lm=lm)
+
+# 2. 定义 Skill 执行的 Signature
+class SkillExecution(dspy.Signature):
+    """根据用户请求和 Skill 指令，生成执行计划并执行"""
+    user_request: str = dspy.InputField(desc="用户的原始请求")
+    skill_context: str = dspy.InputField(desc="SKILL.md 中的关键指令")
+    execution_result: str = dspy.OutputField(desc="执行结果")
+
+# 3. 构建模块
+class EvolvableSkill(dspy.Module):
+    def __init__(self):
+        self.executor = dspy.ChainOfThought(SkillExecution)
+
+    def forward(self, user_request, skill_context):
+        return self.executor(user_request=user_request, skill_context=skill_context)
+
+# 4. 准备训练数据（从执行日志中提取）
+trainset = [
+    dspy.Example(
+        user_request="把 README.md 转成 PDF",
+        skill_context="...",
+        execution_result="成功生成 README.pdf，使用 warm-academic 主题"
+    ).with_inputs("user_request", "skill_context"),
+    # ... 更多样本
+]
+
+# 5. 定义 metric
+def execution_quality(example, pred, trace=None):
+    """评估执行结果质量（0-1）"""
+    # 简单版：关键词匹配
+    if "成功" in pred.execution_result or "success" in pred.execution_result.lower():
+        return 1.0
+    return 0.0
+
+# 6. 运行 MIPRO 优化
+optimizer = dspy.MIPROv2(
+    metric=execution_quality,
+    num_candidates=10,      # 生成 10 个候选 prompt
+    num_threads=4,
+    max_bootstrapped_demos=3,
+    max_labeled_demos=5,
+)
+
+optimized_skill = optimizer.compile(
+    EvolvableSkill(),
+    trainset=trainset,
+    requires_permission_to_run=True,  # 安全起见，需确认
+)
+
+# 7. 提取优化后的 instructions
+print(optimized_skill.executor.signature.instructions)
+# 将其写回 SKILL.md 的对应段落
+</code></pre>
+<p><strong>关键要点</strong>：</p>
+<ul>
+<li>DSPy 优化的是 prompt 中的 instructions 和 few-shot examples，不是整个 SKILL.md</li>
+<li>需要将 SKILL.md 中可优化的部分提取为 DSPy Signature 的 instructions</li>
+<li>优化完成后，把新 instructions 写回 SKILL.md</li>
+<li>MIPRO 的搜索空间指数级增长，<code>num_candidates</code> 控制在 10-30 之间即可</li>
+</ul>
+<h3 id="方案-ctextgrad-定向修复"><a class="header" href="#方案-ctextgrad-定向修复">方案 C：TextGrad 定向修复</a></h3>
+<p>TextGrad 特别适合“知道哪里出了问题，但不确定怎么改“的场景。</p>
+<pre><code class="language-python">import textgrad as tg
+
+# 1. 初始化
+engine = tg.get_engine("claude-sonnet-4-20250514")
+tg.set_backward_engine(engine)
+
+# 2. 将 SKILL.md 的关键段落设为可优化变量
+skill_instructions = tg.Variable(
+    value="""当用户请求生成 PDF 时：
+1. 检测输入文件格式（.md / .txt / .rst）
+2. 询问主题偏好
+3. 调用 md2pdf.py 执行转换""",
+    role_description="Skill 的核心执行指令",
+    requires_grad=True,  # 标记为可优化
+)
+
+# 3. 定义前向传播（模拟执行）
+def simulate_execution(instructions, user_request):
+    """模拟 agent 按照指令执行用户请求"""
+    response = engine.generate(
+        f"你是一个 AI agent，按照以下指令处理用户请求。
+
+指令：{instructions.value}
+
+用户请求：{user_request}"
+    )
+    return tg.Variable(value=response, role_description="执行结果")
+
+# 4. 定义 loss function
+def compute_loss(result, expected):
+    """用 LLM 评估结果与期望的差距"""
+    loss = engine.generate(
+        f"对比以下执行结果和期望结果，描述差距和改进方向。
+结果：{result.value}
+期望：{expected}"
+    )
+    return tg.Variable(value=loss, role_description="loss/改进方向")
+
+# 5. 执行优化循环
+test_cases = [
+    ("把这个 .rst 文件转成 PDF", "应该先将 .rst 转为 .md，再调用 md2pdf.py"),
+    ("生成一个带目录的 PDF", "应该在 md2pdf.py 调用中加入 --toc 参数"),
+]
+
+optimizer = tg.TGD(parameters=[skill_instructions], lr=1)  # lr 控制更新幅度
+
+for request, expected in test_cases:
+    result = simulate_execution(skill_instructions, request)
+    loss = compute_loss(result, expected)
+    loss.backward()         # 文本反向传播：生成改进建议
+    optimizer.step()        # 应用改进到 skill_instructions
+
+print("优化后的指令：")
+print(skill_instructions.value)
+</code></pre>
+<p><strong>TextGrad 的优势在于可解释性</strong>。每一步“梯度“都是自然语言形式的改进建议，你能清楚看到为什么做出每个修改。但它也有明显的局限：一次只能沿一个方向优化，容易陷入局部最优。</p>
+<h3 id="三种方案对比"><a class="header" href="#三种方案对比">三种方案对比</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>维度</th><th>方案 A: Experience-Based</th><th>方案 B: DSPy MIPRO</th><th>方案 C: TextGrad</th></tr>
+</thead>
+<tbody>
+<tr><td>前置要求</td><td>执行日志</td><td>标注数据集</td><td>失败 case + 期望结果</td></tr>
+<tr><td>实现复杂度</td><td>一个 Python 脚本</td><td>需要 DSPy 框架</td><td>需要 TextGrad 库</td></tr>
+<tr><td>搜索能力</td><td>依赖 LLM 的单次推理</td><td>贝叶斯全局搜索</td><td>局部梯度下降</td></tr>
+<tr><td>优化粒度</td><td>整个 SKILL.md</td><td>Signature 中的 instructions</td><td>指定段落</td></tr>
+<tr><td>人工参与</td><td>高（需审批）</td><td>低（自动选优）</td><td>中（需定义 test case）</td></tr>
+<tr><td>Token 消耗</td><td>~5K/轮</td><td>~50K-200K/轮</td><td>~10K/轮</td></tr>
+<tr><td>推荐用法</td><td>日常迭代</td><td>大版本优化</td><td>定点修复</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="125-案例设计-lovstudioskill-evolver-元技能"><a class="header" href="#125-案例设计-lovstudioskill-evolver-元技能">12.5 案例：设计 lovstudio:skill-evolver 元技能</a></h2>
+<p>最后，把上面的理论落地成一个真正的 Skill —— <code>lovstudio:skill-evolver</code>。这是一个<strong>元技能（Meta-Skill）</strong>：它的作用是优化其他 Skill。</p>
+<h3 id="设计目标"><a class="header" href="#设计目标">设计目标</a></h3>
+<pre><code>输入：一个 Skill 的路径 + 执行日志
+输出：改进后的 SKILL.md + 变更报告
+约束：每次最多修改 3 个段落；必须通过 lint；需人工确认
+</code></pre>
+<h3 id="skillmd-骨架"><a class="header" href="#skillmd-骨架">SKILL.md 骨架</a></h3>
+<pre><code class="language-yaml">---
+name: skill-evolver
+description: 分析 Skill 执行日志，自动生成 SKILL.md 改进方案
+version: 0.1.0
+author: lovstudio
+tags: [meta, evolution, optimization]
+compatibility:
+  - claude-code
+---
+</code></pre>
+<h3 id="核心-workflow"><a class="header" href="#核心-workflow">核心 Workflow</a></h3>
+<pre><code>Step 1: 环境检查
+  - 确认目标 Skill 路径存在
+  - 确认日志目录存在且有足够数据
+  - 读取当前 SKILL.md，计算版本 hash
+
+Step 2: 日志分析
+  - 解析 JSONL 日志
+  - 统计成功率、平均耗时、失败模式分布
+  - 如果失败率 &lt; 15%，报告"无需进化"并退出
+
+Step 3: 根因分析
+  - 对 top-5 失败模式逐个分析
+  - 定位到 SKILL.md 中导致失败的具体指令段落
+  - 区分：指令缺失 vs 指令模糊 vs 指令错误
+
+Step 4: 生成修订
+  - 对每个问题生成修复建议（附 confidence 分数）
+  - 只保留 confidence &gt;= 0.7 的修改
+  - 检查修改间是否互相冲突
+
+Step 5: 验证 &amp; 输出
+  - 对修订后的 SKILL.md 运行 lint（调用 lovstudio:skill-optimizer）
+  - 生成 unified diff
+  - 生成变更报告（Markdown 格式）
+  - 询问用户是否应用修改
+</code></pre>
+<h3 id="与-cicd-集成"><a class="header" href="#与-cicd-集成">与 CI/CD 集成</a></h3>
+<p>在成熟的 Skill 仓库中，可以把 <code>skill-evolver</code> 集成到 GitHub Actions：</p>
+<pre><code class="language-yaml"># .github/workflows/skill-evolution.yml
+name: Skill Evolution Check
+on:
+  schedule:
+    - cron: '0 9 * * 1'  # 每周一早 9 点
+  workflow_dispatch:       # 手动触发
+
+jobs:
+  evolve:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download execution logs
+        run: |
+          # 从你的日志存储拉取最近一周的执行日志
+          aws s3 sync s3://skill-logs/last-week ./logs/
+      - name: Run evolution analysis
+        run: |
+          for skill_dir in skills/lovstudio-*/; do
+            python scripts/evolve.py \
+              --skill "$skill_dir/SKILL.md" \
+              --logs "./logs/$(basename $skill_dir)/" \
+              --output "./evolution-reports/"
+          done
+      - name: Create PR if changes found
+        run: |
+          if [ -n "$(ls evolution-reports/*.md 2&gt;/dev/null)" ]; then
+            git checkout -b evolution/$(date +%Y-%m-%d)
+            # 应用所有通过验证的修改
+            python scripts/apply_evolution.py --reports ./evolution-reports/
+            git add skills/
+            git commit -m "chore(evolution): auto-evolve skills based on weekly logs"
+            gh pr create \
+              --title "Skill Evolution: $(date +%Y-%m-%d)" \
+              --body "$(cat evolution-reports/SUMMARY.md)"
+          fi
+</code></pre>
+<p>这样，每周一你会收到一个 PR，里面是所有 Skill 的改进建议，附带详细的失败分析和 diff。你只需要 review 和 merge。</p>
+<hr>
+<h2 id="本章小结"><a class="header" href="#本章小结">本章小结</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>要点</th><th>说明</th></tr>
+</thead>
+<tbody>
+<tr><td>Skill 进化的本质</td><td>把 SKILL.md 视为可优化的程序，用执行反馈驱动迭代</td></tr>
+<tr><td>方法论谱系</td><td>OPRO → EvoPrompt → PromptBreeder → DSPy MIPRO → TextGrad</td></tr>
+<tr><td>最实用的方案</td><td>Experience-Based（方案 A），日志驱动 + LLM 修订 + Lint 验证</td></tr>
+<tr><td>最强的方案</td><td>DSPy MIPRO（方案 B），但需要标注数据</td></tr>
+<tr><td>最精准的方案</td><td>TextGrad（方案 C），适合定点修复</td></tr>
+<tr><td>元技能设计</td><td><code>skill-evolver</code> 可以集成到 CI/CD，实现“每周自动进化“</td></tr>
+<tr><td>安全底线</td><td>始终保留人工审批环节；维护回归测试集防止退化</td></tr>
+</tbody>
+</table>
+</div>
+<p>Skill 自我进化是 2025-2026 年最值得关注的技术方向之一。它不会取代人类 Skill 设计者 —— 恰恰相反，它把设计者从繁琐的日志分析和参数调优中解放出来，让你专注于更高层次的设计决策：<strong>这个 Skill 应该解决什么问题？它的边界在哪里？它和其他 Skill 如何组合？</strong></p>
+<p>进化引擎负责“怎么做得更好“，你负责“做什么“和“为什么做“。这才是人机协作的正确分工。</p>
+<blockquote>
+<p><strong>下一章预告</strong>：第 13 章将讨论 Skill 的发布、分发与安全 —— 当你的 Skill 足够好，如何让更多人安全地使用它。</p>
+</blockquote>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../chapter-11/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../chapter-13/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../chapter-11/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../chapter-13/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../mark-09e88c2c.min.js"></script>
+        <script src="../searcher-c2a407aa.js"></script>
+
+        <script src="../clipboard-1626706a.min.js"></script>
+        <script src="../highlight-abc7f01d.js"></script>
+        <script src="../book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

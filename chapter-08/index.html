@@ -1,0 +1,617 @@
+<!DOCTYPE HTML>
+<html lang="zh" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Skill 组合模式 — 从单兵到军团 - Agent Skill 高质量设计指南</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="系统掌握 AI 编程助手 Skill 设计方法论，从架构到发布的完整指南">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../css/general-2459343d.css">
+        <link rel="stylesheet" href="../css/chrome-ae938929.css">
+        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex-fc53036c.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc-b872e53c.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Agent Skill 高质量设计指南</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/MarkShawn2020/agent-skill-design-guide" title="Git repository" aria-label="Git repository">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/MarkShawn2020/agent-skill-design-guide/edit/main/src/chapter-08/README.md" title="Suggest an edit" aria-label="Suggest an edit" rel="edit">
+                            <span class=fa-svg id="git-edit-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M421.7 220.3l-11.3 11.3-22.6 22.6-205 205c-6.6 6.6-14.8 11.5-23.8 14.1L30.8 511c-8.4 2.5-17.5 .2-23.7-6.1S-1.5 489.7 1 481.2L38.7 353.1c2.6-9 7.5-17.2 14.1-23.8l205-205 22.6-22.6 11.3-11.3 33.9 33.9 62.1 62.1 33.9 33.9zM96 353.9l-9.3 9.3c-.9 .9-1.6 2.1-2 3.4l-25.3 86 86-25.3c1.3-.4 2.5-1.1 3.4-2l9.3-9.3H112c-8.8 0-16-7.2-16-16V353.9zM453.3 19.3l39.4 39.4c25 25 25 65.5 0 90.5l-14.5 14.5-22.6 22.6-11.3 11.3-33.9-33.9-62.1-62.1L314.3 67.7l11.3-11.3 22.6-22.6 14.5-14.5c25-25 65.5-25 90.5 0z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="第-8-章skill-组合模式--从单兵到军团"><a class="header" href="#第-8-章skill-组合模式--从单兵到军团">第 8 章：Skill 组合模式 — 从单兵到军团</a></h1>
+<p><img src="../assets/images/chapters/ch08-composition.png" alt="Skill 组合 — 兵马俑的三种阵型"></p>
+<blockquote>
+<p>“Unix 哲学的精髓不是写一个什么都能做的程序，而是写很多小程序，让它们协作。”
+—— Doug McIlroy</p>
+</blockquote>
+<p>单个 Skill 解决单个问题。但真实场景从来不是单个问题 —— 客户说“帮我出份方案“，背后是需求分析、文案生成、配图、排版、导出 PDF 五个环节串联。这一章讲的就是：<strong>如何让多个 Skill 像军团一样协同作战。</strong></p>
+<p>我们将从 lovstudio-skills 仓库的真实案例出发，拆解三种经过验证的组合模式，以及三种你应该避免的反模式。</p>
+<hr>
+<h2 id="81-skill-间调用基本机制"><a class="header" href="#81-skill-间调用基本机制">8.1 Skill 间调用：基本机制</a></h2>
+<p>在 Agent Skill 体系中，一个 Skill 调用另一个 Skill 的方式出奇地简单 —— <strong>直接在 SKILL.md 的 Workflow 中写 slash command。</strong> AI 助手读到指令后，会自动切换到目标 Skill 的上下文执行。</p>
+<pre><code class="language-markdown">### Step 5: 自动生成 PDF
+
+配图完成后，调用 any2pdf skill：
+
+    /lovstudio-any2pdf {illustrated_file_path}
+
+默认推荐选项：
+- 主题：chinese-red（政企客户）或 warm-academic（科技客户）
+</code></pre>
+<p>这段来自 <code>lovstudio:proposal</code> 的 SKILL.md。它没有 import 语句，没有 API 调用，没有 RPC —— 就是一行 slash command。AI 助手看到 <code>/lovstudio-any2pdf</code>，就知道要激活 <code>any2pdf</code> Skill 并传入文件路径。</p>
+<p>这种调用机制有三个特点：</p>
+<ol>
+<li><strong>声明式</strong>：你告诉 AI “调用那个 Skill”，而不是写代码去调用</li>
+<li><strong>松耦合</strong>：调用方不需要知道被调用方的内部实现</li>
+<li><strong>上下文传递</strong>：文件路径、用户偏好等信息通过自然语言传递，不需要序列化/反序列化</li>
+</ol>
+<h3 id="依赖声明"><a class="header" href="#依赖声明">依赖声明</a></h3>
+<p>虽然调用本身是隐式的（写在 Workflow 里），但好的 Skill 会在 frontmatter 中显式声明依赖。看 <code>lovstudio:proposal</code> 的做法：</p>
+<pre><code class="language-yaml">compatibility: &gt;
+  Pure instruction skill — no scripts. Depends on lovstudio:illustrate
+  and lovstudio:any2pdf for the full pipeline.
+</code></pre>
+<p>再看 <code>lovstudio:xbti-creator</code>：</p>
+<pre><code class="language-yaml">compatibility: &gt;
+  Requires Node.js 18+ and a package manager (pnpm/npm/bun).
+  Avatar generation requires lovstudio:image-creator skill and ZENMUX_API_KEY.
+</code></pre>
+<p>两者都在 <code>compatibility</code> 字段中明确列出了依赖的 Skill 和外部工具。这不是运行时强制的 —— 没有包管理器会替你检查 —— 但它是给人（和 AI）看的契约。</p>
+<h3 id="依赖链管理"><a class="header" href="#依赖链管理">依赖链管理</a></h3>
+<p>当 A 依赖 B，B 又依赖 C 时，依赖链就形成了。以 <code>proposal</code> 为例：</p>
+<pre><code>proposal → illustrate → image-creator (需要 ZENMUX_API_KEY)
+proposal → any2pdf (需要 reportlab)
+</code></pre>
+<p>当前 Agent Skill 生态没有自动的依赖解析机制（不像 npm 或 pip）。每个 Skill 需要自己在 Workflow 中检查前置条件。<code>xbti-creator</code> 的做法值得借鉴 —— 它在 Step 2 里用 bash 逐项检查环境：</p>
+<pre><code class="language-bash"># image-creator skill
+ls ~/.claude/skills/lovstudio-image-creator/gen_image.py 2&gt;/dev/null \
+  &amp;&amp; echo "OK" || echo "MISSING"
+
+# Zenmux API key
+[ -n "$ZENMUX_API_KEY" ] &amp;&amp; echo "OK" || echo "MISSING"
+</code></pre>
+<p><strong>缺失时自动修复，修不了再问用户。</strong> 这是目前最务实的依赖管理策略。</p>
+<hr>
+<h2 id="82-组合模式一pipeline串联"><a class="header" href="#82-组合模式一pipeline串联">8.2 组合模式一：Pipeline（串联）</a></h2>
+<p>Pipeline 是最直觉的组合模式 —— 上一步的输出就是下一步的输入，像流水线。</p>
+<h3 id="模式图"><a class="header" href="#模式图">模式图</a></h3>
+<pre><code class="language-mermaid">graph LR
+    A[Markdown 源文件] --&gt; B[any2pdf]
+    B --&gt; C[PDF 文件]
+    C --&gt; D[pdf2png]
+    D --&gt; E[长图 PNG]
+
+    style A fill:#f9f9f7,stroke:#cc785c
+    style B fill:#cc785c,stroke:#181818,color:#fff
+    style C fill:#f9f9f7,stroke:#cc785c
+    style D fill:#cc785c,stroke:#181818,color:#fff
+    style E fill:#f9f9f7,stroke:#cc785c
+</code></pre>
+<h3 id="真实案例any2pdf--pdf2png"><a class="header" href="#真实案例any2pdf--pdf2png">真实案例：any2pdf → pdf2png</a></h3>
+<p>用户需要把 Markdown 报告发到微信群里 —— 微信不支持 PDF 预览，只能发图片。于是：</p>
+<ol>
+<li><code>any2pdf</code> 把 Markdown 转为带主题样式的 PDF</li>
+<li><code>pdf2png</code> 把 PDF 的每一页渲染成高清图片，然后纵向拼接成一张长图</li>
+</ol>
+<p>两个 Skill 完全独立开发，各自有自己的 SKILL.md 和脚本。它们之间的“接口“就是一个 PDF 文件。</p>
+<h3 id="pipeline-模式的设计原则"><a class="header" href="#pipeline-模式的设计原则">Pipeline 模式的设计原则</a></h3>
+<p><strong>原则一：中间产物用通用格式。</strong></p>
+<p>PDF、Markdown、PNG、JSON —— 这些是 Skill 之间最好的“接口“。不要发明自定义的中间格式，那会让 Pipeline 变脆弱。<code>any2pdf</code> 输出标准 PDF，任何能处理 PDF 的 Skill 都能接在后面。</p>
+<p><strong>原则二：每个 Skill 必须能独立运行。</strong></p>
+<p><code>pdf2png</code> 不关心 PDF 是 <code>any2pdf</code> 生成的还是用户自己的。它只需要一个 PDF 路径。这保证了 Pipeline 中的每个节点都可以单独测试、单独使用。</p>
+<p><strong>原则三：失败时中间产物应该保留。</strong></p>
+<p>如果 <code>pdf2png</code> 崩了，用户至少还有 <code>any2pdf</code> 生成的 PDF。Pipeline 设计时要确保每一步的输出都写到磁盘，而不是只存在内存里。</p>
+<h3 id="何时使用-pipeline"><a class="header" href="#何时使用-pipeline">何时使用 Pipeline</a></h3>
+<ul>
+<li>数据有明确的“加工方向“：原材料 → 半成品 → 成品</li>
+<li>每一步的转换逻辑相对独立</li>
+<li>用户可能只需要中间产物（比如只要 PDF 不要 PNG）</li>
+</ul>
+<hr>
+<h2 id="83-组合模式二orchestrator编排"><a class="header" href="#83-组合模式二orchestrator编排">8.3 组合模式二：Orchestrator（编排）</a></h2>
+<p>Orchestrator 比 Pipeline 复杂 —— 一个“指挥官“ Skill 协调多个“士兵“ Skill，控制执行顺序、传递上下文、处理分支逻辑。</p>
+<h3 id="模式图-1"><a class="header" href="#模式图-1">模式图</a></h3>
+<pre><code class="language-mermaid">graph TD
+    U[用户需求] --&gt; P[proposal 编排器]
+    P --&gt; S1[Step 1-3: 自身逻辑&lt;br/&gt;需求分析 + 文案生成]
+    S1 --&gt; S2[illustrate&lt;br/&gt;AI 配图]
+    S2 --&gt; S3[any2pdf&lt;br/&gt;PDF 排版]
+    S3 --&gt; S4[交付确认]
+
+    P -.-&gt;|传递主题偏好| S3
+    P -.-&gt;|传递文件路径| S2
+    P -.-&gt;|传递文件路径| S3
+
+    style P fill:#cc785c,stroke:#181818,color:#fff
+    style S2 fill:#e8d5c4,stroke:#cc785c
+    style S3 fill:#e8d5c4,stroke:#cc785c
+</code></pre>
+<h3 id="真实案例proposal"><a class="header" href="#真实案例proposal">真实案例：proposal</a></h3>
+<p><code>lovstudio:proposal</code> 是一个典型的 Orchestrator。它的 Workflow 有 6 个 Step：</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Step</th><th>执行者</th><th>做什么</th></tr>
+</thead>
+<tbody>
+<tr><td>1</td><td>proposal 自身</td><td>读取/收集客户需求</td></tr>
+<tr><td>2</td><td>proposal 自身</td><td>交互式确认方案参数（报价策略、主题等）</td></tr>
+<tr><td>3</td><td>proposal 自身</td><td>生成 10 章结构的方案 Markdown</td></tr>
+<tr><td>4</td><td>illustrate</td><td>AI 自动配图（最多 8 张）</td></tr>
+<tr><td>5</td><td>any2pdf</td><td>转为带主题样式的 PDF</td></tr>
+<tr><td>6</td><td>proposal 自身</td><td>输出交付清单</td></tr>
+</tbody>
+</table>
+</div>
+<p>关键在于 Step 4 和 Step 5 —— proposal 不会自己画图或排版，它把这些工作<strong>委托</strong>给专门的 Skill。但它掌控全局：决定什么时候调用谁、传什么参数、用什么主题。</p>
+<p>再看 SKILL.md 中的具体指令：</p>
+<pre><code class="language-markdown">### Step 4: 自动配图
+
+生成 markdown 后，调用 illustrate skill：
+
+    /lovstudio:illustrate {file_path} --auto --max 8
+</code></pre>
+<pre><code class="language-markdown">### Step 5: 自动生成 PDF
+
+配图完成后，调用 any2pdf skill：
+
+    /lovstudio-any2pdf {illustrated_file_path}
+
+默认推荐选项：
+- 主题：chinese-red（政企客户）或 warm-academic（科技客户）
+- 水印：商业机密
+</code></pre>
+<p>Orchestrator 的威力在于：<strong>每个子 Skill 只做一件事，但组合起来能完成复杂的端到端流程。</strong></p>
+<h3 id="xbti-creator带自动修复的-orchestrator"><a class="header" href="#xbti-creator带自动修复的-orchestrator">xbti-creator：带自动修复的 Orchestrator</a></h3>
+<p><code>lovstudio:xbti-creator</code> 展示了 Orchestrator 的另一个面向 —— <strong>环境编排</strong>。</p>
+<p>它在 Step 2 中检查 6 项前置条件（Node.js、包管理器、git、image-creator Skill、API Key、Python 依赖），对每一项都定义了自动修复策略：</p>
+<pre><code class="language-bash"># image-creator missing → 自动安装
+npx skills add lovstudio/skills --skill lovstudio:image-creator
+
+# Python deps missing → 自动安装
+pip install google-genai Pillow --break-system-packages
+</code></pre>
+<p>只有真正无法自动修复的问题（Node.js 缺失、API Key 缺失）才会中断流程问用户。这种<strong>渐进式降级</strong>的依赖处理方式，比粗暴的“缺依赖就报错退出“好得多。</p>
+<h3 id="orchestrator-模式的设计原则"><a class="header" href="#orchestrator-模式的设计原则">Orchestrator 模式的设计原则</a></h3>
+<p><strong>原则一：编排器拥有全局上下文。</strong></p>
+<p>proposal 知道用户选了“精简报价“还是“重点客户“，知道目标客户是政企还是科技公司。它把这些上下文翻译成子 Skill 能理解的参数（<code>--theme chinese-red</code> vs <code>warm-academic</code>）。子 Skill 不需要知道“为什么用这个主题“。</p>
+<p><strong>原则二：编排器不复制子 Skill 的逻辑。</strong></p>
+<p>proposal 不会自己写 PDF 渲染代码。它信任 <code>any2pdf</code> 能把 Markdown 变成好看的 PDF。如果发现自己在编排器里重写子 Skill 的逻辑，说明拆分有问题。</p>
+<p><strong>原则三：编排器定义“胶水“。</strong></p>
+<p>子 Skill 之间不直接通信。所有协调工作 —— 参数映射、文件路径传递、执行顺序控制 —— 都在编排器的 SKILL.md 里完成。这让每个子 Skill 保持独立可测试。</p>
+<h3 id="pipeline-vs-orchestrator区别在哪"><a class="header" href="#pipeline-vs-orchestrator区别在哪">Pipeline vs Orchestrator：区别在哪？</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>维度</th><th>Pipeline</th><th>Orchestrator</th></tr>
+</thead>
+<tbody>
+<tr><td>控制流</td><td>线性，A→B→C</td><td>有分支、条件、并行可能</td></tr>
+<tr><td>上下文</td><td>只通过中间产物传递</td><td>编排器持有全局上下文</td></tr>
+<tr><td>调用方式</td><td>可以手动串联</td><td>必须有一个“指挥官“</td></tr>
+<tr><td>子 Skill 关系</td><td>平等，首尾相接</td><td>主从，编排器统领</td></tr>
+<tr><td>典型场景</td><td>格式转换链</td><td>端到端业务流程</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="84-组合模式三shared-library共享资源"><a class="header" href="#84-组合模式三shared-library共享资源">8.4 组合模式三：Shared Library（共享资源）</a></h2>
+<p>前两种模式是关于“Skill 怎么调用 Skill“。第三种模式不同 —— 它是关于“多个 Skill 怎么共享同一套资源“。</p>
+<h3 id="模式图-2"><a class="header" href="#模式图-2">模式图</a></h3>
+<pre><code class="language-mermaid">graph TD
+    T[14 套主题系统&lt;br/&gt;色彩 / 字体 / 布局]
+
+    A[any2pdf] --&gt; T
+    B[any2docx] --&gt; T
+    C[proposal] -.-&gt;|通过 any2pdf| T
+    D[md2pdf] -.-&gt;|pandoc 变体| T
+
+    style T fill:#cc785c,stroke:#181818,color:#fff
+    style A fill:#e8d5c4,stroke:#cc785c
+    style B fill:#e8d5c4,stroke:#cc785c
+    style C fill:#e8d5c4,stroke:#cc785c
+    style D fill:#e8d5c4,stroke:#cc785c
+</code></pre>
+<h3 id="真实案例14-套主题系统"><a class="header" href="#真实案例14-套主题系统">真实案例：14 套主题系统</a></h3>
+<p>lovstudio-skills 仓库中有 14 套颜色主题（warm-academic、nord-frost、github-light、chinese-red 等）。这套主题被多个 Skill 使用：</p>
+<ul>
+<li><code>any2pdf</code> 用它渲染 PDF 的背景色、文字色、强调色</li>
+<li><code>any2docx</code> 用它设置 Word 文档的样式</li>
+<li><code>proposal</code> 通过调用 <code>any2pdf</code> 间接使用它</li>
+<li><code>md2pdf</code> 的 pandoc 引擎有对应的主题变体</li>
+</ul>
+<p>看两个 Skill 中主题定义的代码：</p>
+<p><strong>any2pdf/scripts/md2pdf.py：</strong></p>
+<pre><code class="language-python"># THEMES — each theme has colors + layout for real typographic difference
+THEMES = {
+    "warm-academic": { ... },
+    "nord-frost": { ... },
+    "chinese-red": { ... },
+    # ... 共 14 套
+}
+</code></pre>
+<p><strong>any2docx/scripts/md2docx.py：</strong></p>
+<pre><code class="language-python"># THEMES — same palette as any2pdf
+THEMES = {
+    "warm-academic": { ... },
+    "nord-frost": { ... },
+    "chinese-red": { ... },
+    # ... 共 14 套
+}
+</code></pre>
+<p>注意第二段代码的注释：<code>same palette as any2pdf</code>。这说明开发者<strong>有意</strong>让两个 Skill 的主题保持一致。用户在 <code>any2pdf</code> 中选了 <code>warm-academic</code>，生成的 PDF 和用 <code>any2docx</code> 生成的 Word 应该是同一个视觉风格。</p>
+<h3 id="共享的三种实现方式"><a class="header" href="#共享的三种实现方式">共享的三种实现方式</a></h3>
+<p>在当前 Agent Skill 生态中，共享资源有三种落地方式，各有取舍：</p>
+<h4 id="方式一copy-paste当前做法"><a class="header" href="#方式一copy-paste当前做法">方式一：Copy-Paste（当前做法）</a></h4>
+<p>每个 Skill 的脚本里都有一份完整的 <code>THEMES</code> 字典。新增主题时需要同步更新所有 Skill。</p>
+<ul>
+<li><strong>优点</strong>：每个 Skill 完全自包含，零外部依赖</li>
+<li><strong>缺点</strong>：主题数据重复，新增/修改主题需要多处同步</li>
+<li><strong>适用</strong>：Skill 数量少（&lt; 5 个），主题变更不频繁</li>
+</ul>
+<h4 id="方式二共享引用文件"><a class="header" href="#方式二共享引用文件">方式二：共享引用文件</a></h4>
+<p>把主题定义提取到一个共享位置（比如 <code>shared/themes.json</code>），各 Skill 在运行时读取：</p>
+<pre><code class="language-python">import json
+from pathlib import Path
+
+THEMES_PATH = Path(__file__).parent.parent.parent.parent / "shared" / "themes.json"
+THEMES = json.loads(THEMES_PATH.read_text())
+</code></pre>
+<ul>
+<li><strong>优点</strong>：Single Source of Truth，改一处全局生效</li>
+<li><strong>缺点</strong>：引入了路径依赖，单独安装某个 Skill 时可能找不到共享文件</li>
+<li><strong>适用</strong>：Skill 在同一个仓库中开发和部署</li>
+</ul>
+<h4 id="方式三构建时注入"><a class="header" href="#方式三构建时注入">方式三：构建时注入</a></h4>
+<p>用构建脚本在发布前把共享数据“烧“进每个 Skill 的脚本里。开发时维护一份，发布时每个 Skill 都是自包含的。</p>
+<pre><code class="language-bash"># build.sh
+python scripts/inject_themes.py \
+    --source shared/themes.json \
+    --targets skills/lovstudio-any2pdf/scripts/md2pdf.py \
+              skills/lovstudio-any2docx/scripts/md2docx.py
+</code></pre>
+<ul>
+<li><strong>优点</strong>：兼顾 DRY 和自包含</li>
+<li><strong>缺点</strong>：需要额外的构建步骤</li>
+<li><strong>适用</strong>：Skill 需要独立分发，但数据必须一致</li>
+</ul>
+<h3 id="shared-library-模式的设计原则"><a class="header" href="#shared-library-模式的设计原则">Shared Library 模式的设计原则</a></h3>
+<p><strong>原则一：共享的是数据，不是逻辑。</strong></p>
+<p>主题的颜色值可以共享，但 <code>any2pdf</code> 用 reportlab 渲染和 <code>any2docx</code> 用 python-docx 渲染的<strong>逻辑</strong>不应该共享。不同输出格式的渲染逻辑差异很大，强行共享只会制造 leaky abstraction。</p>
+<p><strong>原则二：共享资源必须有版本。</strong></p>
+<p>当你修改了主题色值，需要知道哪些 Skill 还在用旧版本。最简单的做法是在主题数据里加 <code>version</code> 字段，或者利用 git 的 blame 追踪同步状态。</p>
+<p><strong>原则三：宁可多复制，不要错共享。</strong></p>
+<p>如果两个 Skill 对同一份数据有不同的需求（比如 <code>any2pdf</code> 的主题需要 <code>code_bg</code> 字段而 <code>any2docx</code> 不需要），不要为了 DRY 而强行统一数据结构。让各自持有各自需要的子集，用注释标明“与 XXX 保持同步“即可。</p>
+<hr>
+<h2 id="85-组合模式对比"><a class="header" href="#85-组合模式对比">8.5 组合模式对比</a></h2>
+<p>三种模式并不互斥，一个复杂系统中往往同时存在。下面这张表帮你在具体场景中选择：</p>
+<pre><code class="language-mermaid">graph LR
+    subgraph Pipeline
+        P1[Skill A] --&gt;|文件| P2[Skill B] --&gt;|文件| P3[Skill C]
+    end
+
+    subgraph Orchestrator
+        O0[编排器] --&gt; O1[Skill X]
+        O0 --&gt; O2[Skill Y]
+        O0 --&gt; O3[Skill Z]
+    end
+
+    subgraph Shared Library
+        S1[Skill M] --&gt; S0[共享资源]
+        S2[Skill N] --&gt; S0
+    end
+</code></pre>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>维度</th><th>Pipeline</th><th>Orchestrator</th><th>Shared Library</th></tr>
+</thead>
+<tbody>
+<tr><td>关系</td><td>串联</td><td>主从</td><td>对等</td></tr>
+<tr><td>耦合点</td><td>中间产物格式</td><td>编排器的 Workflow</td><td>共享数据的 schema</td></tr>
+<tr><td>新增 Skill</td><td>在链上插入新节点</td><td>编排器增加一个 Step</td><td>新 Skill 引用共享资源</td></tr>
+<tr><td>典型场景</td><td>格式转换</td><td>端到端业务流程</td><td>设计系统 / 配置</td></tr>
+<tr><td>复杂度</td><td>低</td><td>中-高</td><td>低</td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="86-反模式组合中的常见陷阱"><a class="header" href="#86-反模式组合中的常见陷阱">8.6 反模式：组合中的常见陷阱</a></h2>
+<h3 id="反模式一循环依赖"><a class="header" href="#反模式一循环依赖">反模式一：循环依赖</a></h3>
+<pre><code class="language-mermaid">graph LR
+    A[Skill A] --&gt;|调用| B[Skill B]
+    B --&gt;|调用| A
+
+    style A fill:#ff6b6b,stroke:#181818,color:#fff
+    style B fill:#ff6b6b,stroke:#181818,color:#fff
+</code></pre>
+<p><strong>症状：</strong> Skill A 在某个 Step 调用 Skill B，而 Skill B 在某个 Step 又调用 Skill A。</p>
+<p><strong>后果：</strong> AI 助手陷入死循环，或者在某次调用时上下文窗口溢出。</p>
+<p><strong>修复：</strong> 提取共同逻辑为第三个 Skill，让 A 和 B 都依赖 C 而不是互相依赖。或者重新审视设计 —— 循环依赖几乎总是意味着职责划分有问题。</p>
+<h3 id="反模式二隐式依赖"><a class="header" href="#反模式二隐式依赖">反模式二：隐式依赖</a></h3>
+<p><strong>症状：</strong> Skill A 的 Workflow 里直接写了 <code>python ~/.claude/skills/lovstudio-foo/scripts/bar.py</code>，但 <code>compatibility</code> 字段里没提 <code>lovstudio:foo</code>。</p>
+<p><strong>后果：</strong> 用户单独安装 Skill A，运行时报 “file not found”。排查半天才发现还需要安装另一个 Skill。</p>
+<p><strong>修复：</strong> 所有 Skill 间依赖必须在 <code>compatibility</code> 字段中声明。Workflow 中使用 slash command（<code>/lovstudio:foo</code>）而不是直接调用脚本路径 —— 这样 AI 助手会提示用户安装缺失的 Skill。</p>
+<h3 id="反模式三版本不一致"><a class="header" href="#反模式三版本不一致">反模式三：版本不一致</a></h3>
+<p><strong>症状：</strong> <code>any2pdf</code> 新增了第 15 套主题 <code>sakura-pink</code>，但忘了同步到 <code>any2docx</code>。用户在 <code>proposal</code> 中选了 <code>sakura-pink</code>，PDF 有对应样式，但导出 Word 时回退到默认主题。</p>
+<p><strong>后果：</strong> 用户感到困惑 —— 同一个主题在不同格式下长得不一样。</p>
+<p><strong>修复三板斧：</strong></p>
+<ol>
+<li><strong>注释锚点</strong>：在每个 THEMES 字典上方写 <code># THEMES — same palette as any2pdf, keep in sync</code></li>
+<li><strong>Changelog 联动</strong>：每次修改主题时，在 commit message 中标注 <code>[sync: any2pdf, any2docx, md2pdf]</code></li>
+<li><strong>Lint 检查</strong>（如果你有 CI）：写一个脚本对比各 Skill 的主题列表，不一致时报 warning</li>
+</ol>
+<h3 id="反模式四编排器做太多"><a class="header" href="#反模式四编排器做太多">反模式四：编排器做太多</a></h3>
+<p><strong>症状：</strong> Orchestrator Skill 的 SKILL.md 超过 500 行，其中大部分是应该属于子 Skill 的实现细节。</p>
+<p><strong>后果：</strong> 编排器变成了 monolith。修改任何一个环节都要改编排器。子 Skill 名存实亡，因为所有细节都写在编排器里。</p>
+<p><strong>修复：</strong> 编排器只做三件事 —— (1) 收集用户输入，(2) 决定调用哪些 Skill 以及顺序，(3) 传递参数。其他所有事情都交给子 Skill。如果你发现编排器在写“如何渲染 PDF“的细节，那就是越界了。</p>
+<hr>
+<h2 id="87-实战设计一个新的组合-skill"><a class="header" href="#87-实战设计一个新的组合-skill">8.7 实战：设计一个新的组合 Skill</a></h2>
+<p>让我们用一个假想需求来练习组合模式的应用。</p>
+<p><strong>需求：</strong> 用户说“帮我把这篇文章做成小红书卡片“。</p>
+<p><strong>分析：</strong></p>
+<ol>
+<li>文章需要拆分为多张卡片的文案 —— 这是<strong>内容处理</strong></li>
+<li>每张卡片需要配图 —— 这是<strong>图片生成</strong></li>
+<li>卡片需要加上品牌水印和排版 —— 这是<strong>视觉处理</strong></li>
+</ol>
+<p><strong>组合设计：</strong></p>
+<pre><code class="language-mermaid">graph TD
+    U[用户: 文章 URL / Markdown] --&gt; O[xhs-cards 编排器]
+    O --&gt; S1[内容拆解&lt;br/&gt;自身逻辑]
+    S1 --&gt; S2[image-creator&lt;br/&gt;生成配图]
+    S2 --&gt; S3[卡片排版&lt;br/&gt;自身逻辑]
+
+    T[共享资源:&lt;br/&gt;品牌色系 / 字体] -.-&gt; S3
+
+    style O fill:#cc785c,stroke:#181818,color:#fff
+    style S2 fill:#e8d5c4,stroke:#cc785c
+    style T fill:#f9f9f7,stroke:#cc785c
+</code></pre>
+<p>这里同时用到了三种模式：</p>
+<ul>
+<li><strong>Orchestrator</strong>：<code>xhs-cards</code> 编排整个流程</li>
+<li><strong>Pipeline</strong>：内容拆解 → 配图 → 排版的线性流</li>
+<li><strong>Shared Library</strong>：品牌设计资源被卡片排版和配图共同使用</li>
+</ul>
+<hr>
+<h2 id="88-本章小结"><a class="header" href="#88-本章小结">8.8 本章小结</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>要点</th><th>内容</th></tr>
+</thead>
+<tbody>
+<tr><td>调用机制</td><td>Slash command + 自然语言传参，声明式、松耦合</td></tr>
+<tr><td>依赖声明</td><td>在 <code>compatibility</code> 字段中显式列出，Workflow 中自动检查</td></tr>
+<tr><td>Pipeline</td><td>线性串联，中间产物用通用格式，每个节点独立可运行</td></tr>
+<tr><td>Orchestrator</td><td>一个编排器统领多个子 Skill，持有全局上下文</td></tr>
+<tr><td>Shared Library</td><td>多个 Skill 共享数据资源，注意同步一致性</td></tr>
+<tr><td>核心反模式</td><td>循环依赖、隐式依赖、版本不一致、编排器过度膨胀</td></tr>
+</tbody>
+</table>
+</div>
+<p><strong>下一步行动：</strong> 审视你已有的 Skill，哪些可以组合？哪些在重复造轮子？如果你发现两个 Skill 的 SKILL.md 里有相似的 Step，也许是时候提取一个共享的子 Skill 了。</p>
+<blockquote>
+<p>好的军团不是人多，而是分工明确、配合默契。Skill 组合也一样 —— 每个 Skill 做好自己的事，编排器做好调度，共享资源做好同步。三条线拉齐，复杂的业务流程就能用简单的方式搞定。</p>
+</blockquote>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../chapter-07/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../chapter-09/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../chapter-07/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../chapter-09/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../mark-09e88c2c.min.js"></script>
+        <script src="../searcher-c2a407aa.js"></script>
+
+        <script src="../clipboard-1626706a.min.js"></script>
+        <script src="../highlight-abc7f01d.js"></script>
+        <script src="../book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

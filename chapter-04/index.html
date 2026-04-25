@@ -1,0 +1,597 @@
+<!DOCTYPE HTML>
+<html lang="zh" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Skill 质量模型 — 如何定义和衡量「高质量」 - Agent Skill 高质量设计指南</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="系统掌握 AI 编程助手 Skill 设计方法论，从架构到发布的完整指南">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../css/general-2459343d.css">
+        <link rel="stylesheet" href="../css/chrome-ae938929.css">
+        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex-fc53036c.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc-b872e53c.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Agent Skill 高质量设计指南</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/MarkShawn2020/agent-skill-design-guide" title="Git repository" aria-label="Git repository">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/MarkShawn2020/agent-skill-design-guide/edit/main/src/chapter-04/README.md" title="Suggest an edit" aria-label="Suggest an edit" rel="edit">
+                            <span class=fa-svg id="git-edit-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M421.7 220.3l-11.3 11.3-22.6 22.6-205 205c-6.6 6.6-14.8 11.5-23.8 14.1L30.8 511c-8.4 2.5-17.5 .2-23.7-6.1S-1.5 489.7 1 481.2L38.7 353.1c2.6-9 7.5-17.2 14.1-23.8l205-205 22.6-22.6 11.3-11.3 33.9 33.9 62.1 62.1 33.9 33.9zM96 353.9l-9.3 9.3c-.9 .9-1.6 2.1-2 3.4l-25.3 86 86-25.3c1.3-.4 2.5-1.1 3.4-2l9.3-9.3H112c-8.8 0-16-7.2-16-16V353.9zM453.3 19.3l39.4 39.4c25 25 25 65.5 0 90.5l-14.5 14.5-22.6 22.6-11.3 11.3-33.9-33.9-62.1-62.1L314.3 67.7l11.3-11.3 22.6-22.6 14.5-14.5c25-25 65.5-25 90.5 0z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="第-4-章skill-质量模型--如何定义和衡量高质量"><a class="header" href="#第-4-章skill-质量模型--如何定义和衡量高质量">第 4 章：Skill 质量模型 — 如何定义和衡量「高质量」</a></h1>
+<p><img src="../assets/images/chapters/ch04-quality-model.png" alt="质量五维度 — 天平上的五颗宝石"></p>
+<blockquote>
+<p>“Not everything that counts can be counted, and not everything that can be counted counts.”
+— William Bruce Cameron</p>
+</blockquote>
+<p>在第 2-3 章中，我们已经了解了 Skill 的架构和规范。但掌握规范只是入门——就像知道 Python 语法不等于写得出优雅的代码，符合 SKILL.md 格式不等于写出了高质量的 Skill。</p>
+<p>本章是全书的理论核心。我们将回答一个根本问题：<strong>什么是「高质量」的 Skill，如何系统地衡量它？</strong></p>
+<p>我们将提出一个五维度质量模型，结合业界首个 Skill 基准测试 SkillsBench 的实证数据，以及 agentskills.io 平台的评审标准，构建一套从理论到实践的完整质量评估框架。最后，我们用 <code>lovstudio:fill-form</code> 的真实迭代历程作为案例，展示质量模型如何指导 Skill 的持续改进。</p>
+<hr>
+<h2 id="41-为什么需要质量模型"><a class="header" href="#41-为什么需要质量模型">4.1 为什么需要质量模型</a></h2>
+<p>你可能会问：Skill 不就是一段给 AI 的指令吗，有什么「质量」可言？</p>
+<p>这个问题的答案藏在 SkillsBench（arXiv: 2602.12670）的一组数据中：研究者对 86 个任务、7 种 Agent-模型配置进行了 7,308 次执行轨迹测试，发现 <strong>curated Skills 平均提升 pass rate 16.2 个百分点，但其中 16 个任务反而出现了负面效果</strong>。更惊人的是，<strong>模型自己生成的 Skills 平均 pass rate 比不用 Skill 还低 1.3 个百分点</strong>。</p>
+<p>这说明三件事：</p>
+<ol>
+<li><strong>Skill 质量差异巨大</strong>——好的 Skill 能让小模型追平大模型的表现，差的 Skill 反而拖后腿</li>
+<li><strong>质量不是自动涌现的</strong>——即使是最强的 LLM 也无法可靠地自动生成高质量 Skill</li>
+<li><strong>我们需要一套标准来定义、衡量和追踪 Skill 质量</strong>——否则改进就是盲人摸象</li>
+</ol>
+<h2 id="42-质量五维度模型"><a class="header" href="#42-质量五维度模型">4.2 质量五维度模型</a></h2>
+<p>经过对 30+ 个 Skill 的设计、迭代和生产使用经验总结，结合 SkillsBench 的实证研究和 agentskills.io 的评审标准，我们提出 <strong>Skill 质量五维度模型（Five-Dimension Quality Model, 5DQM）</strong>：</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>维度</th><th>英文名</th><th>核心问题</th><th>衡量方式</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>D1 触发准确率</strong></td><td>Trigger Precision</td><td>description 能否在正确场景被精准激活？</td><td>触发命中率 / 误触率</td></tr>
+<tr><td><strong>D2 首次执行成功率</strong></td><td>First-Run Success Rate</td><td>用户首次调用能否得到预期结果？</td><td>端到端成功率</td></tr>
+<tr><td><strong>D3 Token 效率</strong></td><td>Token Efficiency</td><td>完成任务消耗的 token 数是否合理？</td><td>token/任务 比值</td></tr>
+<tr><td><strong>D4 可维护性</strong></td><td>Maintainability</td><td>他人能否理解、修改、扩展？</td><td>代码/指令可读性评估</td></tr>
+<tr><td><strong>D5 可组合性</strong></td><td>Composability</td><td>能否与其他 Skill 无缝协作？</td><td>组合调用成功率</td></tr>
+</tbody>
+</table>
+</div>
+<p>这五个维度不是随意拼凑的，它们覆盖了 Skill 生命周期的三个关键阶段：</p>
+<ul>
+<li><strong>激活阶段</strong>（D1）：Agent 是否能在正确的时机选择正确的 Skill</li>
+<li><strong>执行阶段</strong>（D2, D3）：Skill 是否能高效地完成任务</li>
+<li><strong>演化阶段</strong>（D4, D5）：Skill 是否能持续迭代和与生态协作</li>
+</ul>
+<p>下面逐一展开。</p>
+<h3 id="d1触发准确率trigger-precision"><a class="header" href="#d1触发准确率trigger-precision">D1：触发准确率（Trigger Precision）</a></h3>
+<p>触发准确率回答的是：<strong>用户表达了某个意图，Agent 是否选择了正确的 Skill？</strong></p>
+<p>这个维度看似简单，实则是 Skill 质量的第一道门槛。如果触发不准确，后面四个维度都无从谈起——用户说“帮我填个表“，结果 Agent 激活了一个生成 PDF 的 Skill，一切就偏了。</p>
+<p>触发准确率由两个指标构成：</p>
+<ul>
+<li><strong>召回率（Recall）</strong>：应该触发时是否触发了？</li>
+<li><strong>精确率（Precision）</strong>：触发了的是否都是正确的？</li>
+</ul>
+<p>影响触发准确率的核心要素是 <code>description</code> 字段。agentskills.io 的规范明确指出：<strong>name 和 description 是 Agent 在触发决策时唯一能看到的元数据</strong>。这意味着 description 的每一个词都在参与一场隐式的“语义检索竞赛“——Agent 用用户的 prompt 去匹配所有已安装 Skill 的 description，得分最高的被激活。</p>
+<p>高质量 description 的三个原则：</p>
+<p><strong>原则一：用第三人称描述能力，而非功能列表。</strong> 不要写“converts Markdown to PDF“，而要写“Use this skill when the user wants to generate a styled PDF document from Markdown content“。前者是 feature spec，后者是 routing signal。</p>
+<p><strong>原则二：包含触发词和负向触发词。</strong> <code>lovstudio:fill-form</code> 的 description 中明确列出了“填表、填写表格、fill form、fill template、申请表、登记表“等触发词。更高级的做法是加入负向触发词：“Do NOT use this skill for creating new form templates from scratch — use lovstudio:any2docx instead.”</p>
+<p><strong>原则三：控制长度在 1024 字符以内。</strong> agentskills.io 规范限制 description 不超过 1024 字符。这不是任意限制——过长的 description 会稀释关键语义信号，降低匹配精度。</p>
+<blockquote>
+<p><strong>实践建议</strong>：在你的 Skill 安装环境中同时安装 10+ 个 Skill，然后用 20 个不同的自然语言 prompt 测试触发准确率。记录每个 prompt 触发了哪个 Skill，计算召回率和精确率。目标：召回率 &gt; 90%，精确率 &gt; 95%。</p>
+</blockquote>
+<h3 id="d2首次执行成功率first-run-success-rate"><a class="header" href="#d2首次执行成功率first-run-success-rate">D2：首次执行成功率（First-Run Success Rate）</a></h3>
+<p>首次执行成功率回答的是：<strong>用户第一次调用这个 Skill，能否得到一个可用的结果？</strong></p>
+<p>注意关键词是“首次“和“可用“：</p>
+<ul>
+<li><strong>首次</strong>：不是“反复调试后终于跑通“，而是“开箱即用“。SkillsBench 的 pass rate 定义就是严格的一次性成功或失败的二值判定（binary success），每个任务跑 5 次取平均。</li>
+<li><strong>可用</strong>：不是“没报错“，而是“结果符合预期“。一个 PDF 转换 Skill 跑完没报错但生成了空白页面，那就是失败。</li>
+</ul>
+<p>影响首次执行成功率的三大杀手：</p>
+<p><strong>杀手一：依赖缺失。</strong> 用户机器上没有 <code>python-docx</code>、没有 <code>pandoc</code>、Node.js 版本太低。解法：在 <code>compatibility</code> 字段明确声明所有依赖，在 SKILL.md 的 workflow 第一步加入依赖检测逻辑。</p>
+<p><strong>杀手二：交互设计缺陷。</strong> Skill 假设用户会提供某些信息，但实际上用户没提供，导致脚本参数缺失或出错。解法：遵循 “scan → pre-fill → ask only what you don’t know” 的交互三步法（我们将在第 5 章深入展开）。</p>
+<p><strong>杀手三：边界情况未处理。</strong> 输入文件是 <code>.doc</code> 而非 <code>.docx</code>、文件路径含中文或空格、模板中的表格结构非标准。解法：在 SKILL.md 的 Limitations 段落明确列出已知限制，在脚本中对常见边界情况做 graceful degradation。</p>
+<blockquote>
+<p><strong>量化方法</strong>：准备 10 个不同复杂度的真实测试用例（包含 3 个 edge case），在全新环境中执行。成功 8 个以上算 L3 优秀，成功 6 个以上算 L2 好用，低于 6 个需要回炉重造。</p>
+</blockquote>
+<h3 id="d3token-效率token-efficiency"><a class="header" href="#d3token-效率token-efficiency">D3：Token 效率（Token Efficiency）</a></h3>
+<p>Token 效率回答的是：<strong>完成同样的任务，这个 Skill 消耗了多少 token？</strong></p>
+<p>为什么 token 效率重要？三个理由：</p>
+<ol>
+<li><strong>成本</strong>：每个 token 都是钱。一个 SKILL.md 写了 2000 行的 Skill，每次激活就要吃掉大量 context window</li>
+<li><strong>注意力稀释</strong>：SkillsBench 的数据明确显示，“comprehensive” Skills（详尽型）比 “detailed” Skills（适度详细型）的表现差 21.7 个百分点。过长的指令不仅浪费 token，还会让 Agent 迷失在无关信息中</li>
+<li><strong>组合上限</strong>：context window 是有限的。如果一个 Skill 占掉 5000 token，那能同时加载的其他 Skill 就少了</li>
+</ol>
+<p>Token 效率的核心原则是 agentskills.io 提出的：<strong>“Add what the agent lacks, omit what it knows.”</strong> 你不需要解释什么是 PDF、HTTP 怎么工作、数据库迁移是什么意思——Agent 已经知道这些。你需要写的是：项目特定的约定、领域特定的流程、非显而易见的边界情况、以及要使用的具体工具和 API。</p>
+<p>agentskills.io 规范给出了明确的数字指导：</p>
+<ul>
+<li>SKILL.md 主体 &lt;= 500 行、&lt;= 5000 token</li>
+<li>详细参考材料放 <code>references/</code> 目录，按需加载（progressive disclosure）</li>
+<li>加载条件要具体：“Read <code>references/api-errors.md</code> if the API returns a non-200 status code”，而非笼统的“see references/ for details“</li>
+</ul>
+<blockquote>
+<p><strong>度量公式</strong>：Token Efficiency = 任务完成所需总 token / 任务复杂度基准值。可以用同类任务在无 Skill 模式下的 token 消耗作为基准。如果加了 Skill 后 token 消耗反而增加 50% 以上但成功率提升不到 10%，说明 SKILL.md 需要瘦身。</p>
+</blockquote>
+<h3 id="d4可维护性maintainability"><a class="header" href="#d4可维护性maintainability">D4：可维护性（Maintainability）</a></h3>
+<p>可维护性回答的是：<strong>三个月后，另一个人（或你自己）能否快速理解、修改、扩展这个 Skill？</strong></p>
+<p>Skill 和软件代码一样，写完那一刻就开始腐化。依赖库升级、Agent 行为变化、用户需求演进——都会让一个曾经好用的 Skill 逐渐失效。可维护性决定了 Skill 的长期生命力。</p>
+<p>可维护性的四个评估维度：</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>子维度</th><th>好的信号</th><th>坏的信号</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>结构清晰</strong></td><td>Workflow 步骤编号明确，每步有独立职责</td><td>指令散落各处，逻辑交叉</td></tr>
+<tr><td><strong>命名规范</strong></td><td><code>--template</code>、<code>--output</code>、<code>--scan</code> 语义一目了然</td><td><code>--t</code>、<code>--o</code>、<code>--s</code> 或 <code>--arg1</code></td></tr>
+<tr><td><strong>版本追踪</strong></td><td>frontmatter 有 <code>version</code> 字段，CHANGELOG 记录变更</td><td>无版本号，不知道当前是哪个版本</td></tr>
+<tr><td><strong>关注点分离</strong></td><td>SKILL.md 管流程，scripts/ 管实现，references/ 管参考</td><td>所有逻辑都堆在 SKILL.md 里</td></tr>
+</tbody>
+</table>
+</div>
+<p>agentskills.io 的验证检查（validation checks）中包含了若干可维护性相关的硬性要求：</p>
+<ul>
+<li>name 字段 1-64 字符，仅限小写字母、数字和连字符</li>
+<li>name 必须与父目录名完全一致</li>
+<li>frontmatter 必须包含有效的 YAML schema</li>
+<li>license 字段必须存在</li>
+</ul>
+<p>这些看起来是“格式检查“，实则是可维护性的基线保障——没有标准命名和结构的 Skill，在生态中就是一座孤岛。</p>
+<h3 id="d5可组合性composability"><a class="header" href="#d5可组合性composability">D5：可组合性（Composability）</a></h3>
+<p>可组合性回答的是：<strong>这个 Skill 能否作为更大流程的一个环节，与其他 Skill 无缝协作？</strong></p>
+<p>这是最容易被忽视、但对生态价值最高的维度。单个 Skill 解决单个问题，Skill 组合解决复杂工作流。</p>
+<p>举个例子：<code>lovstudio:proposal</code> 这个提案生成 Skill 的 workflow 是：</p>
+<ol>
+<li>调用 <code>lovstudio:illustrate</code> 生成配图</li>
+<li>用 Markdown 编排正文</li>
+<li>调用 <code>lovstudio:any2pdf</code> 转换为带封面的 PDF</li>
+</ol>
+<p>如果这三个 Skill 中任何一个的输入输出格式不兼容，或者对文件路径的约定不一致，整个管线就会断裂。</p>
+<p>可组合性的三个核心要求：</p>
+<p><strong>要求一：输入输出契约清晰。</strong> 每个 Skill 接受什么格式的输入、产出什么格式的输出，必须在 SKILL.md 中明确声明。这就像函数签名——没有清晰的类型声明，调用方就无法安全地传递数据。</p>
+<p><strong>要求二：副作用可控。</strong> Skill 对文件系统、环境变量、全局状态的修改必须是可预测的。一个好的 Skill 默认把输出写到与输入同目录下，用可预测的命名规则（如 <code>&lt;name&gt;_filled.docx</code>），不会意外覆盖已有文件。</p>
+<p><strong>要求三：错误传播合理。</strong> 当 Skill 作为管线的一环失败时，它应该给出清晰的错误信息，让调用方（Agent 或上游 Skill）能据此决策——是重试、跳过、还是回退。</p>
+<blockquote>
+<p><strong>测试方法</strong>：设计一个 3-Skill 管线，让目标 Skill 作为中间环节。如果管线一次跑通，说明可组合性良好；如果需要人工调整中间产物的格式或路径，说明有改进空间。</p>
+</blockquote>
+<hr>
+<h2 id="43-skillsbench业界首个-skill-质量基准"><a class="header" href="#43-skillsbench业界首个-skill-质量基准">4.3 SkillsBench：业界首个 Skill 质量基准</a></h2>
+<p>2025 年 2 月，SkillsBench（arXiv: 2602.12670）发布，成为业界首个系统评估 Agent Skill 质量的基准测试。它的意义不仅在于提供了一组数据，更在于确立了 Skill 质量评估的方法论范式。</p>
+<h3 id="实验设计"><a class="header" href="#实验设计">实验设计</a></h3>
+<p>SkillsBench 包含 86 个任务、覆盖 11 个专业领域（软件工程、金融、医疗、能源、机器人等），每个任务在三种条件下评估：</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>条件</th><th>说明</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>No Skills</strong></td><td>Agent 仅接收任务描述，无 Skill 辅助</td></tr>
+<tr><td><strong>Curated Skills</strong></td><td>提供人工精心编写的 Skill，包含示例和资源</td></tr>
+<tr><td><strong>Self-Generated Skills</strong></td><td>Agent 先自行生成 Skill，再用于任务</td></tr>
+</tbody>
+</table>
+</div>
+<p>每种条件下每个任务执行 5 次，使用 pass rate（二值成功率平均）作为主要指标，辅以 Hake 公式计算 normalized gain：</p>
+<pre><code>g = (pass_skill - pass_vanilla) / (1 - pass_vanilla)
+</code></pre>
+<h3 id="核心发现"><a class="header" href="#核心发现">核心发现</a></h3>
+<p><strong>发现一：Curated Skills 显著提升表现，但领域差异极大。</strong></p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>领域</th><th>提升幅度</th></tr>
+</thead>
+<tbody>
+<tr><td>Healthcare</td><td>+51.9 pp</td></tr>
+<tr><td>Finance</td><td>+28.3 pp</td></tr>
+<tr><td>Energy</td><td>+22.1 pp</td></tr>
+<tr><td>平均</td><td>+16.2 pp</td></tr>
+<tr><td>Software Engineering</td><td>+4.5 pp</td></tr>
+</tbody>
+</table>
+</div>
+<p>Healthcare 领域提升最大，因为医疗流程高度标准化、步骤依赖强、领域知识密集——这恰恰是 Skill 最擅长的场景。Software Engineering 提升最小，因为 Agent 本身在编码任务上已经有较强的基线能力。</p>
+<p><strong>发现二：Moderate-length Skills 表现最佳。</strong></p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Skill 类型</th><th>Pass Rate 变化</th></tr>
+</thead>
+<tbody>
+<tr><td>Detailed（适度详细）</td><td>+18.8 pp</td></tr>
+<tr><td>Comprehensive（详尽）</td><td>-2.9 pp</td></tr>
+</tbody>
+</table>
+</div>
+<p>这个发现直接印证了我们 D3（Token 效率）的论点：<strong>过长的 Skill 不仅无益，反而有害</strong>。包含 2-3 个聚焦模块的 Skill 显著优于面面俱到的长篇文档。“Comprehensive” 类型的 Skill 实际上让 Agent 表现下降了 2.9 个百分点——信息过载导致了认知过载。</p>
+<p><strong>发现三：自生成 Skill 无法替代人工 Skill。</strong></p>
+<p>Self-Generated Skills 的平均 pass rate 比 No Skills 基线还低 1.3 个百分点。研究者的结论是：<strong>“effective Skills require human-curated domain expertise”</strong>。模型能消费好的 Skill，但无法可靠地生产好的 Skill。</p>
+<p>这个发现有深刻的含义——它意味着 Skill 设计是一门需要专业训练的技能，不是“让 AI 写个 Skill“就能解决的。这也是本书存在的理由。</p>
+<h3 id="skillsbench-的质量准入门槛"><a class="header" href="#skillsbench-的质量准入门槛">SkillsBench 的质量准入门槛</a></h3>
+<p>SkillsBench 对纳入基准的 Skill 执行了六项质量控制：</p>
+<ol>
+<li><strong>Human-authored</strong>：必须由人类编写，禁止 LLM 生成</li>
+<li><strong>Generality</strong>：Skill 必须覆盖一类任务，而非某个特定实例</li>
+<li><strong>Deterministic verification</strong>：使用程序化验证器（非人工判断）</li>
+<li><strong>Structural validation</strong>：自动化结构校验</li>
+<li><strong>Human review</strong>：人工审核数据有效性、任务真实性、oracle 质量、反作弊</li>
+<li><strong>Leakage prevention</strong>：防止 Skill 内容直接泄漏答案</li>
+</ol>
+<p>这六项质量控制本身就构成了一个评审清单，值得每个 Skill 作者参考。</p>
+<hr>
+<h2 id="44-agentskillsio-评审标准"><a class="header" href="#44-agentskillsio-评审标准">4.4 agentskills.io 评审标准</a></h2>
+<p>agentskills.io 是 Anthropic 官方支持的 Skill 发布平台。它的评审标准从平台运营者的视角定义了“可上架“的质量底线。</p>
+<h3 id="结构验证structural-validation"><a class="header" href="#结构验证structural-validation">结构验证（Structural Validation）</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>检查项</th><th>要求</th></tr>
+</thead>
+<tbody>
+<tr><td>SKILL.md 行数</td><td>&lt;= 500 行</td></tr>
+<tr><td>Frontmatter</td><td>有效 YAML</td></tr>
+<tr><td>name 字段</td><td>1-64 字符，小写字母+数字+连字符，与目录名一致</td></tr>
+<tr><td>description 字段</td><td>&lt;= 1024 字符，第三人称描述</td></tr>
+<tr><td>license 字段</td><td>必须存在</td></tr>
+<tr><td>metadata</td><td>包含 author、version、tags</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="内容质量标准"><a class="header" href="#内容质量标准">内容质量标准</a></h3>
+<p>agentskills.io 的 best practices 文档提出了三个层次的内容质量要求：</p>
+<p><strong>层次一：Task Realism（任务真实性）</strong>。Skill 必须解决真实存在的问题，而非为了技术展示而虚构的需求。判断标准：是否有真实用户会在真实场景中触发这个 Skill？</p>
+<p><strong>层次二：Functional Viability（功能可行性）</strong>。Skill 的指令是否能被 Agent 正确执行？步骤是否完整、无歧义？依赖是否可获取？这直接对应我们的 D2（首次执行成功率）。</p>
+<p><strong>层次三：Anti-cheating（反作弊）</strong>。Skill 是否在合理地引导 Agent 工作，而非直接塞入答案？一个好的 Skill 教的是方法（procedure），而非结果（answer）。agentskills.io 明确区分了两种模式：</p>
+<pre><code class="language-markdown">&lt;!-- 反面：直接给答案（specific answer） --&gt;
+Join the `orders` table to `customers` on `customer_id`,
+filter where `region = 'EMEA'`, and sum the `amount` column.
+
+&lt;!-- 正面：教方法（reusable method） --&gt;
+1. Read the schema from `references/schema.yaml` to find relevant tables
+2. Join tables using the `_id` foreign key convention
+3. Apply any filters from the user's request as WHERE clauses
+4. Aggregate numeric columns as needed
+</code></pre>
+<h3 id="上下文花销的最佳实践"><a class="header" href="#上下文花销的最佳实践">上下文花销的最佳实践</a></h3>
+<p>agentskills.io 特别强调了“上下文花销“（context spending）的概念：一旦 Skill 被激活，它的全部 SKILL.md 内容会加载到 Agent 的 context window 中，与对话历史、系统上下文和其他活跃 Skill 竞争注意力。</p>
+<p>核心原则可以归结为一句话：<strong>“Would the agent get this wrong without this instruction? If the answer is no, cut it.”</strong></p>
+<p>这个原则的实践操作是：对 SKILL.md 中的每一段内容，问自己“如果删掉这段，Agent 会做错吗？“如果答案是“不会”，那就删。如果不确定，测试一下。如果整个任务不加 Skill Agent 也能做好，那这个 Skill 可能根本不需要存在。</p>
+<hr>
+<h2 id="45-质量等级定义从-l1-到-l4"><a class="header" href="#45-质量等级定义从-l1-到-l4">4.5 质量等级定义：从 L1 到 L4</a></h2>
+<p>基于五维度模型和上述评审标准，我们定义四个质量等级：</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>等级</th><th>名称</th><th>D1 触发准确率</th><th>D2 首次成功率</th><th>D3 Token 效率</th><th>D4 可维护性</th><th>D5 可组合性</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>L1</strong></td><td>可用</td><td>基本能触发</td><td>&gt; 50%</td><td>SKILL.md &lt; 800 行</td><td>有 frontmatter</td><td>独立运行</td></tr>
+<tr><td><strong>L2</strong></td><td>好用</td><td>召回 &gt; 80%</td><td>&gt; 70%</td><td>&lt; 500 行</td><td>版本追踪、结构清晰</td><td>输入输出格式标准化</td></tr>
+<tr><td><strong>L3</strong></td><td>优秀</td><td>召回 &gt; 90%，精确 &gt; 95%</td><td>&gt; 85%</td><td>&lt; 300 行，progressive disclosure</td><td>他人可独立维护</td><td>可无缝参与管线</td></tr>
+<tr><td><strong>L4</strong></td><td>卓越</td><td>含负向触发词，零误触</td><td>&gt; 95%，含 edge case</td><td>&lt; 200 行核心 + references</td><td>CHANGELOG、自动化 lint</td><td>标准化 I/O 契约，错误传播</td></tr>
+</tbody>
+</table>
+</div>
+<p>几个要点：</p>
+<ul>
+<li><strong>L1 → L2 的跃迁</strong>是最重要的：从“能跑“到“好用“，需要的是对 description 的打磨和对失败场景的处理</li>
+<li><strong>L2 → L3 的跃迁</strong>需要引入 progressive disclosure 和结构化的测试</li>
+<li><strong>L3 → L4 的跃迁</strong>往往需要多轮真实用户反馈的迭代。SkillsBench 的数据表明，即使是专业团队编写的 Skill，也只有少数能达到 L4</li>
+<li>大多数活跃的 Skill 处于 <strong>L2-L3</strong> 之间，这是投入产出比最高的区间</li>
+</ul>
+<hr>
+<h2 id="46-案例lovstudiofill-form-的质量跃迁"><a class="header" href="#46-案例lovstudiofill-form-的质量跃迁">4.6 案例：lovstudio:fill-form 的质量跃迁</a></h2>
+<p>让我们用一个真实案例来验证五维度模型的实用性。<code>lovstudio:fill-form</code> 是一个填写 Word 表格模板的 Skill，从 v0.1 到 v1.1 经历了多次迭代。我们复盘它在五个维度上的演进。</p>
+<h3 id="v01--l1-可用"><a class="header" href="#v01--l1-可用">v0.1 — L1 可用</a></h3>
+<p>最初版本的 fill-form 是一个简单的 wrapper：</p>
+<ul>
+<li><strong>D1 触发准确率</strong>：description 只写了“fill Word form templates“，在用户说“帮我填表“时不稳定触发</li>
+<li><strong>D2 首次成功率</strong>：约 40%。依赖 <code>python-docx</code> 但没有自动安装检测；只支持标准的 label-value 双列表格，遇到合并单元格就出错</li>
+<li><strong>D3 Token 效率</strong>：SKILL.md 约 60 行，效率尚可</li>
+<li><strong>D4 可维护性</strong>：无版本号、无 CLI Reference</li>
+<li><strong>D5 可组合性</strong>：输出路径硬编码为当前目录，无法被其他 Skill 可靠调用</li>
+</ul>
+<p><strong>判定：L1。能跑，但不好用。</strong></p>
+<h3 id="v05--l2-好用"><a class="header" href="#v05--l2-好用">v0.5 — L2 好用</a></h3>
+<p>经过几轮用户反馈后的改进：</p>
+<ul>
+<li><strong>D1</strong>：description 加入了中英文触发词（“填表、填写表格、fill form、fill template、申请表、登记表”），触发稳定性显著提升</li>
+<li><strong>D2</strong>：引入 <code>--scan</code> 模式先扫描模板字段，加入了 <code>.doc</code> → <code>.docx</code> 的自动转换（macOS textutil），成功率提升到约 65%</li>
+<li><strong>D3</strong>：SKILL.md 增长到约 90 行，增加的都是必要的 workflow 说明</li>
+<li><strong>D4</strong>：加入 <code>version</code> 字段和 CLI Reference 表格</li>
+<li><strong>D5</strong>：输出路径改为 <code>&lt;template_dir&gt;/&lt;name&gt;_filled.docx</code>，遵循可预测的命名规则</li>
+</ul>
+<p><strong>判定：L2。大多数常规场景好用，但 edge case 处理不够。</strong></p>
+<h3 id="v08--l3-优秀"><a class="header" href="#v08--l3-优秀">v0.8 — L3 优秀</a></h3>
+<p>关键突破——引入“交互三步法“：</p>
+<ul>
+<li><strong>D1</strong>：description 扩展到完整的语义描述，包含 “Use this skill when…” 引导句和多个触发场景枚举。精确率达到 95%+</li>
+<li><strong>D2</strong>：workflow 改为 Scan → Pre-fill → Ask only what you don’t know 的三步法。Agent 先从 user memory 和 context files 中自动填充已知字段，只问用户真正缺失的信息。首次成功率提升到约 85%</li>
+<li><strong>D3</strong>：SKILL.md 约 120 行。通过 <code>--data-file</code> 参数支持 JSON 文件输入，避免了 shell escaping 问题（长文本在命令行传参时经常出错）</li>
+<li><strong>D4</strong>：Limitations 段落明确声明了 <code>.doc</code> 格式的表格丢失问题；CLI Reference 表格完整</li>
+<li><strong>D5</strong>：输出路径规则支持智能判断——如果模板在临时目录，自动建议保存到用户文档目录</li>
+</ul>
+<p><strong>判定：L3。绝大多数场景首次成功，有明确的限制声明。</strong></p>
+<h3 id="v11当前版本-接近-l4"><a class="header" href="#v11当前版本-接近-l4">v1.1（当前版本）— 接近 L4</a></h3>
+<p>当前版本在 L3 基础上的精细打磨：</p>
+<ul>
+<li><strong>D1</strong>：description 包含中英双语触发词，并明确描述了适用场景（“table-based fields, CJK font support”），category 标注为 “Content Processing”</li>
+<li><strong>D2</strong>：三种字段检测策略——table-based（主要）、merged rows（合并单元格）、paragraph fallback（无表格时的兜底）。支持 <code>--font</code> 和 <code>--font-size</code> 定制。首次成功率估计 &gt; 90%</li>
+<li><strong>D3</strong>：SKILL.md 120 行，核心 workflow 约 70 行。每行都有实际价值，无冗余解释</li>
+<li><strong>D4</strong>：版本号 <code>1.1.0</code>、MIT license、完整 metadata（author, tags）、结构化的 CLI Reference</li>
+<li><strong>D5</strong>：输入 <code>.docx</code>，输出 <code>_filled.docx</code>，路径规则明确，可作为管线中间环节</li>
+</ul>
+<p><strong>判定：接近 L4。差距在于缺少自动化 lint 和标准化的错误传播机制。</strong></p>
+<h3 id="跃迁复盘"><a class="header" href="#跃迁复盘">跃迁复盘</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>版本</th><th>等级</th><th>最大瓶颈</th><th>关键改进动作</th></tr>
+</thead>
+<tbody>
+<tr><td>v0.1</td><td>L1</td><td>D2 首次成功率低</td><td>加入依赖检测、基础错误处理</td></tr>
+<tr><td>v0.5</td><td>L2</td><td>D1 触发不稳定</td><td>丰富 description 触发词</td></tr>
+<tr><td>v0.8</td><td>L3</td><td>D2 交互设计</td><td>引入 Scan → Pre-fill → Ask 三步法</td></tr>
+<tr><td>v1.1</td><td>~L4</td><td>D5 错误传播</td><td>多策略字段检测、路径智能判断</td></tr>
+</tbody>
+</table>
+</div>
+<p>这个案例揭示了一个规律：<strong>每次质量跃迁的瓶颈维度都不同</strong>。v0.1 到 v0.5 是 D2 和 D1 交替提升；v0.5 到 v0.8 的关键突破来自 D2 的交互设计革新；v0.8 到 v1.1 的精打细磨则集中在 D5 的可组合性。</p>
+<p>五维度模型的价值正在于此：它帮你定位当前的瓶颈维度，避免在已经足够好的维度上过度投入。</p>
+<hr>
+<h2 id="47-质量模型的使用指南"><a class="header" href="#47-质量模型的使用指南">4.7 质量模型的使用指南</a></h2>
+<h3 id="何时使用"><a class="header" href="#何时使用">何时使用</a></h3>
+<p>五维度模型适合三个场景：</p>
+<ol>
+<li><strong>新 Skill 设计评审</strong>：在开始编码前，用五维度清单审视设计方案。最常见的问题是 D1（description 没写好）和 D2（缺少 edge case 处理）</li>
+<li><strong>版本迭代规划</strong>：用模型定位当前瓶颈维度，集中火力在投入产出比最高的改进点</li>
+<li><strong>Skill 对比选型</strong>：当两个 Skill 功能类似时，用五维度逐一对比，做出理性选择</li>
+</ol>
+<h3 id="快速评估-checklist"><a class="header" href="#快速评估-checklist">快速评估 Checklist</a></h3>
+<p>如果你没有时间做完整的五维度分析，这个 10 项速查清单可以覆盖 80% 的质量问题：</p>
+<ul>
+<li><input disabled="" type="checkbox"> description 是否包含 “Use this skill when…” 引导句？</li>
+<li><input disabled="" type="checkbox"> description 是否包含 3+ 个触发词/短语？</li>
+<li><input disabled="" type="checkbox"> SKILL.md 是否 &lt;= 500 行？</li>
+<li><input disabled="" type="checkbox"> workflow 步骤是否有编号且职责单一？</li>
+<li><input disabled="" type="checkbox"> 是否有 <code>--scan</code> 或等效的“先看后做“机制？</li>
+<li><input disabled="" type="checkbox"> 依赖是否在 compatibility 中明确声明？</li>
+<li><input disabled="" type="checkbox"> 输出路径是否可预测、可配置？</li>
+<li><input disabled="" type="checkbox"> Limitations 是否明确声明？</li>
+<li><input disabled="" type="checkbox"> frontmatter 是否包含 version 和 license？</li>
+<li><input disabled="" type="checkbox"> 是否能作为管线的一环被调用？</li>
+</ul>
+<hr>
+<h2 id="48-本章小结"><a class="header" href="#48-本章小结">4.8 本章小结</a></h2>
+<p>本章我们建立了 Skill 质量评估的理论框架：</p>
+<ol>
+<li><strong>五维度模型</strong>（触发准确率、首次执行成功率、Token 效率、可维护性、可组合性）提供了系统的质量分析视角</li>
+<li><strong>SkillsBench</strong> 用 7,308 条执行轨迹告诉我们：好的 Skill 平均提升 16.2pp，但过长的 Skill 反而降低表现；模型无法自动生成高质量 Skill</li>
+<li><strong>agentskills.io 评审标准</strong> 定义了从结构验证到内容质量的上架底线</li>
+<li><strong>L1-L4 质量等级</strong>给出了从“可用“到“卓越“的清晰进阶路径</li>
+<li><strong>fill-form 案例</strong>展示了五维度模型如何指导实际的迭代决策</li>
+</ol>
+<p>在下一章，我们将深入 D1（触发准确率）和 D2（首次执行成功率）最核心的影响因素——Instruction 设计，探讨如何用精确的语言让 AI 理解你的意图。</p>
+<hr>
+<p><strong>参考文献</strong></p>
+<ul>
+<li>SkillsBench: Benchmarking How Well Agent Skills Work Across Diverse Tasks. arXiv:2602.12670, 2025.</li>
+<li>agentskills.io Skill Specification &amp; Best Practices. https://agentskills.io/specification</li>
+<li>agentskills.io Best Practices for Skill Creators. https://agentskills.io/skill-creation/best-practices</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../chapter-03/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../chapter-05/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../chapter-03/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../chapter-05/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../mark-09e88c2c.min.js"></script>
+        <script src="../searcher-c2a407aa.js"></script>
+
+        <script src="../clipboard-1626706a.min.js"></script>
+        <script src="../highlight-abc7f01d.js"></script>
+        <script src="../book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

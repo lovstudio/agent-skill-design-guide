@@ -1,0 +1,697 @@
+<!DOCTYPE HTML>
+<html lang="zh" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>多平台适配 — 一个 Skill 跑遍所有 AI 助手 - Agent Skill 高质量设计指南</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="系统掌握 AI 编程助手 Skill 设计方法论，从架构到发布的完整指南">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../css/general-2459343d.css">
+        <link rel="stylesheet" href="../css/chrome-ae938929.css">
+        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex-fc53036c.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc-b872e53c.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Agent Skill 高质量设计指南</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/MarkShawn2020/agent-skill-design-guide" title="Git repository" aria-label="Git repository">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/MarkShawn2020/agent-skill-design-guide/edit/main/src/chapter-10/README.md" title="Suggest an edit" aria-label="Suggest an edit" rel="edit">
+                            <span class=fa-svg id="git-edit-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M421.7 220.3l-11.3 11.3-22.6 22.6-205 205c-6.6 6.6-14.8 11.5-23.8 14.1L30.8 511c-8.4 2.5-17.5 .2-23.7-6.1S-1.5 489.7 1 481.2L38.7 353.1c2.6-9 7.5-17.2 14.1-23.8l205-205 22.6-22.6 11.3-11.3 33.9 33.9 62.1 62.1 33.9 33.9zM96 353.9l-9.3 9.3c-.9 .9-1.6 2.1-2 3.4l-25.3 86 86-25.3c1.3-.4 2.5-1.1 3.4-2l9.3-9.3H112c-8.8 0-16-7.2-16-16V353.9zM453.3 19.3l39.4 39.4c25 25 25 65.5 0 90.5l-14.5 14.5-22.6 22.6-11.3 11.3-33.9-33.9-62.1-62.1L314.3 67.7l11.3-11.3 22.6-22.6 14.5-14.5c25-25 65.5-25 90.5 0z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="第-10-章多平台适配--一个-skill-跑遍所有-ai-助手"><a class="header" href="#第-10-章多平台适配--一个-skill-跑遍所有-ai-助手">第 10 章：多平台适配 — 一个 Skill 跑遍所有 AI 助手</a></h1>
+<p><img src="../assets/images/chapters/ch10-multi-platform.png" alt="多平台适配 — 变色龙在不同编辑器间切换"></p>
+<blockquote>
+<p><strong>核心论点</strong>：SKILL.md 不是某个平台的方言，而是一份可移植的 AI 行为合约。只要理解各平台读取指令的方式差异，一份 Skill 就能在 Claude Code、Cursor、Windsurf、Cline、Codex CLI、Gemini CLI 上无缝运行。</p>
+</blockquote>
+<hr>
+<h2 id="101-为什么需要跨平台"><a class="header" href="#101-为什么需要跨平台">10.1 为什么需要跨平台？</a></h2>
+<p>2025 年初，AI 编程助手市场进入“战国时代“。Claude Code 率先推出 SKILL.md 规范，Cursor 用 <code>.cursorrules</code>，Windsurf 有自己的 Rules 体系，Cline 支持 <code>.clinerules</code>，OpenAI 推出 Codex CLI 读取 <code>AGENTS.md</code>，Google 的 Gemini CLI 读取 <code>GEMINI.md</code>。</p>
+<p>一个有趣的现象是：<strong>这些格式在结构上高度趋同</strong>。它们本质上都是 Markdown 文件，包含角色定义、工作流程、约束条件。差异更多在“入口文件名“和“触发方式“上，而非指令语法本身。</p>
+<p>这意味着一个设计良好的 Skill，<strong>核心逻辑只需要写一次</strong>，适配工作量远比想象中小。</p>
+<h3 id="可移植性的商业价值"><a class="header" href="#可移植性的商业价值">可移植性的商业价值</a></h3>
+<ul>
+<li><strong>用户覆盖面</strong>：你的 Skill 不绑定某个 IDE，受众直接翻倍</li>
+<li><strong>抗风险</strong>：平台兴衰不影响你的 Skill 资产</li>
+<li><strong>复用投资</strong>：Skill 的核心知识（workflow、prompt engineering）是平台无关的</li>
+</ul>
+<hr>
+<h2 id="102-平台差异全景分析"><a class="header" href="#102-平台差异全景分析">10.2 平台差异全景分析</a></h2>
+<p>我们先建立一张全面的对比表，再逐一剖析关键差异。</p>
+<h3 id="表-10-1六大-ai-编程助手-skill-支持对比2026-年-4-月"><a class="header" href="#表-10-1六大-ai-编程助手-skill-支持对比2026-年-4-月">表 10-1：六大 AI 编程助手 Skill 支持对比（2026 年 4 月）</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>特性</th><th>Claude Code</th><th>Cursor</th><th>Windsurf</th><th>Cline</th><th>Codex CLI</th><th>Gemini CLI</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>指令文件名</strong></td><td><code>SKILL.md</code> / <code>CLAUDE.md</code></td><td><code>.cursorrules</code></td><td><code>.windsurfrules</code></td><td><code>.clinerules</code></td><td><code>AGENTS.md</code></td><td><code>GEMINI.md</code></td></tr>
+<tr><td><strong>文件格式</strong></td><td>Markdown + YAML frontmatter</td><td>Markdown</td><td>Markdown</td><td>Markdown</td><td>Markdown</td><td>Markdown</td></tr>
+<tr><td><strong>Frontmatter 支持</strong></td><td>完整（name, description, metadata）</td><td>忽略但不报错</td><td>忽略</td><td>忽略</td><td>忽略</td><td>部分解析</td></tr>
+<tr><td><strong>安装位置</strong></td><td><code>~/.claude/skills/</code></td><td>项目根目录</td><td>项目根目录</td><td>项目根目录</td><td>项目根目录</td><td><code>~/.gemini/</code> 或项目根</td></tr>
+<tr><td><strong>触发方式</strong></td><td><code>/skill-name</code> 或自然语言</td><td>自动加载</td><td>自动加载</td><td>自动加载</td><td>自动加载</td><td><code>/skill-name</code> 或自然语言</td></tr>
+<tr><td><strong>多 Skill 管理</strong></td><td>每个 Skill 独立目录</td><td>单文件，需手动分段</td><td>单文件</td><td>单文件</td><td>每个 Agent 独立文件</td><td>独立目录</td></tr>
+<tr><td><strong>Vision（图片理解）</strong></td><td>支持</td><td>支持</td><td>支持</td><td>取决于底层模型</td><td>支持</td><td>支持</td></tr>
+<tr><td><strong>交互式提问</strong></td><td><code>AskUserQuestion</code> 工具</td><td>直接对话</td><td>直接对话</td><td>直接对话</td><td>直接对话</td><td>直接对话</td></tr>
+<tr><td><strong>脚本执行</strong></td><td>Bash / Python 自动沙盒</td><td>需用户确认</td><td>需用户确认</td><td>需用户确认</td><td>沙盒执行</td><td>Bash 沙盒</td></tr>
+<tr><td><strong>MCP 集成</strong></td><td>原生支持</td><td>支持</td><td>支持</td><td>支持</td><td>不支持</td><td>支持</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="三个关键差异点"><a class="header" href="#三个关键差异点">三个关键差异点</a></h3>
+<p><strong>差异 1：入口文件机制</strong></p>
+<p>Claude Code 和 Gemini CLI 采用“专用目录 + 按需加载“模式——Skill 安装在全局目录中，用户通过 slash command 或自然语言触发。Cursor、Windsurf、Cline 采用“项目级自动加载“模式——规则文件放在项目根目录，每次会话自动注入 context。</p>
+<p>这个差异决定了适配策略：你需要为“自动加载型“平台提供一份精简的规则文件，而不是把完整的 SKILL.md 原封不动丢进去。</p>
+<p><strong>差异 2：交互式提问</strong></p>
+<p>Claude Code 提供了 <code>AskUserQuestion</code> 这个专用工具，Skill 可以在 workflow 中主动向用户提问。其他平台没有等价机制，但“直接在回复中提问并等待用户回答“在所有平台都能工作。</p>
+<p>这意味着你的 SKILL.md 中写的 <code>Use AskUserQuestion to ask...</code> 在 Cursor 里会被理解为“向用户提问“，AI 会自然地在回复中提出问题。<strong>行为等价，只是机制不同。</strong></p>
+<p><strong>差异 3：Frontmatter 处理</strong></p>
+<p>只有 Claude Code 会解析 YAML frontmatter 中的元数据（name、version、tags）。其他平台会忽略 frontmatter 块，但不会报错——Markdown 渲染器天然会跳过 <code>---</code> 围起来的内容。</p>
+<p>这是个好消息：<strong>frontmatter 是安全的跨平台附加信息</strong>，加了不影响任何平台。</p>
+<hr>
+<h2 id="103-可移植性设计写一次到处跑"><a class="header" href="#103-可移植性设计写一次到处跑">10.3 可移植性设计：写一次，到处跑</a></h2>
+<p>基于以上分析，我们提炼出一套 Skill 可移植性设计原则。</p>
+<h3 id="原则-1以-skillmd-为-single-source-of-truth"><a class="header" href="#原则-1以-skillmd-为-single-source-of-truth">原则 1：以 SKILL.md 为 Single Source of Truth</a></h3>
+<p>所有平台适配版本都从 SKILL.md 派生，而非反过来。SKILL.md 是完整版本，其他格式是它的子集。</p>
+<pre><code>SKILL.md (完整版 — Claude Code / Gemini CLI)
+  ├── .cursorrules    (适配版 — Cursor)
+  ├── .windsurfrules  (适配版 — Windsurf)
+  ├── .clinerules     (适配版 — Cline)
+  └── AGENTS.md       (适配版 — Codex CLI)
+</code></pre>
+<h3 id="原则-2指令语法保持平台无关"><a class="header" href="#原则-2指令语法保持平台无关">原则 2：指令语法保持平台无关</a></h3>
+<p>避免在 Skill 正文中使用平台特有的 API 名称。以下是一些替换建议：</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>平台特有写法</th><th>可移植写法</th></tr>
+</thead>
+<tbody>
+<tr><td><code>Use AskUserQuestion to ask...</code></td><td><code>Ask the user:</code></td></tr>
+<tr><td><code>Use the Bash tool to run...</code></td><td><code>Run the following command:</code></td></tr>
+<tr><td><code>Use the Read tool to read...</code></td><td><code>Read the file at:</code></td></tr>
+<tr><td><code>Use the Write tool to write...</code></td><td><code>Write the following to:</code></td></tr>
+</tbody>
+</table>
+</div>
+<p>大多数 AI 助手都能理解这些通用指令。Claude Code 尤其聪明——它会自动把 <code>Ask the user</code> 映射到 <code>AskUserQuestion</code> 工具。</p>
+<blockquote>
+<p><strong>实战建议</strong>：如果你的 Skill 只发布到 Claude Code，用平台专属 API 名可以获得更精确的控制。如果你追求跨平台，使用通用描述。这是<strong>精确性与可移植性的 trade-off</strong>。</p>
+</blockquote>
+<h3 id="原则-3workflow-步骤用编号--大写标题"><a class="header" href="#原则-3workflow-步骤用编号--大写标题">原则 3：Workflow 步骤用编号 + 大写标题</a></h3>
+<p>所有平台的 AI 都能理解编号步骤。使用 <code>### Step 1: ...</code>、<code>### Step 2: ...</code> 这种格式，比自然段落描述的 workflow 更可靠地被各平台解析为顺序执行的步骤。</p>
+<h3 id="原则-4脚本调用使用标准-cli-接口"><a class="header" href="#原则-4脚本调用使用标准-cli-接口">原则 4：脚本调用使用标准 CLI 接口</a></h3>
+<p>如果你的 Skill 包含脚本，使用 <code>argparse</code>（Python）或标准 CLI 参数格式。不要依赖平台特有的文件传递机制。</p>
+<pre><code class="language-python"># Good — 任何平台都能调用
+python scripts/analyze.py --input image.png --output report.md
+
+# Bad — 依赖 Claude Code 的工具链
+# "Use the Bash tool to execute scripts/analyze.py with the file the user provided"
+</code></pre>
+<hr>
+<h2 id="104-skill-触发方式的跨平台兼容"><a class="header" href="#104-skill-触发方式的跨平台兼容">10.4 Skill 触发方式的跨平台兼容</a></h2>
+<p>触发方式是跨平台适配中最微妙的部分。</p>
+<h3 id="claude-codeslash-command--自然语言"><a class="header" href="#claude-codeslash-command--自然语言">Claude Code：Slash Command + 自然语言</a></h3>
+<pre><code>/visual-clone          # slash command 触发
+"帮我提取这张图的风格"   # 自然语言触发（通过 description 中的 trigger 关键词匹配）
+</code></pre>
+<p>Claude Code 的 SKILL.md frontmatter 中 <code>description</code> 字段支持 <code>Trigger when:</code> 语法，AI 会根据用户输入自动匹配。这是最精确的触发机制。</p>
+<h3 id="cursor--windsurf--cline自动加载"><a class="header" href="#cursor--windsurf--cline自动加载">Cursor / Windsurf / Cline：自动加载</a></h3>
+<p>这类平台没有“触发“概念——规则文件在会话开始时自动加载到 context 中。AI 始终“知道“这些规则，在相关场景下自动应用。</p>
+<p>适配方法：将 Skill 的核心指令精简后放入 <code>.cursorrules</code>，在开头加一句触发条件：</p>
+<pre><code class="language-markdown">## Visual Clone — Design DNA Extractor
+
+**When to activate**: When the user provides a reference image and asks to
+extract style, replicate a design, clone visual elements, or generate a
+replication prompt.
+
+**When NOT to activate**: Normal coding tasks, debugging, file editing.
+</code></pre>
+<p>这种“条件激活“的写法让 AI 知道何时应用这套规则，避免在不相关的场景中干扰正常编程。</p>
+<h3 id="codex-cli--gemini-cli类-claude-code-模式"><a class="header" href="#codex-cli--gemini-cli类-claude-code-模式">Codex CLI / Gemini CLI：类 Claude Code 模式</a></h3>
+<p>Codex CLI 的 <code>AGENTS.md</code> 和 Gemini CLI 的 <code>GEMINI.md</code> 支持类似 Claude Code 的目录结构。适配工作量最小——通常只需要复制 SKILL.md 并调整文件名。</p>
+<h3 id="表-10-2触发方式适配速查表"><a class="header" href="#表-10-2触发方式适配速查表">表 10-2：触发方式适配速查表</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>平台</th><th>触发方式</th><th>适配要点</th></tr>
+</thead>
+<tbody>
+<tr><td>Claude Code</td><td>Slash command / 自然语言 / 手动</td><td>frontmatter <code>description</code> 写 trigger 关键词</td></tr>
+<tr><td>Cursor</td><td>自动加载</td><td>加 “When to activate” 条件段</td></tr>
+<tr><td>Windsurf</td><td>自动加载</td><td>同 Cursor</td></tr>
+<tr><td>Cline</td><td>自动加载</td><td>同 Cursor</td></tr>
+<tr><td>Codex CLI</td><td>按目录加载</td><td>重命名为 <code>AGENTS.md</code></td></tr>
+<tr><td>Gemini CLI</td><td>Slash command / 自然语言</td><td>重命名为 <code>instructions.md</code> 放入 <code>~/.gemini/skills/</code></td></tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="105-测试矩阵如何验证跨平台表现"><a class="header" href="#105-测试矩阵如何验证跨平台表现">10.5 测试矩阵：如何验证跨平台表现</a></h2>
+<p>跨平台 Skill 需要系统化测试。我们推荐一个三层测试矩阵。</p>
+<h3 id="层-1语法兼容性静态检查"><a class="header" href="#层-1语法兼容性静态检查">层 1：语法兼容性（静态检查）</a></h3>
+<p>验证 Skill 文件在各平台能被正确解析，不报错、不丢内容。</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>检查项</th><th>方法</th></tr>
+</thead>
+<tbody>
+<tr><td>Frontmatter 不破坏解析</td><td>在各平台加载文件，确认 AI 能看到 frontmatter 之后的内容</td></tr>
+<tr><td>Markdown 标题层级正确</td><td>确认 <code>## / ###</code> 不被平台特有的解析器截断</td></tr>
+<tr><td>代码块完整</td><td>确认 ``` 代码块在各平台正确闭合</td></tr>
+<tr><td>文件大小不超限</td><td>各平台的 context window 有上限，确认 Skill 不超过</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="层-2行为一致性功能测试"><a class="header" href="#层-2行为一致性功能测试">层 2：行为一致性（功能测试）</a></h3>
+<p>用相同的输入在各平台运行 Skill，对比输出。</p>
+<pre><code class="language-markdown">## 测试用例：visual-clone 基础流程
+
+**输入**：一张日式极简海报图片
+**预期行为**：
+1. ✅ AI 是否主动询问目标场景？
+2. ✅ 输出是否包含所有 8 个 Design DNA 维度？
+3. ✅ 颜色值是否使用 hex 格式？
+4. ✅ 是否生成 Replication Prompt？
+5. ✅ 中英双语标题是否正确？
+</code></pre>
+<h3 id="层-3边界场景鲁棒性测试"><a class="header" href="#层-3边界场景鲁棒性测试">层 3：边界场景（鲁棒性测试）</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>场景</th><th>预期</th></tr>
+</thead>
+<tbody>
+<tr><td>用户不提供图片</td><td>AI 主动要求上传</td></tr>
+<tr><td>用户用英文交流</td><td>AI 切换为英文回复（如果 Skill 支持）</td></tr>
+<tr><td>图片模糊 / 低分辨率</td><td>AI 给出 best-effort 分析并标注不确定项</td></tr>
+<tr><td>用户中途改变需求</td><td>AI 能回溯并调整</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="自动化测试脚本"><a class="header" href="#自动化测试脚本">自动化测试脚本</a></h3>
+<p>对于带脚本的 Skill，可以编写一个 CI 级别的兼容性检查：</p>
+<pre><code class="language-bash">#!/bin/bash
+# test-portability.sh — 检查 Skill 文件的跨平台基础兼容性
+
+SKILL_FILE=$1
+
+# 1. frontmatter 格式检查
+if head -1 "$SKILL_FILE" | grep -q '^---$'; then
+  echo "✅ Frontmatter detected"
+  # 检查 frontmatter 是否正确闭合
+  awk '/^---$/{c++} c==2{print "✅ Frontmatter properly closed"; exit}' "$SKILL_FILE"
+fi
+
+# 2. 平台特有 API 引用检查
+if grep -q 'AskUserQuestion' "$SKILL_FILE"; then
+  echo "⚠️  Contains Claude-specific 'AskUserQuestion' — may need generic alias for other platforms"
+fi
+
+# 3. 文件大小检查（大多数平台 context 限制在 ~200K tokens）
+SIZE=$(wc -c &lt; "$SKILL_FILE")
+if [ "$SIZE" -gt 50000 ]; then
+  echo "⚠️  File size ${SIZE} bytes — may exceed some platforms' context limits"
+else
+  echo "✅ File size OK (${SIZE} bytes)"
+fi
+
+# 4. 代码块配对检查
+OPEN=$(grep -c '```' "$SKILL_FILE")
+if [ $((OPEN % 2)) -eq 0 ]; then
+  echo "✅ Code blocks properly paired ($OPEN markers)"
+else
+  echo "❌ Odd number of code block markers ($OPEN) — likely unclosed block"
+fi
+</code></pre>
+<hr>
+<h2 id="106-案例将-lovstudiovisual-clone-适配到-cursor"><a class="header" href="#106-案例将-lovstudiovisual-clone-适配到-cursor">10.6 案例：将 lovstudio:visual-clone 适配到 Cursor</a></h2>
+<p>让我们用一个真实案例走完整个适配流程。<code>lovstudio:visual-clone</code> 是一个纯指令型 Skill（无脚本），用于从参考设计图中提取视觉 DNA 并生成复刻指令。</p>
+<h3 id="原始-skillmd-结构"><a class="header" href="#原始-skillmd-结构">原始 SKILL.md 结构</a></h3>
+<pre><code class="language-yaml">---
+name: lovstudio:visual-clone
+description: &gt;
+  Analyze a reference design image and extract visual DNA...
+  Trigger when: user asks to "extract style", "replicate this", "clone this design"...
+license: MIT
+compatibility: &gt;
+  No dependencies. Pure AI visual analysis — requires a model with vision capability.
+metadata:
+  author: lovstudio
+  version: "1.0.1"
+  tags: design, visual-analysis, style-extraction, prompt-generation
+---
+</code></pre>
+<p>这个 Skill 有几个跨平台适配要点：</p>
+<ol>
+<li><strong>依赖 Vision 能力</strong> — 需要确认目标平台支持图片理解</li>
+<li><strong>使用 <code>AskUserQuestion</code></strong> — 需要替换为通用提问方式</li>
+<li><strong>输出格式严格</strong> — 8 个 DNA 维度 + Replication Prompt</li>
+<li><strong>中英双语</strong> — 目标平台的模型需要支持中文</li>
+</ol>
+<h3 id="step-1分析平台能力匹配"><a class="header" href="#step-1分析平台能力匹配">Step 1：分析平台能力匹配</a></h3>
+<p>Cursor 使用 Claude / GPT-4 作为底层模型，两者都支持 Vision 和中文。能力匹配没有问题。</p>
+<h3 id="step-2生成-cursorrules-适配版"><a class="header" href="#step-2生成-cursorrules-适配版">Step 2：生成 .cursorrules 适配版</a></h3>
+<pre><code class="language-markdown"># Visual Clone — Design DNA Extractor
+
+## When to Activate
+
+Activate this ruleset when the user provides a reference design image and asks to:
+- Extract style / replicate a design / clone visual elements
+- 提取设计要素 / 复刻风格 / 分析视觉
+
+Do NOT activate for normal coding, debugging, or file editing tasks.
+
+## Workflow
+
+Follow these steps in order:
+
+### Step 1: Receive the Reference Image
+
+Read the image the user provides. If no image is given, ask them to provide one.
+
+### Step 2: Ask Context
+
+Before analysis, ask the user:
+"你想把这个风格复刻到什么场景？（例如：海报、社交媒体图、名片、PPT 封面……）
+如果还没想好也可以先提取，之后再套用。"
+
+### Step 3: Analyze — Extract Design DNA
+
+Examine the image and extract ALL of the following 8 dimensions.
+Use concrete values (hex colors, approximate sizes, named fonts).
+
+Output a Markdown document titled "Design DNA" with these sections:
+
+1. **Layout / 布局** — composition, content zones, hierarchy, aspect ratio
+2. **Color Palette / 色彩** — primary/secondary/accent colors (hex), ratios, mood
+3. **Typography / 字体** — headline/body fonts, weight hierarchy, spacing
+4. **Visual Style / 视觉风格** — design era, illustration style, shape language
+5. **Texture &amp; Material / 质感** — surface feel, overlay effects, shadow, depth
+6. **Imagery / 图像处理** — photo treatment, illustration integration, decorative elements
+7. **Copy &amp; Tone / 文案风格** — headline tone, information density, language register
+8. **Spacing &amp; Rhythm / 间距与节奏** — density, white space, repetition patterns
+
+### Step 4: Generate Replication Prompt
+
+Based on the DNA, generate a self-contained replication prompt with:
+- Visual Brief (1-2 sentences)
+- Specifications (layout, colors, typography, style, texture, imagery, spacing, tone)
+- Adaptation notes for the user's target scenario
+- AI Image Generation prompt (English, under 200 words)
+
+### Step 5: Deliver
+
+Output the full Design DNA + Replication Prompt as a single Markdown document.
+
+## Output Rules
+
+- Color values MUST include hex codes
+- Font identification: name if recognizable, otherwise describe precisely
+- Section headers in 中英双语 format
+- Technical terms in English, descriptions in Chinese
+- Be specific: "12px letter-spacing, tight leading" &gt; "modern typography"
+- Replication Prompt must be copy-pasteable as a standalone brief
+</code></pre>
+<h3 id="step-3对比分析"><a class="header" href="#step-3对比分析">Step 3：对比分析</a></h3>
+<p>让我们对比适配前后的变化：</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>方面</th><th>SKILL.md 原版</th><th>.cursorrules 适配版</th></tr>
+</thead>
+<tbody>
+<tr><td>Frontmatter</td><td>完整 YAML（name, version, tags）</td><td>移除（Cursor 不解析）</td></tr>
+<tr><td>触发方式</td><td><code>Trigger when:</code> 在 description 中</td><td>独立 “When to Activate” 段落</td></tr>
+<tr><td>交互提问</td><td><code>Use AskUserQuestion to ask...</code></td><td><code>Ask the user:</code></td></tr>
+<tr><td>步骤详细度</td><td>每个维度有子列表</td><td>精简为一行摘要（节省 context）</td></tr>
+<tr><td>总行数</td><td>~150 行</td><td>~60 行</td></tr>
+</tbody>
+</table>
+</div>
+<p>关键改动只有三处：</p>
+<ol>
+<li><strong>去 frontmatter</strong> — Cursor 不需要，去掉减少噪音</li>
+<li><strong>通用化交互指令</strong> — 把 <code>AskUserQuestion</code> 替换为 <code>ask the user</code></li>
+<li><strong>压缩篇幅</strong> — Cursor 的 <code>.cursorrules</code> 会自动注入每次对话，所以要控制 token 消耗</li>
+</ol>
+<p>核心 workflow 逻辑、输出格式、质量要求——<strong>一行都没改</strong>。</p>
+<h3 id="step-4验证"><a class="header" href="#step-4验证">Step 4：验证</a></h3>
+<p>在 Cursor 中实测：</p>
+<ol>
+<li>打开一个项目，确认 <code>.cursorrules</code> 被加载</li>
+<li>拖入一张设计参考图，输入“帮我提取这个设计的风格“</li>
+<li>验证 AI 是否按照 5 步 workflow 执行</li>
+<li>验证输出是否包含 8 个 DNA 维度和 Replication Prompt</li>
+</ol>
+<hr>
+<h2 id="107-适配自动化从手工到管线"><a class="header" href="#107-适配自动化从手工到管线">10.7 适配自动化：从手工到管线</a></h2>
+<p>手动为每个平台维护一份规则文件显然不 scale。我们可以用一个简单的构建脚本实现自动化：</p>
+<pre><code class="language-python">#!/usr/bin/env python3
+"""generate_platform_rules.py — 从 SKILL.md 生成各平台适配文件"""
+
+import re
+import sys
+from pathlib import Path
+
+def strip_frontmatter(content: str) -&gt; str:
+    """移除 YAML frontmatter"""
+    if content.startswith('---'):
+        end = content.find('---', 3)
+        if end != -1:
+            return content[end + 3:].lstrip('
+')
+    return content
+
+def genericize_tools(content: str) -&gt; str:
+    """将平台特有 API 替换为通用写法"""
+    replacements = {
+        r'Use `?AskUserQuestion`? to (?:ask|collect|prompt)': 'Ask the user',
+        r'Use the `?Bash`? tool to (?:run|execute)': 'Run',
+        r'Use the `?Read`? tool to read': 'Read',
+        r'Use the `?Write`? tool to write': 'Write to',
+    }
+    for pattern, replacement in replacements.items():
+        content = re.sub(pattern, replacement, content, flags=re.IGNORECASE)
+    return content
+
+def add_activation_guard(content: str, triggers: list[str]) -&gt; str:
+    """在文件开头添加条件激活段落"""
+    guard = "## When to Activate
+
+"
+    guard += "Activate this ruleset when the user " + ", ".join(triggers) + ".
+"
+    guard += "Do NOT activate for normal coding, debugging, or file editing tasks.
+
+"
+    return guard + content
+
+def generate(skill_path: str, output_dir: str):
+    content = Path(skill_path).read_text()
+    body = strip_frontmatter(content)
+    generic = genericize_tools(body)
+
+    # Claude Code — 原样使用
+    # Cursor
+    Path(f"{output_dir}/.cursorrules").write_text(generic)
+    # Windsurf
+    Path(f"{output_dir}/.windsurfrules").write_text(generic)
+    # Cline
+    Path(f"{output_dir}/.clinerules").write_text(generic)
+    # Codex CLI
+    Path(f"{output_dir}/AGENTS.md").write_text(generic)
+
+    print(f"Generated platform rules in {output_dir}")
+
+if __name__ == '__main__':
+    generate(sys.argv[1], sys.argv[2])
+</code></pre>
+<p>这个脚本做了三件事：</p>
+<ol>
+<li>剥离 frontmatter（对“自动加载型“平台是噪音）</li>
+<li>将 Claude Code 专属工具名替换为通用描述</li>
+<li>输出各平台对应的文件名</li>
+</ol>
+<p>在 CI 中集成这个脚本，每次 SKILL.md 更新时自动重新生成所有平台的适配文件。</p>
+<hr>
+<h2 id="108-跨平台设计的常见陷阱"><a class="header" href="#108-跨平台设计的常见陷阱">10.8 跨平台设计的常见陷阱</a></h2>
+<h3 id="陷阱-1context-预算不一致"><a class="header" href="#陷阱-1context-预算不一致">陷阱 1：Context 预算不一致</a></h3>
+<p>各平台可用的 context window 大小不同。Claude Code 可以按需加载 Skill（不占常驻 context），但 Cursor 的 <code>.cursorrules</code> 是每次会话都注入的。一个 5000 token 的 SKILL.md 在 Claude Code 上没问题，但在 Cursor 上可能挤占用户的编码 context。</p>
+<p><strong>解法</strong>：为“自动加载型“平台准备一个精简版，控制在 2000 token 以内。核心 workflow 和约束保留，详细的示例和说明移除。</p>
+<h3 id="陷阱-2工具能力假设"><a class="header" href="#陷阱-2工具能力假设">陷阱 2：工具能力假设</a></h3>
+<p>有些 Skill 依赖特定工具能力。例如 <code>lovstudio:any2pdf</code> 需要执行 Python 脚本，<code>lovstudio:tech-book</code> 需要调用 <code>gh</code> CLI。这些在 Claude Code 的沙盒中可以直接运行，但在 Cursor 中需要用户手动确认每一步 shell 命令。</p>
+<p><strong>解法</strong>：在 Skill 的 <code>compatibility</code> 字段中明确标注依赖。如果某个平台不支持必要能力，在适配版中加入 fallback 指引：</p>
+<pre><code class="language-markdown">&gt; **Note**: If your AI assistant cannot execute shell commands directly,
+&gt; run the following command manually in your terminal:
+&gt; ```bash
+&gt; python scripts/md2pdf.py --input doc.md --output doc.pdf
+&gt; ```
+</code></pre>
+<h3 id="陷阱-3交互模型差异"><a class="header" href="#陷阱-3交互模型差异">陷阱 3：交互模型差异</a></h3>
+<p>Claude Code 的 <code>AskUserQuestion</code> 会暂停执行并等待用户回答，形成一个明确的“问-答“cycle。其他平台的 AI 可能在提问后继续生成内容，而不是等待。</p>
+<p><strong>解法</strong>：在 workflow 中用强语气标注暂停点——</p>
+<pre><code class="language-markdown">### Step 2: Ask Context
+
+Ask the user the following question. **STOP and WAIT for their response
+before proceeding to Step 3. Do NOT assume or skip.**
+</code></pre>
+<p><code>STOP and WAIT</code> 这种大写指令在所有主流 LLM 上都被证实有效。</p>
+<h3 id="陷阱-4路径与环境差异"><a class="header" href="#陷阱-4路径与环境差异">陷阱 4：路径与环境差异</a></h3>
+<p>Claude Code 的 Skill 安装在 <code>~/.claude/skills/</code> 下，脚本路径是相对于 Skill 目录的。当你把 Skill 复制到 Cursor 项目根目录时，脚本路径需要调整。</p>
+<p><strong>解法</strong>：使用相对于项目根的路径，或在 Skill 中写明脚本的绝对安装路径：</p>
+<pre><code class="language-markdown">## Setup
+
+1. Clone this skill: `git clone https://github.com/user/skill.git ~/.skills/visual-clone`
+2. Scripts are at: `~/.skills/visual-clone/scripts/`
+</code></pre>
+<hr>
+<h2 id="109-未来展望skillmd-走向真正的标准"><a class="header" href="#109-未来展望skillmd-走向真正的标准">10.9 未来展望：SKILL.md 走向真正的标准</a></h2>
+<p>2026 年的趋势已经很清楚——<strong>AI 编程助手的指令格式正在收敛</strong>。</p>
+<p>Cursor 在 2025 年底开始支持直接读取 SKILL.md 文件。Gemini CLI 和 Codex CLI 的指令格式与 SKILL.md 高度相似。各平台厂商都在意识到：用户不愿意为每个平台重写一套规则。</p>
+<p>可以预见几个方向：</p>
+<ol>
+<li><strong>SKILL.md frontmatter 成为事实标准</strong>：name、description、compatibility 这些字段会被更多平台解析</li>
+<li><strong>跨平台 Skill 市场</strong>：agentskills.io 已经在做的事，会有更多平台接入</li>
+<li><strong>安装协议统一</strong>：类似 <code>npm install</code> 的一键安装方式，自动适配当前平台</li>
+<li><strong>平台差异趋近于零</strong>：当所有平台都用 Markdown + YAML frontmatter，“适配“这个概念会消失</li>
+</ol>
+<p>作为 Skill 作者，今天投入可移植性设计的成本非常低——本质上就是“别用平台专属 API 名“和“控制文件大小“两件事。但回报是你的 Skill 资产不被任何单一平台锁定。</p>
+<hr>
+<h2 id="本章小结"><a class="header" href="#本章小结">本章小结</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>要点</th><th>一句话总结</th></tr>
+</thead>
+<tbody>
+<tr><td>平台差异的本质</td><td>入口文件名和触发方式不同，指令语法高度趋同</td></tr>
+<tr><td>可移植性设计原则</td><td>SKILL.md 为 Single Source of Truth，通用指令语法，标准 CLI 接口</td></tr>
+<tr><td>触发方式适配</td><td>Claude Code 用 slash command，自动加载型平台加 “When to Activate” 段</td></tr>
+<tr><td>测试矩阵</td><td>三层：语法兼容 → 行为一致 → 边界鲁棒</td></tr>
+<tr><td>最大陷阱</td><td>Context 预算差异——自动加载型平台要精简版</td></tr>
+<tr><td>自动化适配</td><td>一个 Python 脚本：剥 frontmatter + 通用化工具名 + 输出多格式</td></tr>
+<tr><td>未来趋势</td><td>SKILL.md 格式正在成为跨平台事实标准</td></tr>
+</tbody>
+</table>
+</div>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../chapter-09/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../chapter-11/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../chapter-09/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../chapter-11/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../mark-09e88c2c.min.js"></script>
+        <script src="../searcher-c2a407aa.js"></script>
+
+        <script src="../clipboard-1626706a.min.js"></script>
+        <script src="../highlight-abc7f01d.js"></script>
+        <script src="../book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>
